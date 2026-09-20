@@ -51,24 +51,43 @@
     td{display:block;padding-top:2px}}
 </style>
 <script>
-/* Die Seite soll oben anfangen. Der Browser faehrt beim Neuladen sonst zur alten
-   Scrollposition zurueck, und auch nachgeladene Inhalte koennen die Seite verschieben.
-   Deshalb wird sie in den ersten anderthalb Sekunden oben gehalten – aber nur so lange,
-   bis der Besucher selbst scrollt, tippt oder klickt. Ein Anker in der Adresse
-   (index.html#termin) hat Vorrang und wird nicht angetastet. */
+/* Die Seite soll oben anfangen.
+   Drei Faelle:
+   1. Neu geladen oder mit Vor/Zurueck geoeffnet -> immer oben, ein haengengebliebener
+      Anker (#termin) wird aus der Adresse entfernt. Sonst springt jedes Aktualisieren
+      wieder zum Kalender, weil der Anker vom letzten Klick noch in der Adresse steht.
+   2. Frisch ueber einen Link mit Anker aufgerufen -> der Anker gilt.
+   3. Normal aufgerufen -> die Seite wird kurz oben gehalten, falls nachgeladene
+      Inhalte sie verschieben. Sobald der Besucher scrollt, tippt oder klickt, hoert
+      das sofort auf. */
 (function(){
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  if (location.hash) return;
-  var nutzer = false, bis = Date.now() + 1500, h = document.documentElement;
+
+  var art = 'navigate';
+  try {
+    var e = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    if (e && e.type) art = e.type;
+    else if (performance.navigation && performance.navigation.type === 1) art = 'reload';
+    else if (performance.navigation && performance.navigation.type === 2) art = 'back_forward';
+  } catch (x) {}
+  var neuGeladen = (art === 'reload' || art === 'back_forward');
+
+  if (location.hash && neuGeladen) {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (x) {}
+  } else if (location.hash) {
+    return;                       /* frischer Link mit Anker: nicht antasten */
+  }
+
+  var nutzer = false, bis = Date.now() + 2500, h = document.documentElement;
   var vorher = h.style.scrollBehavior;
-  h.style.scrollBehavior = 'auto';           /* kein weiches Gleiten beim Zuruecksetzen */
+  h.style.scrollBehavior = 'auto';
+  function frei(){ nutzer = true; h.style.scrollBehavior = vorher; }
   ['wheel','touchstart','keydown','mousedown'].forEach(function(e){
-    addEventListener(e, function(){ nutzer = true; h.style.scrollBehavior = vorher; },
-                     {once:true, passive:true});
+    addEventListener(e, frei, {once:true, passive:true});
   });
   function oben(){
-    if (nutzer || location.hash) { h.style.scrollBehavior = vorher; return; }
-    if (window.scrollY > 0 || window.pageYOffset > 0) window.scrollTo(0, 0);
+    if (nutzer) return;
+    if (window.pageYOffset > 0) window.scrollTo(0, 0);
     if (Date.now() < bis) requestAnimationFrame(oben); else h.style.scrollBehavior = vorher;
   }
   oben();
