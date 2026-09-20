@@ -50,6 +50,12 @@
   @media(max-width:560px){h1{font-size:25px}th{width:auto;display:block;border:0;padding-bottom:0}
     td{display:block;padding-top:2px}}
 </style>
+<script>
+  /* Ohne das merkt sich der Browser die alte Scrollposition und faehrt beim Neuladen
+     dorthin zurueck. Zusammen mit dem weichen Scrollen sieht das aus, als springe die
+     Seite von selbst nach unten. Ein Anker in der Adresse (#termin) wirkt weiterhin. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+</script>
 </head>
 <body>
 <div style="background:#42392F;color:#fff;text-align:center;font-size:13.5px;padding:8px 16px">Diese Seite ist im Aufbau – Inhalte, Angebote und Preise sind vorläufig.</div>
