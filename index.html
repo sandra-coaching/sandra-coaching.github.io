@@ -124,19 +124,24 @@
   .btn-hell{background:#FBF7F1;border-color:#FBF7F1;color:var(--ink)}
   .btn-hell:hover{background:var(--rose);border-color:var(--rose);color:var(--ink)}
 
-  /* Fahne am Rand */
-  .fahne{position:fixed;right:0;top:50%;z-index:45;transform:translate(102%,-50%);
-         background:var(--clay);color:#fff;text-decoration:none;font-size:14px;font-weight:600;
+  /* Fahnen am rechten Rand */
+  .fahnen{position:fixed;right:0;top:50%;z-index:45;transform:translate(102%,-50%);
+          display:flex;flex-direction:column;align-items:flex-end;gap:8px;
+          transition:transform .35s ease}
+  .fahnen.an{transform:translate(0,-50%)}
+  .fahne{background:var(--clay);color:#fff;text-decoration:none;font-size:14px;font-weight:600;
          letter-spacing:.05em;padding:20px 13px;border-radius:14px 0 0 14px;
          writing-mode:vertical-rl;box-shadow:0 12px 34px -16px rgba(66,57,47,.75);
-         transition:transform .35s ease,background .2s}
-  .fahne.an{transform:translate(0,-50%)}
+         transition:background .2s}
   .fahne:hover{background:var(--clay-dark)}
   .fahne:focus-visible{outline:2px solid var(--clay-dark);outline-offset:3px}
-  /* Auf dem Handy keine Fahne – die Kopfzeile zeigt „Termin finden" dort ohnehin
-     dauerhaft, ein zweiter Knopf würde nur Text verdecken. */
-  @media(max-width:760px){.fahne{display:none}}
-  @media(prefers-reduced-motion:reduce){.fahne{transition:none}}
+  .fahne-2{background:var(--paper);color:var(--clay-dark);padding:16px 13px;
+           border:1px solid var(--sand-2);border-right:0}
+  .fahne-2:hover{background:var(--sand);color:var(--clay-dark)}
+  /* Auf dem Handy keine Fahnen – die Kopfzeile zeigt „Termin finden" dort ohnehin
+     dauerhaft, schwebende Knoepfe wuerden nur Text verdecken. */
+  @media(max-width:760px){.fahnen{display:none}}
+  @media(prefers-reduced-motion:reduce){.fahnen{transition:none}}
 
   /* Karten */
   .three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -256,20 +261,11 @@
   .os-note{font-size:13.5px;color:var(--muted);margin-top:14px;text-align:left}
   @media(max-width:560px){.os-row{flex-direction:column}.os-row input{padding:14px 18px}}
 
-  /* Anfahrt */
-  .anfahrt{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
-           gap:20px;background:var(--paper);border:1px solid var(--line);border-radius:20px;
-           padding:24px 28px;margin-top:26px}
-  .anfahrt b{display:block;font-size:17px;margin-bottom:4px}
-  .anfahrt p{font-size:15px;color:var(--muted);max-width:34em}
+  /* Anschrift als Link */
   .adr-link{color:inherit;text-decoration:none;border-bottom:1px solid var(--rose)}
   .adr-link:hover{border-bottom-color:var(--clay);color:var(--clay-dark)}
   footer .adr-link{border-bottom-color:rgba(214,200,185,.45)}
   footer .adr-link:hover{color:#fff;border-bottom-color:#fff}
-  .navi{display:flex;flex-wrap:wrap;gap:10px}
-  .navi a{font-size:15px;font-weight:600;text-decoration:none;color:var(--clay-dark);
-          border:1px solid var(--sand-2);border-radius:999px;padding:9px 18px;white-space:nowrap}
-  .navi a:hover{border-color:var(--clay);background:var(--sand)}
 
   footer{background:var(--ink);color:#C4B6A8;padding:52px 0 40px;font-size:14.5px;margin-top:78px}
   .foot-links a{color:#D6C8B9;text-decoration:none;border-bottom:1px solid rgba(214,200,185,.35)}
@@ -291,7 +287,10 @@
   </div>
 </header>
 
-<a href="#termin" class="fahne" id="fahne">Termin finden</a>
+<div class="fahnen" id="fahnen">
+  <a href="#termin" class="fahne">Termin finden</a>
+  <a class="fahne fahne-2" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer">Route</a>
+</div>
 
 <!-- ============ HERO ============ -->
 <div class="hero">
@@ -598,21 +597,6 @@
       </div>
     </div>
 
-    <!-- Anfahrt -->
-    <div class="anfahrt">
-      <div>
-        <b>Wenn wir uns vor Ort treffen</b>
-        <p><a class="adr-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer" title="Route nach Postau öffnen">Auweg 23, 84103 Postau</a>. Tipp auf die Adresse oder einen der Knöpfe – das öffnet die Karten-App auf deinem Gerät.
-          Vorher wird nichts an den Kartenanbieter übertragen.</p>
-      </div>
-      <div class="navi">
-        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau"
-           target="_blank" rel="noopener noreferrer">Google Maps</a>
-        <a href="https://maps.apple.com/?daddr=Auweg+23%2C+84103+Postau"
-           target="_blank" rel="noopener noreferrer">Apple Karten</a>
-      </div>
-    </div>
-
     <!-- Ein Satz statt Formular -->
     <div class="onesentence">
       <h3>Noch nicht bereit für einen Termin?</h3>
@@ -693,13 +677,13 @@
 
   /* Kopfzeile bekommt beim Scrollen eine Linie, Fahne erscheint darunter */
   var head = document.getElementById('top');
-  var fahne = document.getElementById('fahne');
+  var fahnen = document.getElementById('fahnen');
   var termin = document.getElementById('termin');
   window.addEventListener('scroll', function(){
     head.classList.toggle('stuck', window.scrollY > 12);
-    if (fahne) {
+    if (fahnen) {
       var terminOben = termin ? termin.getBoundingClientRect().top : 1e9;
-      fahne.classList.toggle('an', window.scrollY > 500 && terminOben > window.innerHeight * 0.6);
+      fahnen.classList.toggle('an', window.scrollY > 500 && terminOben > window.innerHeight * 0.6);
     }
   }, {passive:true});
 
