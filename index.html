@@ -159,7 +159,7 @@
   @media(max-width:760px){.steps{grid-template-columns:1fr}}
 
   /* FAQ */
-  .faq{display:flex;flex-direction:column;gap:12px;max-width:780px}
+  .faq{display:flex;flex-direction:column;gap:12px}
   details{background:var(--paper);border:1px solid var(--line);border-radius:16px;
           padding:0 24px}
   details[open]{border-color:var(--sand-2)}
@@ -236,7 +236,7 @@
     .book-r{padding:26px 22px}}
 
   .safety{background:var(--sand-2);border-radius:18px;padding:24px 28px;margin-top:44px;
-          font-size:15.5px;color:#5E5346;max-width:780px}
+          font-size:15.5px;color:#5E5346}
   .safety b{display:block;margin-bottom:6px;color:var(--ink)}
 
   /* Ein Satz statt Formular */
@@ -262,6 +262,10 @@
            padding:24px 28px;margin-top:26px}
   .anfahrt b{display:block;font-size:17px;margin-bottom:4px}
   .anfahrt p{font-size:15px;color:var(--muted);max-width:34em}
+  .adr-link{color:inherit;text-decoration:none;border-bottom:1px solid var(--rose)}
+  .adr-link:hover{border-bottom-color:var(--clay);color:var(--clay-dark)}
+  footer .adr-link{border-bottom-color:rgba(214,200,185,.45)}
+  footer .adr-link:hover{color:#fff;border-bottom-color:#fff}
   .navi{display:flex;flex-wrap:wrap;gap:10px}
   .navi a{font-size:15px;font-weight:600;text-decoration:none;color:var(--clay-dark);
           border:1px solid var(--sand-2);border-radius:999px;padding:9px 18px;white-space:nowrap}
@@ -598,7 +602,7 @@
     <div class="anfahrt">
       <div>
         <b>Wenn wir uns vor Ort treffen</b>
-        <p>Auweg 23, 84103 Postau. Die Links öffnen die Karten-App auf deinem Gerät.
+        <p><a class="adr-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer" title="Route nach Postau öffnen">Auweg 23, 84103 Postau</a>. Tipp auf die Adresse oder einen der Knöpfe – das öffnet die Karten-App auf deinem Gerät.
           Vorher wird nichts an den Kartenanbieter übertragen.</p>
       </div>
       <div class="navi">
@@ -632,7 +636,7 @@
 
 <footer>
   <div class="wrap foot">
-    <div>© 2026 Sandra [Nachname] · Auweg 23, 84103 Postau</div>
+    <div>© 2026 Sandra [Nachname] · <a class="adr-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer" title="Route nach Postau öffnen">Auweg 23, 84103 Postau</a></div>
     <div class="foot-links"><a href="impressum.html">Impressum</a> ·
       <a href="datenschutz.html">Datenschutz</a> ·
       <a href="test.html">Selbstcheck</a> ·

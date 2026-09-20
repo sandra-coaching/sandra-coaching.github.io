@@ -35,6 +35,10 @@
   .hinweis{background:var(--sand);border-radius:18px;padding:20px 24px;margin-top:34px;
            font-size:15.5px;color:#5E5346}
   .hinweis b{display:block;margin-bottom:4px;color:var(--ink)}
+  .adr-link{color:inherit;text-decoration:none;border-bottom:1px solid var(--rose)}
+  .adr-link:hover{border-bottom-color:var(--clay);color:var(--clay-dark)}
+  footer .adr-link{border-bottom-color:rgba(214,200,185,.45)}
+  footer .adr-link:hover{color:#fff;border-bottom-color:#fff}
   .navi{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
   .navi a{display:inline-block;font-size:15px;font-weight:600;text-decoration:none;
           border:1px solid var(--sand-2);border-radius:999px;padding:9px 18px;background:var(--paper)}
@@ -60,8 +64,8 @@
   <div class="adresse">
     <b>Sandra <span class="platz">[Nachname eintragen]</span></b>
     <span class="platz">[Falls ein Firmenname geführt wird: hier eintragen]</span><br>
-    Auweg 23<br>
-    84103 Postau<br>
+    <a class="adr-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer">Auweg 23<br>
+    84103 Postau</a><br>
     Deutschland
   </div>
 
@@ -90,7 +94,7 @@
      (§ 36 Verbraucherstreitbeilegungsgesetz).</p>
 
   <h2>So findest du mich</h2>
-  <p>Auweg 23, 84103 Postau. Die Links öffnen die Karten-App deines Geräts – erst beim
+  <p><a class="adr-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer" title="Route nach Postau öffnen">Auweg 23, 84103 Postau</a>. Ein Tipp auf die Adresse oder einen Knopf öffnet die Karten-App deines Geräts – erst beim
      Klick, vorher wird nichts an Dritte übertragen.</p>
   <div class="navi">
     <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau"
@@ -108,7 +112,7 @@
 </main>
 
 <footer><div class="wrap foot">
-  <div>© 2026 Sandra [Nachname] · Auweg 23, 84103 Postau</div>
+  <div>© 2026 Sandra [Nachname] · <a class="adr-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer" title="Route nach Postau öffnen">Auweg 23, 84103 Postau</a></div>
   <div><a href="index.html">Startseite</a> · <a href="datenschutz.html">Datenschutz</a></div>
 </div></footer>
 
