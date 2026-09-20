@@ -23,6 +23,9 @@
   .btn-2{background:var(--paper);color:var(--clay-dark);border:1px solid var(--line)}
   .btn-2:hover{background:var(--sand)}
   .btn-klein{padding:6px 12px;font-size:13.5px}
+  .btn-loesch{background:var(--paper);color:#9B3B2E;border:1px solid #E3C6C0}
+  .btn-loesch:hover{background:#F6E9E6;border-color:#C98F84}
+  .btn-loesch:disabled{opacity:.5;cursor:default}
   input,select,textarea{border:1px solid var(--line);border-radius:10px;padding:9px 12px;
        font:inherit;background:var(--paper);color:var(--ink)}
   .karte{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:18px}
@@ -115,6 +118,7 @@
   .m-zu{background:none;border:0;font-size:26px;line-height:1;color:var(--muted);cursor:pointer}
   .modal-inhalt{padding:18px 22px 20px}
   .modal-fuss{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px;margin-top:4px}
+  .fuss-links{margin-right:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .m-art{margin-bottom:14px}
   .m-lbl{font-size:14px;color:var(--muted);display:block;margin-bottom:4px}
   .m-suche{position:relative;flex:1}
@@ -773,10 +777,14 @@
         '<label class="breit">Interne Notiz<textarea id="m-notiz" rows="2">'+esc(t&&t.notiz||'')+'</textarea></label>'+
         '<div class="breit"><span class="m-lbl">Farbe</span>'+farbAuswahl('m-farbe', t ? t.farbe : '', true)+'</div>'+
         '<div class="breit modal-fuss">'+
-          (t ? (t.status==='gebucht'?'<button type="button" class="btn btn-2 btn-klein" data-st="bestaetigt">Bestätigen</button>':'')+
+          (t ? '<span class="fuss-links">'+
+                 (t.rechnung_id ? '<span class="hinweis">abgerechnet</span>'
+                                : t.status!=='abgesagt' ? '<button type="button" class="btn btn-2 btn-klein" id="m-rechnung">Rechnung</button>' : '')+
+                 (t.rechnung_id ? '' : '<button type="button" class="btn btn-loesch btn-klein" id="m-loeschen">Termin löschen</button>')+
+               '</span>'+
+               (t.status==='gebucht'?'<button type="button" class="btn btn-2 btn-klein" data-st="bestaetigt">Bestätigen</button>':'')+
                '<button type="button" class="btn btn-2 btn-klein" data-st="stattgefunden">Hat stattgefunden</button>'+
-               (t.status!=='abgesagt'?'<button type="button" class="btn btn-2 btn-klein" data-st="abgesagt">Absagen</button>':'')+
-               (t.rechnung_id ? '<span class="hinweis" style="margin-right:auto;align-self:center">abgerechnet</span>' : t.status!=='abgesagt' ? '<button type="button" class="btn btn-2 btn-klein" id="m-rechnung" style="margin-right:auto">Rechnung</button>' : '<span style="margin-right:auto"></span>') : '')+
+               (t.status!=='abgesagt'?'<button type="button" class="btn btn-2 btn-klein" data-st="abgesagt">Absagen</button>':'') : '')+
           '<button class="btn">Speichern</button><button type="button" class="btn btn-2" data-zu>Schließen</button></div>'+
         '<p class="breit fehler" id="m-fehler"></p></form>'+
       '<form id="m-sperre" class="formular" hidden>'+
@@ -806,6 +814,22 @@
         if (b.dataset.st === 'abgesagt' && !b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Wirklich absagen?'; return; }
         rpc('coaching_admin_termin_aendern', {p_id:t.id, p_status:b.dataset.st}).then(function(){ schliesseFenster(); ladeWoche(); });
       }; });
+      /* Löschen entfernt den Termin endgültig. Absagen ist der Normalfall – deshalb
+         fragt der Knopf beim ersten Klick nach. */
+      if ($('m-loeschen')) $('m-loeschen').onclick = function(){
+        var b = $('m-loeschen'), f = $('m-fehler');
+        if (!b.dataset.sicher) {
+          b.dataset.sicher = '1'; b.textContent = 'Wirklich endgültig löschen?';
+          f.className = 'breit hinweis';
+          f.textContent = 'Der Termin ist danach weg. Soll er nur nicht mehr stattfinden, nimm „Absagen" – dann bleibt er in der Übersicht.';
+          return;
+        }
+        b.disabled = true;
+        rpc('coaching_admin_termin_loeschen', {p_id:t.id})
+          .then(function(){ schliesseFenster(); ladeWoche(); })
+          .catch(function(err){ b.disabled = false; b.dataset.sicher = ''; b.textContent = 'Termin löschen';
+                                f.className = 'breit fehler'; f.textContent = err.message; });
+      };
     }
     $('m-inhalt').querySelectorAll('[data-zu]').forEach(function(b){ b.onclick = schliesseFenster; });
     $('m-inhalt').querySelectorAll('[data-typ]').forEach(function(b){ b.onclick = function(){

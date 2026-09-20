@@ -376,7 +376,7 @@
         <a href="#termin" class="btn">Kostenloses Erstgespräch</a>
         <a href="#woher" class="btn btn-2">Woher das kommt</a>
       </div>
-      <div class="reassure">30 Minuten · unverbindlich · online oder in Postau</div>
+      <div class="reassure"><span data-eg-min>15</span> Minuten · unverbindlich · online oder in Postau</div>
     </div>
   </div>
 </div>
@@ -454,8 +454,8 @@
     </div>
     <div class="three">
       <div class="box"><b>Ein Gespräch, das nichts kostet</b>
-        <span>30 Minuten, in denen du erzählst, was los ist. Danach entscheidest du –
-              nicht ich, und nicht sofort.</span></div>
+        <span><span data-eg-min>15</span> Minuten, in denen du erzählst, was los ist.
+              Danach entscheidest du – nicht ich, und nicht sofort.</span></div>
       <div class="box"><b>Ein Rahmen statt guter Ratschläge</b>
         <span>Feste Termine, ein klarer Ablauf und jemand, der die Fragen stellt,
               die du dir selbst nicht stellst.</span></div>
@@ -501,7 +501,7 @@
         <b>Erstgespräch</b>
         <span>Ein ruhiges Kennenlernen. Du erzählst, was dich beschäftigt – ich sage
               dir ehrlich, ob ich die Richtige für dich bin.</span>
-        <div class="p">30 Min · kostenfrei</div>
+        <div class="p"><span data-eg-min>15</span> Min · kostenfrei</div>
       </div>
       <div class="box">
         <b>Einzelbegleitung</b>
@@ -621,7 +621,7 @@
       <div class="book-l">
         <div class="bk-kat" id="bk-l-kat"></div>
         <h3 id="bk-l-titel">Kostenloses Erstgespräch</h3>
-        <p id="bk-l-text">30 Minuten, unverbindlich, per Video oder Telefon.</p>
+        <p id="bk-l-text">Ein ruhiges Kennenlernen, unverbindlich, per Video oder Telefon.</p>
         <p class="bk-l-fakt" id="bk-l-fakt"></p>
         <ul>
           <li>✓ Keine Vorbereitung nötig</li>
@@ -869,7 +869,7 @@
         html += '<option value="'+i+'">'+esc(x.titel)+' · '+dauerText(x)+(x.preis_cent!=null?' · '+euro(x.preis_cent):'')+'</option>';
       });
       $('bk-angebot').innerHTML = html + (letzte!==null?'</optgroup>':'');
-      angebot = a[0]; zeigeAngebot(); ladeZeiten(); zeigeKarten();
+      angebot = a[0]; zeigeAngebot(); ladeZeiten(); zeigeKarten(); setzeErstgespraechDauer();
     }).catch(function(){ $('bk-info').textContent = 'Die Termine können gerade nicht geladen werden. Bitte versuch es später noch einmal.'; });
   }
 
@@ -886,6 +886,15 @@
       (x.ist_paket && x.preis_cent ? ' (' + euro(Math.round(x.preis_cent/x.anzahl_sitzungen)) + ' pro Sitzung)' : '');
     $('bk-l-fakt').textContent = f;
   }
+  /* Die Dauer des Erstgesprächs steht an mehreren Stellen im Text. Damit sie nur an
+     einer Stelle gepflegt werden muss, wird sie aus dem Angebot übernommen. Antwortet
+     die Datenbank nicht, bleibt der fest eingetragene Wert stehen. */
+  function setzeErstgespraechDauer(){
+    var eg = angebote.filter(function(x){ return x.preis_cent === 0 && !x.ist_paket; })[0];
+    if (!eg || !eg.dauer_min) return;
+    document.querySelectorAll('[data-eg-min]').forEach(function(el){ el.textContent = eg.dauer_min; });
+  }
+
   /* Abschnitt „Angebot": Karten aus der Datenbank (bei Fehler bleibt der feste Text stehen) */
   function zeigeKarten(){
     var box = $('angebot-karten'); if (!box || !angebote.length) return;
