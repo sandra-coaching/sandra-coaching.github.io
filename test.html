@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Wie gehst du mit dir um? – kleiner Selbstcheck</title>
+<meta name="description" content="Zwölf Fragen dazu, wie freundlich du mit dir selbst umgehst. Nichts wird gespeichert, das Ergebnis siehst nur du.">
+<style>
+  :root{
+    --cream:#FBF7F1; --paper:#FFFDFA; --sand:#EFE6DA; --sand-2:#E4D8CC;
+    --rose:#E6CFC4; --clay:#A97B63; --clay-dark:#8B6049; --olive:#A9AE97;
+    --ink:#42392F; --muted:#7C6F63; --line:#E7DCCF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-size:17.5px;line-height:1.7;
+       font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 26px}
+  a{color:var(--clay-dark)}
+  .btn{display:inline-block;background:var(--clay);color:#fff;text-decoration:none;
+       padding:15px 30px;border-radius:999px;font:inherit;font-size:16px;font-weight:600;
+       border:2px solid var(--clay);cursor:pointer}
+  .btn:hover{background:var(--clay-dark);border-color:var(--clay-dark)}
+  .btn-2{background:transparent;color:var(--clay-dark);border-color:var(--sand-2)}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn:disabled:hover{background:var(--clay);border-color:var(--clay)}
+  .btn-2:hover{background:var(--sand)}
+  header{padding:26px 0}
+  .kopf{display:flex;justify-content:space-between;align-items:center;font-size:15px}
+  .kopf a{text-decoration:none;color:var(--muted)}
+  .kopf a:hover{color:var(--ink)}
+  h1{font-size:32px;line-height:1.2;letter-spacing:-.02em;margin:26px 0 12px}
+  .intro{color:var(--muted);max-width:44em}
+  .karte{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:26px 28px;margin-top:26px}
+  .frage{padding:18px 0;border-bottom:1px solid var(--line)}
+  .frage:last-child{border-bottom:0}
+  .frage p{margin-bottom:12px}
+  .skala{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .skala label{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);
+       border:1px solid var(--line);border-radius:12px;padding:10px 4px;cursor:pointer;text-align:center;background:var(--cream)}
+  .skala label:hover{border-color:var(--clay)}
+  .skala input{accent-color:var(--clay);width:18px;height:18px}
+  .skala label.an{border-color:var(--clay);background:var(--sand);color:var(--clay-dark);font-weight:600}
+  .stand{position:sticky;bottom:0;background:linear-gradient(transparent,var(--cream) 30%);padding:18px 0 22px;margin-top:8px}
+  .stand .zeile{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .balken{flex:1;min-width:140px;height:8px;background:var(--sand-2);border-radius:999px;overflow:hidden}
+  .balken i{display:block;height:100%;background:var(--clay);width:0;transition:width .3s}
+  .hinweis{font-size:14px;color:var(--muted);margin-top:14px}
+  .ergebnis h2{font-size:24px;margin-bottom:6px}
+  .wert{font-size:44px;font-weight:700;color:var(--clay-dark);line-height:1.1}
+  .bereich{margin-top:18px}
+  .bereich b{display:block;font-size:15.5px}
+  .bereich .balken{margin-top:6px;height:10px}
+  .bereich small{color:var(--muted);font-size:13.5px}
+  .weiter{background:var(--sand);border-radius:18px;padding:22px 24px;margin-top:26px}
+  .safety{background:var(--sand-2);border-radius:18px;padding:20px 24px;margin-top:26px;font-size:15.5px;color:#5E5346}
+  .safety b{display:block;margin-bottom:4px;color:var(--ink)}
+  footer{color:var(--muted);font-size:13.5px;padding:40px 0 60px}
+  [hidden]{display:none!important}
+  @media(max-width:560px){h1{font-size:26px}.karte{padding:20px 18px}.skala{grid-template-columns:repeat(5,1fr);gap:5px}.skala label{font-size:11px;padding:8px 2px}}
+</style>
+</head>
+<body>
+<div style="background:#42392F;color:#fff;text-align:center;font-size:13.5px;padding:8px 16px">Diese Seite ist im Aufbau – Inhalte, Angebote und Preise sind vorläufig.</div>
+
+<header><div class="wrap kopf">
+  <span>Sandra [Nachname]</span>
+  <a href="index.html">← Zur Startseite</a>
+</div></header>
+
+<main class="wrap">
+  <h1>Wie gehst du eigentlich mit dir um?</h1>
+  <p class="intro">Zwölf Sätze. Kreuz einfach an, wie oft das auf dich zutrifft – ohne lange
+    zu überlegen. Am Ende siehst du, wie freundlich oder wie streng du dir selbst begegnest.
+    <b>Nichts wird gespeichert oder verschickt.</b> Das Ergebnis siehst nur du auf diesem Bildschirm.</p>
+
+  <form id="test">
+    <div class="karte" id="fragen"></div>
+    <div class="stand">
+      <div class="zeile">
+        <div class="balken"><i id="fortschritt"></i></div>
+        <span id="zaehler" style="font-size:14px;color:var(--muted)">0 von 12</span>
+        <button class="btn" id="auswerten" type="submit" disabled>Auswerten</button>
+      </div>
+      <p class="hinweis" id="fehlt"></p>
+    </div>
+  </form>
+
+  <section class="karte ergebnis" id="ergebnis" hidden aria-live="polite">
+    <h2>Dein Ergebnis</h2>
+    <p class="wert"><span id="wert">–</span> <span style="font-size:18px;color:var(--muted);font-weight:400">von 5</span></p>
+    <p id="deutung"></p>
+    <div id="bereiche"></div>
+    <div class="weiter">
+      <p id="brueckentext"></p>
+      <p style="margin-top:14px"><a class="btn" href="index.html#termin">Kostenloses Erstgespräch finden</a>
+        <button type="button" class="btn btn-2" id="nochmal" style="margin-left:8px">Nochmal ausfüllen</button></p>
+    </div>
+    <p class="hinweis">Das ist kein psychologischer Test und keine Diagnose, sondern ein Anstoß zum Nachdenken.
+      Die Fragen orientieren sich an der Kurzskala zum Selbstmitgefühl von Kristin Neff (Self-Compassion Scale – Short Form).
+      Die deutsche Formulierung stammt von uns. [Platzhalter: von Sandra fachlich prüfen lassen.]</p>
+  </section>
+
+  <div class="safety">
+    <b>Wenn es dir gerade sehr schlecht geht</b>
+    Dann ist ein Test nicht das Richtige. Hol dir bitte Unterstützung bei einem Menschen,
+    dem du vertraust, oder bei einer Fachstelle. [Platzhalter: konkrete Anlaufstellen mit
+    Telefonnummer eintragen – von Sandra.]
+  </div>
+</main>
+
+<footer><div class="wrap">
+  © 2026 Sandra [Nachname] · <a href="index.html">Startseite</a> ·
+  <a href="index.html#termin">Termin</a> · [Impressum] · [Datenschutz]
+</div></footer>
+
+<script>
+(function(){
+  var SKALA = ['fast nie','selten','manchmal','oft','fast immer'];
+  /* + = freundliche Haltung, − = wird umgedreht gezählt */
+  var FRAGEN = [
+    {t:'Wenn es mir schlecht geht, versuche ich, freundlich mit mir umzugehen.', b:'freundlich', r:false},
+    {t:'Wenn ich eine schwere Zeit durchmache, gebe ich mir die Zuwendung, die ich gerade brauche.', b:'freundlich', r:false},
+    {t:'Wenn mir etwas misslingt, mache ich mir lange Vorwürfe.', b:'freundlich', r:true},
+    {t:'Ich bin streng mit mir und verurteile meine eigenen Fehler und Schwächen.', b:'freundlich', r:true},
+    {t:'Ich versuche, meine Fehler als etwas zu sehen, das zum Menschsein dazugehört.', b:'verbunden', r:false},
+    {t:'Wenn es mir schlecht geht, erinnere ich mich daran, dass es vielen Menschen ähnlich geht.', b:'verbunden', r:false},
+    {t:'Wenn ich niedergeschlagen bin, habe ich das Gefühl, die meisten anderen sind glücklicher als ich.', b:'verbunden', r:true},
+    {t:'Wenn ich an meine Schwächen denke, fühle ich mich von allen anderen getrennt.', b:'verbunden', r:true},
+    {t:'Wenn mich etwas belastet, versuche ich, meine Gefühle im Gleichgewicht zu halten.', b:'gelassen', r:false},
+    {t:'Wenn etwas schmerzhaft ist, versuche ich, die Lage in Ruhe und nüchtern anzuschauen.', b:'gelassen', r:false},
+    {t:'Wenn mir etwas misslingt, verliere ich mich in dem Gefühl, versagt zu haben.', b:'gelassen', r:true},
+    {t:'Wenn mich etwas aufwühlt, lassen mich meine Gefühle lange nicht mehr los.', b:'gelassen', r:true}
+  ];
+  var BEREICHE = {
+    freundlich: {name:'Freundlichkeit dir selbst gegenüber', kurz:'freundlich mit dir zu sein',
+      hoch:'Du begegnest dir überwiegend so, wie du einer guten Freundin begegnen würdest.',
+      mittel:'Mal freundlich, mal streng – je nachdem, wie der Tag läuft.',
+      tief:'Du gehst mit dir härter um als mit anderen.'},
+    verbunden: {name:'Verbundenheit statt Alleinsein', kurz:'dich mit anderen verbunden zu fühlen',
+      hoch:'Du weißt, dass Fehler und schwere Zeiten zum Leben aller gehören.',
+      mittel:'Manchmal fühlst du dich mit deinen Themen allein.',
+      tief:'In schweren Momenten hast du das Gefühl, nur dir gehe es so.'},
+    gelassen: {name:'Gefühle halten können', kurz:'schwierige Gefühle zu halten',
+      hoch:'Du kannst schwierige Gefühle da sein lassen, ohne dich darin zu verlieren.',
+      mittel:'Mal gelingt dir Abstand, mal zieht es dich hinein.',
+      tief:'Belastende Gefühle nehmen dich schnell ganz ein.'}
+  };
+  var $ = function(id){ return document.getElementById(id); };
+  var antworten = {};
+
+  $('fragen').innerHTML = FRAGEN.map(function(f, i){
+    return '<div class="frage"><p>'+(i+1)+'. '+f.t+'</p><div class="skala" role="group" aria-label="Frage '+(i+1)+'">'+
+      SKALA.map(function(s, j){
+        return '<label><input type="radio" name="f'+i+'" value="'+(j+1)+'"><span>'+s+'</span></label>';
+      }).join('')+'</div></div>';
+  }).join('');
+
+  $('fragen').addEventListener('change', function(e){
+    var el = e.target; if (el.type !== 'radio') return;
+    antworten[el.name] = +el.value;
+    el.closest('.skala').querySelectorAll('label').forEach(function(l){ l.classList.toggle('an', l.contains(el)); });
+    var n = Object.keys(antworten).length;
+    $('fortschritt').style.width = (n/FRAGEN.length*100)+'%';
+    $('zaehler').textContent = n + ' von ' + FRAGEN.length;
+    $('auswerten').disabled = n < FRAGEN.length;
+    if (n === FRAGEN.length) $('fehlt').textContent = '';
+  });
+
+  function schnitt(liste){ return liste.reduce(function(a,b){ return a+b; }, 0) / liste.length; }
+
+  $('test').addEventListener('submit', function(e){
+    e.preventDefault();
+    var offen = FRAGEN.map(function(_, i){ return i; }).filter(function(i){ return !antworten['f'+i]; });
+    if (offen.length) {
+      $('fehlt').textContent = 'Es fehlen noch ' + offen.length + ' Fragen.';
+      $('fragen').querySelectorAll('.frage')[offen[0]].scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    var werte = {freundlich:[], verbunden:[], gelassen:[]}, alle = [];
+    FRAGEN.forEach(function(f, i){
+      var w = antworten['f'+i]; if (f.r) w = 6 - w;
+      werte[f.b].push(w); alle.push(w);
+    });
+    var g = schnitt(alle);
+    $('wert').textContent = g.toFixed(1).replace('.', ',');
+    $('deutung').textContent = g >= 3.5
+      ? 'Du gehst insgesamt freundlich mit dir um. Das ist eine gute Grundlage – schau trotzdem, wo unten der niedrigste Wert steht.'
+      : g >= 2.5
+        ? 'Mal freundlich, mal streng. Vieles hängt wohl davon ab, wie viel gerade los ist.'
+        : 'Du bist ziemlich streng mit dir. Von außen betrachtet: Würdest du so auch mit einem Menschen reden, den du magst?';
+    $('bereiche').innerHTML = Object.keys(werte).map(function(k){
+      var m = schnitt(werte[k]), stufe = m >= 3.5 ? 'hoch' : m >= 2.5 ? 'mittel' : 'tief';
+      return '<div class="bereich"><b>'+BEREICHE[k].name+' · '+m.toFixed(1).replace('.', ',')+'</b>'+
+        '<div class="balken"><i style="width:'+Math.max(4,(m-1)/4*100)+'%"></i></div>'+
+        '<small>'+BEREICHE[k][stufe]+'</small></div>';
+    }).join('');
+    var sortiert = Object.keys(werte).sort(function(a,b){ return schnitt(werte[a]) - schnitt(werte[b]); });
+    var abstand = schnitt(werte[sortiert[1]]) - schnitt(werte[sortiert[0]]);
+    var vorsatz = abstand >= 0.5 ? 'Am schwersten fällt es dir gerade, ' + BEREICHE[sortiert[0]].kurz + '. ' : '';
+    $('brueckentext').textContent = vorsatz + (g >= 3.5
+      ? 'Wenn du trotzdem das Gefühl hast, dass dein Leben sich nicht nach dir anfühlt – genau da fangen wir im '
+        + 'kostenlosen Erstgespräch an.'
+      : 'Diese Strenge kommt selten von allein. Sie ist meist früh entstanden – und genau dort setzt die Arbeit mit '
+        + 'dem inneren Kind an. Im kostenlosen Erstgespräch schauen wir, was bei dir dahintersteckt.');
+    $('ergebnis').hidden = false;
+    $('ergebnis').scrollIntoView({behavior:'smooth'});
+  });
+
+  $('nochmal').addEventListener('click', function(){
+    antworten = {}; $('test').reset();
+    $('fragen').querySelectorAll('label').forEach(function(l){ l.classList.remove('an'); });
+    $('fortschritt').style.width = '0'; $('zaehler').textContent = '0 von ' + FRAGEN.length;
+    $('auswerten').disabled = true; $('ergebnis').hidden = true;
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
