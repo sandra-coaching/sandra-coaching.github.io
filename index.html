@@ -277,10 +277,30 @@
   @media(prefers-reduced-motion:reduce){.frame img,.cap p{transition:none}html{scroll-behavior:auto}}
 </style>
 <script>
-  /* Ohne das merkt sich der Browser die alte Scrollposition und faehrt beim Neuladen
-     dorthin zurueck. Zusammen mit dem weichen Scrollen sieht das aus, als springe die
-     Seite von selbst nach unten. Ein Anker in der Adresse (#termin) wirkt weiterhin. */
+/* Die Seite soll oben anfangen. Der Browser faehrt beim Neuladen sonst zur alten
+   Scrollposition zurueck, und auch nachgeladene Inhalte koennen die Seite verschieben.
+   Deshalb wird sie in den ersten anderthalb Sekunden oben gehalten – aber nur so lange,
+   bis der Besucher selbst scrollt, tippt oder klickt. Ein Anker in der Adresse
+   (index.html#termin) hat Vorrang und wird nicht angetastet. */
+(function(){
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (location.hash) return;
+  var nutzer = false, bis = Date.now() + 1500, h = document.documentElement;
+  var vorher = h.style.scrollBehavior;
+  h.style.scrollBehavior = 'auto';           /* kein weiches Gleiten beim Zuruecksetzen */
+  ['wheel','touchstart','keydown','mousedown'].forEach(function(e){
+    addEventListener(e, function(){ nutzer = true; h.style.scrollBehavior = vorher; },
+                     {once:true, passive:true});
+  });
+  function oben(){
+    if (nutzer || location.hash) { h.style.scrollBehavior = vorher; return; }
+    if (window.scrollY > 0 || window.pageYOffset > 0) window.scrollTo(0, 0);
+    if (Date.now() < bis) requestAnimationFrame(oben); else h.style.scrollBehavior = vorher;
+  }
+  oben();
+  addEventListener('DOMContentLoaded', oben);
+  addEventListener('load', oben);
+})();
 </script>
 </head>
 <body>
