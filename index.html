@@ -173,6 +173,12 @@
 
   /* Sandra */
   .about{display:grid;grid-template-columns:.72fr 1.28fr;gap:52px;align-items:center}
+  .portraet{margin:0}
+  .portraet img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;
+                object-position:50% 20%;border-radius:22px;background:var(--sand);
+                box-shadow:0 24px 54px -34px rgba(66,57,47,.55)}
+  .portraet figcaption{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center}
+
   .ph{background:linear-gradient(140deg,var(--sand),var(--rose));border:1px dashed #D2BDAE;
       border-radius:22px;display:flex;align-items:center;justify-content:center;
       text-align:center;color:var(--clay-dark);font-size:13.5px;font-weight:600;
@@ -250,7 +256,20 @@
   .os-note{font-size:13.5px;color:var(--muted);margin-top:14px;text-align:left}
   @media(max-width:560px){.os-row{flex-direction:column}.os-row input{padding:14px 18px}}
 
+  /* Anfahrt */
+  .anfahrt{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+           gap:20px;background:var(--paper);border:1px solid var(--line);border-radius:20px;
+           padding:24px 28px;margin-top:26px}
+  .anfahrt b{display:block;font-size:17px;margin-bottom:4px}
+  .anfahrt p{font-size:15px;color:var(--muted);max-width:34em}
+  .navi{display:flex;flex-wrap:wrap;gap:10px}
+  .navi a{font-size:15px;font-weight:600;text-decoration:none;color:var(--clay-dark);
+          border:1px solid var(--sand-2);border-radius:999px;padding:9px 18px;white-space:nowrap}
+  .navi a:hover{border-color:var(--clay);background:var(--sand)}
+
   footer{background:var(--ink);color:#C4B6A8;padding:52px 0 40px;font-size:14.5px;margin-top:78px}
+  .foot-links a{color:#D6C8B9;text-decoration:none;border-bottom:1px solid rgba(214,200,185,.35)}
+  .foot-links a:hover{color:#fff;border-bottom-color:#fff}
   .foot{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap}
   .foot a{text-decoration:none}.foot a:hover{color:var(--rose)}
   .tag{position:fixed;left:14px;bottom:14px;background:var(--ink);color:#fff;font-size:12px;
@@ -304,7 +323,7 @@
         <a href="#termin" class="btn">Kostenloses Erstgespräch</a>
         <a href="#woher" class="btn btn-2">Woher das kommt</a>
       </div>
-      <div class="reassure">30 Minuten · unverbindlich · online oder in [Ort]</div>
+      <div class="reassure">30 Minuten · unverbindlich · online oder in Postau</div>
     </div>
   </div>
 </div>
@@ -427,7 +446,7 @@
       <div class="box">
         <b>Einzelbegleitung</b>
         <span>Regelmäßige Gespräche über einen Zeitraum, den wir gemeinsam festlegen.
-              Online oder in [Ort].</span>
+              Online oder in Postau.</span>
         <div class="p">60 Min · [Preis eintragen]</div>
       </div>
       <div class="box">
@@ -497,8 +516,12 @@
 <section id="ueber" class="band">
   <div class="wrap">
     <div class="about">
-      <div class="ph">Foto Sandra<br>
-        <span style="font-weight:400">steht bewusst erst hier</span></div>
+      <figure class="portraet">
+        <img src="bilder/sandra-portraet-platzhalter.jpg" width="900" height="1125"
+             loading="lazy" decoding="async"
+             alt="Platzhalterbild: Porträt einer Frau in hellem Leinenhemd">
+        <figcaption>Platzhalterbild – wird durch ein echtes Foto von Sandra ersetzt.</figcaption>
+      </figure>
       <div>
         <h2>Und wer begleitet dich dabei?</h2>
         <p style="color:var(--muted);margin-top:16px">[Platzhalter – Sandras Text in
@@ -561,13 +584,28 @@
                     placeholder="Magst du in einem Satz sagen, was dich herführt? (freiwillig)"></textarea>
           <label class="bk-ok"><input type="checkbox" id="bk-einw">
             Ich bin einverstanden, dass meine Angaben zur Terminvereinbarung gespeichert werden.
-            [Platzhalter: Link zur Datenschutzerklärung]</label>
+            Mehr dazu in der <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a>.</label>
           <button class="btn" type="submit" style="width:100%;margin-top:14px">Termin verbindlich buchen</button>
           <button type="button" class="bk-zurueck" id="bk-zurueck">‹ Andere Zeit wählen</button>
           <p class="bk-fehler" id="bk-fehler" role="alert"></p>
         </form>
 
         <div id="bk-fertig" hidden role="status"></div>
+      </div>
+    </div>
+
+    <!-- Anfahrt -->
+    <div class="anfahrt">
+      <div>
+        <b>Wenn wir uns vor Ort treffen</b>
+        <p>Auweg 23, 84103 Postau. Die Links öffnen die Karten-App auf deinem Gerät.
+          Vorher wird nichts an den Kartenanbieter übertragen.</p>
+      </div>
+      <div class="navi">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau"
+           target="_blank" rel="noopener noreferrer">Google Maps</a>
+        <a href="https://maps.apple.com/?daddr=Auweg+23%2C+84103+Postau"
+           target="_blank" rel="noopener noreferrer">Apple Karten</a>
       </div>
     </div>
 
@@ -585,16 +623,20 @@
         </div>
       </form>
       <p class="os-note">Du bekommst eine persönliche Antwort von mir – keine
-        automatische Mail, kein Newsletter. [Platzhalter: Datenschutzhinweis mit
-        Link, bitte rechtlich prüfen. Der Knopf ist im Entwurf ohne Funktion.]</p>
+        automatische Mail, kein Newsletter. Was mit deinen Angaben passiert, steht in der
+        <a href="datenschutz.html">Datenschutzerklärung</a>.
+        [Platzhalter: Der Knopf ist im Entwurf noch ohne Funktion.]</p>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap foot">
-    <div>© 2026 Sandra [Nachname] · [Anschrift]</div>
-    <div><a href="#">Impressum</a> · <a href="#">Datenschutz</a> · <a href="#top">Nach oben</a></div>
+    <div>© 2026 Sandra [Nachname] · Auweg 23, 84103 Postau</div>
+    <div class="foot-links"><a href="impressum.html">Impressum</a> ·
+      <a href="datenschutz.html">Datenschutz</a> ·
+      <a href="test.html">Selbstcheck</a> ·
+      <a href="#top">Nach oben</a></div>
   </div>
 </footer>
 
