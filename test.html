@@ -4,8 +4,52 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Wie gehst du mit dir um? – kleiner Selbstcheck</title>
-<meta name="description" content="Zwölf Fragen dazu, wie freundlich du mit dir selbst umgehst. Nichts wird gespeichert, das Ergebnis siehst nur du.">
+<title>Selbstchecks – Sandra Denk</title>
+<meta name="description" content="Drei kurze Selbstchecks: wie du mit dir umgehst, welche Muster mitlaufen, und wie es zwischen euch steht. Nichts wird gespeichert.">
+<script>
+/* Die Seite soll oben anfangen.
+   Drei Faelle:
+   1. Neu geladen oder mit Vor/Zurueck geoeffnet -> immer oben, ein haengengebliebener
+      Anker wird aus der Adresse entfernt.
+   2. Frisch ueber einen Link mit Anker aufgerufen -> der Anker gilt.
+   3. Normal aufgerufen -> die Seite wird kurz oben gehalten, falls nachgeladene
+      Inhalte sie verschieben. Sobald der Besucher scrollt, tippt oder klickt, hoert
+      das sofort auf. */
+(function(){
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  var art = 'navigate';
+  try {
+    var e = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    if (e && e.type) art = e.type;
+    else if (performance.navigation && performance.navigation.type === 1) art = 'reload';
+    else if (performance.navigation && performance.navigation.type === 2) art = 'back_forward';
+  } catch (x) {}
+  var neuGeladen = (art === 'reload' || art === 'back_forward');
+
+  if (location.hash && neuGeladen) {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (x) {}
+  } else if (location.hash) {
+    return;
+  }
+
+  var nutzer = false, bis = Date.now() + 2500, h = document.documentElement;
+  var vorher = h.style.scrollBehavior;
+  h.style.scrollBehavior = 'auto';
+  function frei(){ nutzer = true; h.style.scrollBehavior = vorher; }
+  ['wheel','touchstart','keydown','mousedown'].forEach(function(e){
+    addEventListener(e, frei, {once:true, passive:true});
+  });
+  function oben(){
+    if (nutzer) return;
+    if (window.pageYOffset > 0) window.scrollTo(0, 0);
+    if (Date.now() < bis) requestAnimationFrame(oben); else h.style.scrollBehavior = vorher;
+  }
+  oben();
+  addEventListener('DOMContentLoaded', oben);
+  addEventListener('load', oben);
+})();
+</script>
 <style>
   :root{
     --cream:#FBF7F1; --paper:#FFFDFA; --sand:#EFE6DA; --sand-2:#E4D8CC;
@@ -13,7 +57,7 @@
     --ink:#42392F; --muted:#7C6F63; --line:#E7DCCF;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;scrollbar-gutter:stable}
   body{background:var(--cream);color:var(--ink);font-size:17.5px;line-height:1.7;
        font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
        -webkit-font-smoothing:antialiased}
@@ -24,16 +68,34 @@
        border:2px solid var(--clay);cursor:pointer}
   .btn:hover{background:var(--clay-dark);border-color:var(--clay-dark)}
   .btn-2{background:transparent;color:var(--clay-dark);border-color:var(--sand-2)}
+  .btn-2:hover{background:var(--sand)}
   .btn:disabled{opacity:.4;cursor:default}
   .btn:disabled:hover{background:var(--clay);border-color:var(--clay)}
-  .btn-2:hover{background:var(--sand)}
   header{padding:26px 0}
   .kopf{display:flex;justify-content:space-between;align-items:center;font-size:15px}
   .kopf a{text-decoration:none;color:var(--muted)}
   .kopf a:hover{color:var(--ink)}
   h1{font-size:32px;line-height:1.2;letter-spacing:-.02em;margin:26px 0 12px}
   .intro{color:var(--muted);max-width:44em}
+
+  /* Auswahl der drei Checks */
+  .auswahl{display:grid;gap:14px;margin-top:30px}
+  .karte-check{background:var(--paper);border:1px solid var(--line);border-radius:20px;
+       padding:24px 26px;text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%;
+       display:flex;justify-content:space-between;align-items:center;gap:20px;
+       transition:border-color .2s,background .2s}
+  .karte-check:hover{border-color:var(--clay);background:var(--sand)}
+  .karte-check b{display:block;font-size:19px;margin-bottom:4px}
+  .karte-check span{font-size:15.5px;color:var(--muted)}
+  .karte-check .pfeil{font-size:22px;color:var(--clay);flex:none}
+
   .karte{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:26px 28px;margin-top:26px}
+  .zurueck{background:none;border:0;font:inherit;font-size:15px;color:var(--muted);
+           cursor:pointer;padding:0;margin-top:26px}
+  .zurueck:hover{color:var(--ink)}
+  .check-kopf{margin-top:26px}
+  .check-kopf h2{font-size:25px;line-height:1.25}
+  .check-kopf p{color:var(--muted);margin-top:8px;font-size:16.5px}
   .frage{padding:18px 0;border-bottom:1px solid var(--line)}
   .frage:last-child{border-bottom:0}
   .frage p{margin-bottom:12px}
@@ -58,57 +120,14 @@
   .safety{background:var(--sand-2);border-radius:18px;padding:20px 24px;margin-top:26px;font-size:15.5px;color:#5E5346}
   .safety b{display:block;margin-bottom:4px;color:var(--ink)}
   footer{color:var(--muted);font-size:13.5px;padding:40px 0 60px}
+  footer a{color:var(--clay-dark)}
   .adr-link{color:inherit;text-decoration:none;border-bottom:1px solid var(--rose)}
   .adr-link:hover{color:var(--clay-dark);border-bottom-color:var(--clay)}
-  footer a{color:var(--clay-dark)}
   [hidden]{display:none!important}
-  @media(max-width:560px){h1{font-size:26px}.karte{padding:20px 18px}.skala{grid-template-columns:repeat(5,1fr);gap:5px}.skala label{font-size:11px;padding:8px 2px}}
+  @media(max-width:560px){h1{font-size:26px}.karte{padding:20px 18px}
+    .skala{gap:5px}.skala label{font-size:11px;padding:8px 2px}
+    .karte-check{padding:20px 18px}}
 </style>
-<script>
-/* Die Seite soll oben anfangen.
-   Drei Faelle:
-   1. Neu geladen oder mit Vor/Zurueck geoeffnet -> immer oben, ein haengengebliebener
-      Anker (#termin) wird aus der Adresse entfernt. Sonst springt jedes Aktualisieren
-      wieder zum Kalender, weil der Anker vom letzten Klick noch in der Adresse steht.
-   2. Frisch ueber einen Link mit Anker aufgerufen -> der Anker gilt.
-   3. Normal aufgerufen -> die Seite wird kurz oben gehalten, falls nachgeladene
-      Inhalte sie verschieben. Sobald der Besucher scrollt, tippt oder klickt, hoert
-      das sofort auf. */
-(function(){
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-
-  var art = 'navigate';
-  try {
-    var e = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
-    if (e && e.type) art = e.type;
-    else if (performance.navigation && performance.navigation.type === 1) art = 'reload';
-    else if (performance.navigation && performance.navigation.type === 2) art = 'back_forward';
-  } catch (x) {}
-  var neuGeladen = (art === 'reload' || art === 'back_forward');
-
-  if (location.hash && neuGeladen) {
-    try { history.replaceState(null, '', location.pathname + location.search); } catch (x) {}
-  } else if (location.hash) {
-    return;                       /* frischer Link mit Anker: nicht antasten */
-  }
-
-  var nutzer = false, bis = Date.now() + 2500, h = document.documentElement;
-  var vorher = h.style.scrollBehavior;
-  h.style.scrollBehavior = 'auto';
-  function frei(){ nutzer = true; h.style.scrollBehavior = vorher; }
-  ['wheel','touchstart','keydown','mousedown'].forEach(function(e){
-    addEventListener(e, frei, {once:true, passive:true});
-  });
-  function oben(){
-    if (nutzer) return;
-    if (window.pageYOffset > 0) window.scrollTo(0, 0);
-    if (Date.now() < bis) requestAnimationFrame(oben); else h.style.scrollBehavior = vorher;
-  }
-  oben();
-  addEventListener('DOMContentLoaded', oben);
-  addEventListener('load', oben);
-})();
-</script>
 </head>
 <body>
 <div style="background:#42392F;color:#fff;text-align:center;font-size:13.5px;padding:8px 16px">Diese Seite ist im Aufbau – Inhalte, Angebote und Preise sind vorläufig.</div>
@@ -119,23 +138,38 @@
 </div></header>
 
 <main class="wrap">
-  <h1>Wie gehst du eigentlich mit dir um?</h1>
-  <p class="intro">Zwölf Sätze. Kreuz einfach an, wie oft das auf dich zutrifft – ohne lange
-    zu überlegen. Am Ende siehst du, wie freundlich oder wie streng du dir selbst begegnest.
-    <b>Nichts wird gespeichert oder verschickt.</b> Das Ergebnis siehst nur du auf diesem Bildschirm.</p>
 
-  <form id="test">
-    <div class="karte" id="fragen"></div>
-    <div class="stand">
-      <div class="zeile">
-        <div class="balken"><i id="fortschritt"></i></div>
-        <span id="zaehler" style="font-size:14px;color:var(--muted)">0 von 12</span>
-        <button class="btn" id="auswerten" type="submit" disabled>Auswerten</button>
-      </div>
-      <p class="hinweis" id="fehlt"></p>
+  <!-- ===== Auswahl ===== -->
+  <section id="auswahl-block">
+    <h1>Wo stehst du gerade?</h1>
+    <p class="intro">Drei kurze Selbstchecks. Such dir den aus, der dich gerade angeht –
+      du kannst auch alle drei machen. Jeder dauert etwa zwei Minuten.
+      <b>Nichts wird gespeichert oder verschickt.</b> Das Ergebnis siehst nur du auf
+      diesem Bildschirm.</p>
+    <div class="auswahl" id="auswahl"></div>
+  </section>
+
+  <!-- ===== Fragebogen ===== -->
+  <section id="check-block" hidden>
+    <div class="check-kopf">
+      <h2 id="check-titel"></h2>
+      <p id="check-intro"></p>
     </div>
-  </form>
+    <form id="test">
+      <div class="karte" id="fragen"></div>
+      <div class="stand">
+        <div class="zeile">
+          <div class="balken"><i id="fortschritt"></i></div>
+          <span id="zaehler" style="font-size:14px;color:var(--muted)"></span>
+          <button class="btn" id="auswerten" type="submit" disabled>Auswerten</button>
+        </div>
+        <p class="hinweis" id="fehlt"></p>
+      </div>
+    </form>
+    <button type="button" class="zurueck" id="abbrechen">‹ Zurück zur Auswahl</button>
+  </section>
 
+  <!-- ===== Ergebnis ===== -->
   <section class="karte ergebnis" id="ergebnis" hidden aria-live="polite">
     <h2>Dein Ergebnis</h2>
     <p class="wert"><span id="wert">–</span> <span style="font-size:18px;color:var(--muted);font-weight:400">von 5</span></p>
@@ -144,11 +178,9 @@
     <div class="weiter">
       <p id="brueckentext"></p>
       <p style="margin-top:14px"><a class="btn" href="index.html#termin">Kostenloses Erstgespräch finden</a>
-        <button type="button" class="btn btn-2" id="nochmal" style="margin-left:8px">Nochmal ausfüllen</button></p>
+        <button type="button" class="btn btn-2" id="nochmal" style="margin-left:8px">Anderen Check machen</button></p>
     </div>
-    <p class="hinweis">Das ist kein psychologischer Test und keine Diagnose, sondern ein Anstoß zum Nachdenken.
-      Die Fragen orientieren sich an der Kurzskala zum Selbstmitgefühl von Kristin Neff (Self-Compassion Scale – Short Form).
-      Die deutsche Formulierung stammt von uns. [Platzhalter: von Sandra fachlich prüfen lassen.]</p>
+    <p class="hinweis" id="quelle"></p>
   </section>
 
   <div class="safety">
@@ -160,110 +192,256 @@
 </main>
 
 <footer><div class="wrap">
-  © 2026 Sandra Denk · <a class="adr-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer" title="Route nach Postau öffnen">Auweg 23, 84103 Postau</a> · <a href="index.html">Startseite</a> ·
-  <a href="index.html#termin">Termin</a> · <a href="impressum.html">Impressum</a> ·
-  <a href="datenschutz.html">Datenschutz</a>
+  © 2026 Sandra Denk · <a class="adr-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auweg+23%2C+84103+Postau" target="_blank" rel="noopener noreferrer" title="Route nach Postau öffnen">Auweg 23, 84103 Postau</a> ·
+  <a href="index.html">Startseite</a> · <a href="index.html#termin">Termin</a> ·
+  <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a>
 </div></footer>
 
 <script>
 (function(){
   var SKALA = ['fast nie','selten','manchmal','oft','fast immer'];
-  /* + = freundliche Haltung, − = wird umgedreht gezählt */
-  var FRAGEN = [
-    {t:'Wenn es mir schlecht geht, versuche ich, freundlich mit mir umzugehen.', b:'freundlich', r:false},
-    {t:'Wenn ich eine schwere Zeit durchmache, gebe ich mir die Zuwendung, die ich gerade brauche.', b:'freundlich', r:false},
-    {t:'Wenn mir etwas misslingt, mache ich mir lange Vorwürfe.', b:'freundlich', r:true},
-    {t:'Ich bin streng mit mir und verurteile meine eigenen Fehler und Schwächen.', b:'freundlich', r:true},
-    {t:'Ich versuche, meine Fehler als etwas zu sehen, das zum Menschsein dazugehört.', b:'verbunden', r:false},
-    {t:'Wenn es mir schlecht geht, erinnere ich mich daran, dass es vielen Menschen ähnlich geht.', b:'verbunden', r:false},
-    {t:'Wenn ich niedergeschlagen bin, habe ich das Gefühl, die meisten anderen sind glücklicher als ich.', b:'verbunden', r:true},
-    {t:'Wenn ich an meine Schwächen denke, fühle ich mich von allen anderen getrennt.', b:'verbunden', r:true},
-    {t:'Wenn mich etwas belastet, versuche ich, meine Gefühle im Gleichgewicht zu halten.', b:'gelassen', r:false},
-    {t:'Wenn etwas schmerzhaft ist, versuche ich, die Lage in Ruhe und nüchtern anzuschauen.', b:'gelassen', r:false},
-    {t:'Wenn mir etwas misslingt, verliere ich mich in dem Gefühl, versagt zu haben.', b:'gelassen', r:true},
-    {t:'Wenn mich etwas aufwühlt, lassen mich meine Gefühle lange nicht mehr los.', b:'gelassen', r:true}
-  ];
-  var BEREICHE = {
-    freundlich: {name:'Freundlichkeit dir selbst gegenüber', kurz:'freundlich mit dir zu sein',
-      hoch:'Du begegnest dir überwiegend so, wie du einer guten Freundin begegnen würdest.',
-      mittel:'Mal freundlich, mal streng – je nachdem, wie der Tag läuft.',
-      tief:'Du gehst mit dir härter um als mit anderen.'},
-    verbunden: {name:'Verbundenheit statt Alleinsein', kurz:'dich mit anderen verbunden zu fühlen',
-      hoch:'Du weißt, dass Fehler und schwere Zeiten zum Leben aller gehören.',
-      mittel:'Manchmal fühlst du dich mit deinen Themen allein.',
-      tief:'In schweren Momenten hast du das Gefühl, nur dir gehe es so.'},
-    gelassen: {name:'Gefühle halten können', kurz:'schwierige Gefühle zu halten',
-      hoch:'Du kannst schwierige Gefühle da sein lassen, ohne dich darin zu verlieren.',
-      mittel:'Mal gelingt dir Abstand, mal zieht es dich hinein.',
-      tief:'Belastende Gefühle nehmen dich schnell ganz ein.'}
-  };
-  var $ = function(id){ return document.getElementById(id); };
-  var antworten = {};
 
-  $('fragen').innerHTML = FRAGEN.map(function(f, i){
-    return '<div class="frage"><p>'+(i+1)+'. '+f.t+'</p><div class="skala" role="group" aria-label="Frage '+(i+1)+'">'+
-      SKALA.map(function(s, j){
-        return '<label><input type="radio" name="f'+i+'" value="'+(j+1)+'"><span>'+s+'</span></label>';
-      }).join('')+'</div></div>';
+  /* r:true = negativ formuliert, wird umgedreht gezaehlt.
+     Hoher Wert heisst bei allen Checks: laeuft gut. */
+  var CHECKS = {
+    mitgefuehl: {
+      name: 'Wie gehst du mit dir um?',
+      kurz: 'Wenn etwas schiefgeht – bist du dann dein schärfster Kritiker oder dein Rückhalt?',
+      intro: 'Zwölf Sätze. Kreuz an, wie oft das auf dich zutrifft – ohne lange zu überlegen.',
+      quelle: 'Das ist kein psychologischer Test und keine Diagnose, sondern ein Anstoß zum Nachdenken. ' +
+              'Die Fragen orientieren sich an der Kurzskala zum Selbstmitgefühl von Kristin Neff ' +
+              '(Self-Compassion Scale – Short Form). Die deutsche Formulierung stammt von uns. ' +
+              '[Platzhalter: von Sandra fachlich prüfen lassen.]',
+      bereiche: {
+        freundlich: {name:'Freundlichkeit dir selbst gegenüber', kurz:'freundlich mit dir zu sein',
+          hoch:'Du begegnest dir überwiegend so, wie du einer guten Freundin begegnen würdest.',
+          mittel:'Mal freundlich, mal streng – je nachdem, wie der Tag läuft.',
+          tief:'Du gehst mit dir härter um als mit anderen.'},
+        verbunden: {name:'Verbundenheit statt Alleinsein', kurz:'dich mit anderen verbunden zu fühlen',
+          hoch:'Du weißt, dass Fehler und schwere Zeiten zum Leben aller gehören.',
+          mittel:'Manchmal fühlst du dich mit deinen Themen allein.',
+          tief:'In schweren Momenten hast du das Gefühl, nur dir gehe es so.'},
+        gelassen: {name:'Gefühle halten können', kurz:'schwierige Gefühle zu halten',
+          hoch:'Du kannst schwierige Gefühle da sein lassen, ohne dich darin zu verlieren.',
+          mittel:'Mal gelingt dir Abstand, mal zieht es dich hinein.',
+          tief:'Belastende Gefühle nehmen dich schnell ganz ein.'}
+      },
+      gesamt: {
+        hoch:'Du gehst insgesamt freundlich mit dir um. Das ist eine gute Grundlage – schau trotzdem, wo unten der niedrigste Wert steht.',
+        mittel:'Mal freundlich, mal streng. Vieles hängt wohl davon ab, wie viel gerade los ist.',
+        tief:'Du bist ziemlich streng mit dir. Von außen betrachtet: Würdest du so auch mit einem Menschen reden, den du magst?'
+      },
+      bruecke: {
+        hoch:'Wenn du trotzdem das Gefühl hast, dass dein Leben sich nicht nach dir anfühlt – genau da fangen wir im kostenlosen Erstgespräch an.',
+        tief:'Diese Strenge kommt selten von allein. Sie ist meist früh entstanden und hat sich über Jahre eingeschliffen. Im kostenlosen Erstgespräch schauen wir, was bei dir dahintersteckt.'
+      },
+      fragen: [
+        {t:'Wenn es mir schlecht geht, versuche ich, freundlich mit mir umzugehen.', b:'freundlich', r:false},
+        {t:'Wenn ich eine schwere Zeit durchmache, gebe ich mir die Zuwendung, die ich gerade brauche.', b:'freundlich', r:false},
+        {t:'Wenn mir etwas misslingt, mache ich mir lange Vorwürfe.', b:'freundlich', r:true},
+        {t:'Ich bin streng mit mir und verurteile meine eigenen Fehler und Schwächen.', b:'freundlich', r:true},
+        {t:'Ich versuche, meine Fehler als etwas zu sehen, das zum Menschsein dazugehört.', b:'verbunden', r:false},
+        {t:'Wenn es mir schlecht geht, erinnere ich mich daran, dass es vielen Menschen ähnlich geht.', b:'verbunden', r:false},
+        {t:'Wenn ich niedergeschlagen bin, habe ich das Gefühl, die meisten anderen sind glücklicher als ich.', b:'verbunden', r:true},
+        {t:'Wenn ich an meine Schwächen denke, fühle ich mich von allen anderen getrennt.', b:'verbunden', r:true},
+        {t:'Wenn mich etwas belastet, versuche ich, meine Gefühle im Gleichgewicht zu halten.', b:'gelassen', r:false},
+        {t:'Wenn etwas schmerzhaft ist, versuche ich, die Lage in Ruhe und nüchtern anzuschauen.', b:'gelassen', r:false},
+        {t:'Wenn mir etwas misslingt, verliere ich mich in dem Gefühl, versagt zu haben.', b:'gelassen', r:true},
+        {t:'Wenn mich etwas aufwühlt, lassen mich meine Gefühle lange nicht mehr los.', b:'gelassen', r:true}
+      ]
+    },
+
+    muster: {
+      name: 'Funktionierst du nur noch?',
+      kurz: 'Für alle, bei denen von außen alles läuft – und innen die Frage steht, wo man selbst geblieben ist.',
+      intro: 'Zwölf Sätze über deinen Alltag. Antworte so, wie es in den letzten Monaten war.',
+      quelle: 'Kein psychologischer Test und keine Diagnose. Die Fragen sind von uns formuliert und ' +
+              'sollen nur einen Anstoß geben. [Platzhalter: von Sandra fachlich prüfen lassen.]',
+      bereiche: {
+        leben: {name:'Leben statt abarbeiten', kurz:'den Tag nicht nur abzuarbeiten',
+          hoch:'Du bist bei dem, was du tust, auch innerlich dabei.',
+          mittel:'Manche Tage arbeitest du ab, andere lebst du.',
+          tief:'Du funktionierst. Was du dabei fühlst, kommt kaum noch vor.'},
+        wert: {name:'Dein eigener Wert', kurz:'dir selbst etwas wert zu sein',
+          hoch:'Du bist dir etwas wert, auch ohne Leistung und Bestätigung.',
+          mittel:'Dein Wert hängt stärker an dem, was du schaffst, als dir lieb ist.',
+          tief:'Du misst dich an dem, was du für andere tust. Für dich selbst bleibt kein Maß.'},
+        richtung: {name:'Weißt du, was du willst?', kurz:'zu wissen, was du willst',
+          hoch:'Du kannst benennen, was du dir wünschst, und merkst rechtzeitig, wenn etwas kippt.',
+          mittel:'Du ahnst es, aber es bleibt unscharf.',
+          tief:'Die Frage, was du willst, kannst du gerade nicht beantworten.'}
+      },
+      gesamt: {
+        hoch:'Du bist bei dir. Wenn dich trotzdem etwas hergeführt hat, schau unten auf den niedrigsten Wert – dort sitzt es vermutlich.',
+        mittel:'Vieles läuft, aber du bist nicht ganz dabei. Das ist der Zustand, in dem die meisten hier ankommen.',
+        tief:'Du funktionierst, und das kostet dich mehr, als du zugibst. Das ist kein Vorwurf – es ist ein Muster, und Muster lassen sich ändern.'
+      },
+      bruecke: {
+        hoch:'Wenn du das Gefühl hast, dass da trotzdem etwas nicht stimmt: Im kostenlosen Erstgespräch gehen wir dem nach.',
+        tief:'Solche Muster entstehen nicht in einem Jahr, und sie verschwinden nicht durch guten Willen. Im kostenlosen Erstgespräch schauen wir, was deins zusammenhält.'
+      },
+      fragen: [
+        {t:'Ich komme durch den Tag, ohne zu merken, wie es mir dabei geht.', b:'leben', r:true},
+        {t:'Am Abend bin ich leer, ohne genau sagen zu können, wovon.', b:'leben', r:true},
+        {t:'Ich nehme mir Zeit für Dinge, die nur mir gehören.', b:'leben', r:false},
+        {t:'Wenn gerade niemand etwas von mir will, weiß ich mit mir etwas anzufangen.', b:'leben', r:false},
+        {t:'Ich bin zufrieden mit mir, auch an Tagen, an denen ich nichts geschafft habe.', b:'wert', r:false},
+        {t:'Ich traue meinem eigenen Urteil.', b:'wert', r:false},
+        {t:'Ich habe das Gefühl, mich rechtfertigen zu müssen, wenn ich etwas nur für mich tue.', b:'wert', r:true},
+        {t:'Wenn etwas schiefgeht, suche ich die Schuld zuerst bei mir.', b:'wert', r:true},
+        {t:'Ich könnte auf Anhieb sagen, was ich mir für die nächsten Jahre wünsche.', b:'richtung', r:false},
+        {t:'Ich merke rechtzeitig, wenn mir etwas zu viel wird.', b:'richtung', r:false},
+        {t:'Bei Entscheidungen frage ich mich zuerst, was die anderen dazu sagen.', b:'richtung', r:true},
+        {t:'In mir ist eine Unruhe, die nicht weggeht, egal wie voll der Tag war.', b:'richtung', r:true}
+      ]
+    },
+
+    beziehung: {
+      name: 'Wie steht es zwischen euch?',
+      kurz: 'Wenn ihr nur noch Organisatorisches besprecht – oder etwas im Raum steht, das keiner ausspricht.',
+      intro: 'Zwölf Sätze über eure Beziehung. Es geht dabei nicht um deinen Partner, ' +
+             'sondern darum, wie du es erlebst.',
+      quelle: 'Das ist keine Beurteilung eurer Beziehung und ersetzt keine Paarberatung. Die Fragen ' +
+              'sind von uns formuliert und sollen dir helfen, für dich selbst klarer zu sehen. ' +
+              '[Platzhalter: von Sandra fachlich prüfen lassen.]',
+      bereiche: {
+        reden: {name:'Wie ihr miteinander redet', kurz:'miteinander zu reden',
+          hoch:'Ihr sprecht auch über das, was schwierig ist.',
+          mittel:'Über manches redet ihr, um anderes macht ihr einen Bogen.',
+          tief:'Ihr besprecht, was organisiert werden muss. Mehr kommt kaum vor.'},
+        naehe: {name:'Nähe', kurz:'euch nah zu sein',
+          hoch:'Ihr seid euch nah, nicht nur räumlich.',
+          mittel:'Die Nähe ist da, aber sie kommt seltener.',
+          tief:'Ihr lebt nebeneinanderher.'},
+        ehrlich: {name:'Wie ehrlich du dabei bist', kurz:'ehrlich zu sein – auch mit dir',
+          hoch:'Du sagst, was du brauchst, und hältst nichts Wesentliches zurück.',
+          mittel:'Einiges sprichst du an, anderes behältst du für dich.',
+          tief:'Du hältst Wesentliches zurück. Das ist anstrengender, als es aussieht.'}
+      },
+      gesamt: {
+        hoch:'Zwischen euch ist mehr in Ordnung, als du vielleicht befürchtet hast.',
+        mittel:'Es trägt noch, aber es ist dünner geworden. Genau an dieser Stelle lohnt sich das Hinschauen.',
+        tief:'So wie es gerade ist, tut es dir nicht gut. Das heißt nicht, dass es zu Ende ist – aber es heißt, dass etwas passieren muss.'
+      },
+      bruecke: {
+        hoch:'Wenn dich trotzdem etwas umtreibt, muss das kein großes Thema sein, um darüber zu reden. Das Erstgespräch ist kostenlos.',
+        tief:'Ich arbeite mit dir, nicht mit euch beiden – das ist keine Paartherapie. Oft ist genau das der richtige Anfang, weil du nur bei dir selbst etwas verändern kannst. Im kostenlosen Erstgespräch schauen wir, was für dich dran ist.'
+      },
+      fragen: [
+        {t:'Wir reden über mehr als Termine, Kinder und Organisatorisches.', b:'reden', r:false},
+        {t:'Wenn mich etwas stört, spreche ich es an.', b:'reden', r:false},
+        {t:'Es gibt Themen, um die wir beide einen Bogen machen.', b:'reden', r:true},
+        {t:'Ich habe das Gefühl, dass mir zugehört wird.', b:'reden', r:false},
+        {t:'Ich freue mich, wenn er oder sie nach Hause kommt.', b:'naehe', r:false},
+        {t:'Wir haben Momente, in denen wir uns wirklich nah sind.', b:'naehe', r:false},
+        {t:'Ich ziehe mich zurück, ohne zu sagen warum.', b:'naehe', r:true},
+        {t:'Ich habe das Gefühl, wir leben nebeneinanderher.', b:'naehe', r:true},
+        {t:'Ich sage, was ich brauche.', b:'ehrlich', r:false},
+        {t:'Ich weiß, was ich von dieser Beziehung will.', b:'ehrlich', r:false},
+        {t:'Es gibt etwas, das ich verschweige.', b:'ehrlich', r:true},
+        {t:'Meine Gedanken sind öfter bei jemand anderem.', b:'ehrlich', r:true}
+      ]
+    }
+  };
+
+  var $ = function(id){ return document.getElementById(id); };
+  var aktuell = null, antworten = {};
+
+  /* ---------- Auswahl aufbauen ---------- */
+  $('auswahl').innerHTML = Object.keys(CHECKS).map(function(k){
+    var c = CHECKS[k];
+    return '<button type="button" class="karte-check" data-check="'+k+'">' +
+           '<span><b>'+c.name+'</b><span>'+c.kurz+'</span></span>' +
+           '<span class="pfeil" aria-hidden="true">→</span></button>';
   }).join('');
 
+  $('auswahl').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-check]'); if (!b) return;
+    starte(b.dataset.check);
+  });
+
+  function starte(k){
+    aktuell = k; antworten = {};
+    var c = CHECKS[k];
+    $('check-titel').textContent = c.name;
+    $('check-intro').textContent = c.intro;
+    $('fragen').innerHTML = c.fragen.map(function(f, i){
+      return '<div class="frage"><p>'+(i+1)+'. '+f.t+'</p><div class="skala" role="group" aria-label="Frage '+(i+1)+'">'+
+        SKALA.map(function(s, j){
+          return '<label><input type="radio" name="f'+i+'" value="'+(j+1)+'"><span>'+s+'</span></label>';
+        }).join('')+'</div></div>';
+    }).join('');
+    $('zaehler').textContent = '0 von ' + c.fragen.length;
+    $('fortschritt').style.width = '0';
+    $('auswerten').disabled = true;
+    $('fehlt').textContent = '';
+    $('auswahl-block').hidden = true;
+    $('ergebnis').hidden = true;
+    $('check-block').hidden = false;
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function zurAuswahl(){
+    aktuell = null; antworten = {};
+    $('check-block').hidden = true;
+    $('ergebnis').hidden = true;
+    $('auswahl-block').hidden = false;
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  $('abbrechen').addEventListener('click', zurAuswahl);
+  $('nochmal').addEventListener('click', zurAuswahl);
+
+  /* ---------- Antworten ---------- */
   $('fragen').addEventListener('change', function(e){
     var el = e.target; if (el.type !== 'radio') return;
     antworten[el.name] = +el.value;
     el.closest('.skala').querySelectorAll('label').forEach(function(l){ l.classList.toggle('an', l.contains(el)); });
-    var n = Object.keys(antworten).length;
-    $('fortschritt').style.width = (n/FRAGEN.length*100)+'%';
-    $('zaehler').textContent = n + ' von ' + FRAGEN.length;
-    $('auswerten').disabled = n < FRAGEN.length;
-    if (n === FRAGEN.length) $('fehlt').textContent = '';
+    var anzahl = CHECKS[aktuell].fragen.length, n = Object.keys(antworten).length;
+    $('fortschritt').style.width = (n/anzahl*100)+'%';
+    $('zaehler').textContent = n + ' von ' + anzahl;
+    $('auswerten').disabled = n < anzahl;
+    if (n === anzahl) $('fehlt').textContent = '';
   });
 
   function schnitt(liste){ return liste.reduce(function(a,b){ return a+b; }, 0) / liste.length; }
+  function stufe(m){ return m >= 3.5 ? 'hoch' : m >= 2.5 ? 'mittel' : 'tief'; }
+  function zahl(m){ return m.toFixed(1).replace('.', ','); }
 
+  /* ---------- Auswertung ---------- */
   $('test').addEventListener('submit', function(e){
     e.preventDefault();
-    var offen = FRAGEN.map(function(_, i){ return i; }).filter(function(i){ return !antworten['f'+i]; });
+    var c = CHECKS[aktuell];
+    var offen = c.fragen.map(function(_, i){ return i; }).filter(function(i){ return !antworten['f'+i]; });
     if (offen.length) {
       $('fehlt').textContent = 'Es fehlen noch ' + offen.length + ' Fragen.';
       $('fragen').querySelectorAll('.frage')[offen[0]].scrollIntoView({behavior:'smooth', block:'center'});
       return;
     }
-    var werte = {freundlich:[], verbunden:[], gelassen:[]}, alle = [];
-    FRAGEN.forEach(function(f, i){
+    var werte = {}, alle = [];
+    Object.keys(c.bereiche).forEach(function(b){ werte[b] = []; });
+    c.fragen.forEach(function(f, i){
       var w = antworten['f'+i]; if (f.r) w = 6 - w;
       werte[f.b].push(w); alle.push(w);
     });
-    var g = schnitt(alle);
-    $('wert').textContent = g.toFixed(1).replace('.', ',');
-    $('deutung').textContent = g >= 3.5
-      ? 'Du gehst insgesamt freundlich mit dir um. Das ist eine gute Grundlage – schau trotzdem, wo unten der niedrigste Wert steht.'
-      : g >= 2.5
-        ? 'Mal freundlich, mal streng. Vieles hängt wohl davon ab, wie viel gerade los ist.'
-        : 'Du bist ziemlich streng mit dir. Von außen betrachtet: Würdest du so auch mit einem Menschen reden, den du magst?';
+    var g = schnitt(alle), st = stufe(g);
+
+    $('wert').textContent = zahl(g);
+    $('deutung').textContent = c.gesamt[st];
     $('bereiche').innerHTML = Object.keys(werte).map(function(k){
-      var m = schnitt(werte[k]), stufe = m >= 3.5 ? 'hoch' : m >= 2.5 ? 'mittel' : 'tief';
-      return '<div class="bereich"><b>'+BEREICHE[k].name+' · '+m.toFixed(1).replace('.', ',')+'</b>'+
+      var m = schnitt(werte[k]), b = c.bereiche[k];
+      return '<div class="bereich"><b>'+b.name+' · '+zahl(m)+'</b>'+
         '<div class="balken"><i style="width:'+Math.max(4,(m-1)/4*100)+'%"></i></div>'+
-        '<small>'+BEREICHE[k][stufe]+'</small></div>';
+        '<small>'+b[stufe(m)]+'</small></div>';
     }).join('');
+
     var sortiert = Object.keys(werte).sort(function(a,b){ return schnitt(werte[a]) - schnitt(werte[b]); });
     var abstand = schnitt(werte[sortiert[1]]) - schnitt(werte[sortiert[0]]);
-    var vorsatz = abstand >= 0.5 ? 'Am schwersten fällt es dir gerade, ' + BEREICHE[sortiert[0]].kurz + '. ' : '';
-    $('brueckentext').textContent = vorsatz + (g >= 3.5
-      ? 'Wenn du trotzdem das Gefühl hast, dass dein Leben sich nicht nach dir anfühlt – genau da fangen wir im '
-        + 'kostenlosen Erstgespräch an.'
-      : 'Diese Strenge kommt selten von allein. Sie ist meist früh entstanden – und genau dort setzt die Arbeit mit '
-        + 'dem inneren Kind an. Im kostenlosen Erstgespräch schauen wir, was bei dir dahintersteckt.');
+    var vorsatz = abstand >= 0.5 ? 'Am schwersten fällt es dir gerade, ' + c.bereiche[sortiert[0]].kurz + '. ' : '';
+    $('brueckentext').textContent = vorsatz + (st === 'hoch' ? c.bruecke.hoch : c.bruecke.tief);
+    $('quelle').textContent = c.quelle;
+
     $('ergebnis').hidden = false;
     $('ergebnis').scrollIntoView({behavior:'smooth'});
-  });
-
-  $('nochmal').addEventListener('click', function(){
-    antworten = {}; $('test').reset();
-    $('fragen').querySelectorAll('label').forEach(function(l){ l.classList.remove('an'); });
-    $('fortschritt').style.width = '0'; $('zaehler').textContent = '0 von ' + FRAGEN.length;
-    $('auswerten').disabled = true; $('ergebnis').hidden = true;
-    window.scrollTo({top:0, behavior:'smooth'});
   });
 })();
 </script>
