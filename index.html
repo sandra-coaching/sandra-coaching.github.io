@@ -111,15 +111,32 @@
   @media(max-width:760px){.mirror{padding:24px 22px}}
   .bridge{margin-top:36px;padding-left:22px;border-left:3px solid var(--rose);
           font-size:19px;max-width:38em}
-  .selbstcheck{margin-top:34px;background:var(--paper);border:1px solid var(--line);
-               border-radius:20px;padding:24px 26px;max-width:38em}
-  .selbstcheck b{display:block;font-size:12.5px;font-weight:700;letter-spacing:.16em;
-                 text-transform:uppercase;color:var(--clay);margin-bottom:8px}
-  .selbstcheck p{font-size:16.5px;color:var(--muted)}
-  .selbstcheck a{display:inline-block;margin-top:14px;font-size:16px;font-weight:600;
-                 color:var(--clay-dark);text-decoration:none;border-bottom:1.5px solid var(--rose);
-                 padding-bottom:2px}
-  .selbstcheck a:hover{border-color:var(--clay)}
+  /* Dunkles Band: Selbstcheck */
+  .dunkel{background:var(--ink);color:#F4EDE4}
+  .dunkel h2{color:#FFFDFA}
+  .sc{max-width:40em}
+  .sc-eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+              color:var(--rose);margin-bottom:14px}
+  .sc-text{font-size:19px;color:#D8CCBE;margin-top:14px;max-width:34em}
+  .sc-fakten{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 30px}
+  .sc-fakten span{font-size:13.5px;color:#D8CCBE;border:1px solid rgba(244,237,228,.28);
+                  border-radius:999px;padding:6px 15px}
+  .btn-hell{background:#FBF7F1;border-color:#FBF7F1;color:var(--ink)}
+  .btn-hell:hover{background:var(--rose);border-color:var(--rose);color:var(--ink)}
+
+  /* Fahne am Rand */
+  .fahne{position:fixed;right:0;top:50%;z-index:45;transform:translate(102%,-50%);
+         background:var(--clay);color:#fff;text-decoration:none;font-size:14px;font-weight:600;
+         letter-spacing:.05em;padding:20px 13px;border-radius:14px 0 0 14px;
+         writing-mode:vertical-rl;box-shadow:0 12px 34px -16px rgba(66,57,47,.75);
+         transition:transform .35s ease,background .2s}
+  .fahne.an{transform:translate(0,-50%)}
+  .fahne:hover{background:var(--clay-dark)}
+  .fahne:focus-visible{outline:2px solid var(--clay-dark);outline-offset:3px}
+  /* Auf dem Handy keine Fahne – die Kopfzeile zeigt „Termin finden" dort ohnehin
+     dauerhaft, ein zweiter Knopf würde nur Text verdecken. */
+  @media(max-width:760px){.fahne{display:none}}
+  @media(prefers-reduced-motion:reduce){.fahne{transition:none}}
 
   /* Karten */
   .three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -246,6 +263,8 @@
   </div>
 </header>
 
+<a href="#termin" class="fahne" id="fahne">Termin finden</a>
+
 <!-- ============ HERO ============ -->
 <div class="hero">
   <div class="wrap">
@@ -328,13 +347,18 @@
     <p class="bridge">Solche Sätze lösen sich nicht durch Nachdenken auf. Sie sind früh
       entstanden – und genau dort müssen wir hin, um sie zu lösen. Das ist die Arbeit
       mit dem inneren Kind.</p>
+  </div>
+</section>
 
-    <div class="selbstcheck">
-      <b>Kleiner Selbstcheck</b>
-      <p>Zwölf Fragen dazu, wie freundlich du eigentlich mit dir selbst umgehst.
-        Zwei Minuten, nichts wird gespeichert, das Ergebnis siehst nur du.</p>
-      <a href="test.html">Zum Selbstcheck →</a>
-    </div>
+<!-- ============ SELBSTCHECK ============ -->
+<section id="selbstcheck" class="dunkel">
+  <div class="wrap sc">
+    <p class="sc-eyebrow">Kleiner Selbstcheck</p>
+    <h2>Wie gehst du eigentlich mit dir um?</h2>
+    <p class="sc-text">Bevor wir über Ursachen reden: Schau einmal nach, wie du dir selbst
+      begegnest, wenn etwas schiefgeht. Zwölf Sätze, ehrlich angekreuzt.</p>
+    <p class="sc-fakten"><span>12 Fragen</span><span>2 Minuten</span><span>nichts wird gespeichert</span></p>
+    <a class="btn btn-hell" href="test.html">Selbstcheck starten</a>
   </div>
 </section>
 
@@ -616,10 +640,16 @@
   });
   show(0); start();
 
-  /* Kopfzeile bekommt beim Scrollen eine Linie */
+  /* Kopfzeile bekommt beim Scrollen eine Linie, Fahne erscheint darunter */
   var head = document.getElementById('top');
+  var fahne = document.getElementById('fahne');
+  var termin = document.getElementById('termin');
   window.addEventListener('scroll', function(){
     head.classList.toggle('stuck', window.scrollY > 12);
+    if (fahne) {
+      var terminOben = termin ? termin.getBoundingClientRect().top : 1e9;
+      fahne.classList.toggle('an', window.scrollY > 500 && terminOben > window.innerHeight * 0.6);
+    }
   }, {passive:true});
 
   /* Glaubenssatz-Spiegel */
