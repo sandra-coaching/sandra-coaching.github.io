@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin – Termine</title>
+<style>
+  :root{
+    --cream:#FBF7F1; --paper:#FFFDFA; --sand:#EFE6DA; --sand-2:#E4D8CC;
+    --rose:#E6CFC4; --clay:#A97B63; --clay-dark:#8B6049; --olive:#A9AE97;
+    --ink:#42392F; --muted:#7C6F63; --line:#E7DCCF; --warn:#9B3B2E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-size:15.5px;line-height:1.55;
+       font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+  .wrap{max-width:1400px;margin:0 auto;padding:22px 16px 60px}
+  h1{font-size:22px}
+  h2{font-size:18px;margin-bottom:12px}
+  .btn{background:var(--clay);color:#fff;border:0;border-radius:999px;padding:10px 20px;
+       font:inherit;font-weight:600;cursor:pointer}
+  .btn:hover{background:var(--clay-dark)}
+  .btn-2{background:var(--paper);color:var(--clay-dark);border:1px solid var(--line)}
+  .btn-2:hover{background:var(--sand)}
+  .btn-klein{padding:6px 12px;font-size:13.5px}
+  input,select,textarea{border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+       font:inherit;background:var(--paper);color:var(--ink)}
+  .karte{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:18px}
+  .kopf{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+  .tabs button{background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font:inherit;cursor:pointer;color:var(--muted)}
+  .tabs button.an{background:var(--clay);border-color:var(--clay);color:#fff}
+  .woche{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+  .tag{background:var(--cream);border-radius:12px;padding:8px;min-height:140px}
+  .tag h3{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}
+  .tag.heute h3{color:var(--clay-dark)}
+  .ev{display:block;width:100%;text-align:left;border:0;border-left:4px solid var(--clay);background:var(--sand);
+      border-radius:8px;padding:6px 8px;margin-bottom:6px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+  .ev.bestaetigt{border-left-color:var(--olive)}
+  .ev.abgesagt{opacity:.5;text-decoration:line-through}
+  .ev.stattgefunden{border-left-color:var(--muted);opacity:.75}
+  .ev.sperre{border-left-color:var(--muted);background:repeating-linear-gradient(45deg,var(--sand-2),var(--sand-2) 6px,var(--sand) 6px,var(--sand) 12px)}
+  @media(max-width:860px){.woche{grid-template-columns:1fr}.tag{min-height:0}}
+  .detail dl{display:grid;grid-template-columns:130px 1fr;gap:6px 12px;margin:10px 0 16px}
+  .detail dt{color:var(--muted)}
+  .reihe{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600}
+  .hinweis{font-size:13.5px;color:var(--muted);margin-top:8px}
+  .fehler{color:var(--warn);margin-top:8px}
+  .ok{color:#5F6B4E;margin-top:8px}
+  .formular{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}
+  .formular label{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted)}
+  .formular label.haken{flex-direction:row;align-items:center;gap:8px;color:var(--ink)}
+  .formular .breit{grid-column:1/-1}
+  .formular input,.formular select,.formular textarea{color:var(--ink);font-size:15px}
+  .an-vorschau{background:var(--cream);border-radius:10px;padding:10px 12px;font-size:14px}
+  @media(max-width:700px){.formular{grid-template-columns:1fr}}
+  .aufg{display:flex;gap:12px;align-items:flex-start;padding:10px 4px;border-bottom:1px solid var(--line)}
+  .aufg input[type=checkbox]{width:18px;height:18px;margin-top:3px;accent-color:var(--clay)}
+  .aufg.fertig .a-t{text-decoration:line-through;color:var(--muted)}
+  .wer{font-size:11.5px;font-weight:600;border-radius:999px;padding:1px 8px;margin-left:6px;background:var(--sand)}
+  .wer-Sandra{background:var(--rose)} .wer-Ralph{background:#DDE0D2}
+  /* Kalender */
+  .kal-karte{padding:16px}
+  .kal-leiste{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .kal-titel{font-size:19px}
+  .knopfgruppe{display:inline-flex}
+  .kb{background:var(--paper);border:1px solid var(--line);padding:7px 13px;font:inherit;font-size:14.5px;color:var(--ink);cursor:pointer;border-radius:8px}
+  .knopfgruppe .kb{border-radius:0;margin-left:-1px}
+  .knopfgruppe .kb:first-child{border-radius:8px 0 0 8px;margin-left:0}
+  .knopfgruppe .kb:last-child{border-radius:0 8px 8px 0}
+  .kb:hover{background:var(--sand)}
+  .kb.an{background:var(--sand-2);font-weight:600}
+  #k-filter{padding:7px 10px;font-size:14.5px}
+  .kal{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+  .kal-raster{display:grid;grid-template-columns:62px repeat(var(--n),minmax(110px,1fr));min-width:calc(62px + var(--n) * 110px)}
+  .kal-ecke,.kal-tagkopf{position:sticky;top:0;z-index:3;background:var(--paper);border-bottom:1px solid var(--line);height:38px}
+  .kal-tagkopf{display:flex;align-items:center;justify-content:center;font-size:14.5px;border-left:1px solid var(--line)}
+  .kal-tagkopf.heute{background:#F6EEDC;font-weight:700;color:var(--clay-dark)}
+  .kal-achse{position:relative}
+  .kal-std{position:absolute;right:8px;font-size:12.5px;color:var(--muted);transform:translateY(-50%)}
+  .kal-std{font-size:11.5px}
+  .kal-std.halb{font-size:10.5px;opacity:.7}
+  .kal-std:first-child{transform:none}
+  .kal-spalte{position:relative;border-left:1px solid var(--line);cursor:copy;
+    background-color:#EFEBE5;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px);
+    background-size:100% var(--px-std,60px),100% calc(var(--px-std,60px)/2)}
+  .kal-spalte.heute{background-color:#F1EADB}
+  .kal-arbeit{position:absolute;left:0;right:0;background:rgba(255,253,250,.92);pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px);
+    background-size:100% var(--px-std,60px),100% calc(var(--px-std,60px)/2)}
+  .kal-ev{position:absolute;left:2px;right:2px;z-index:2;border:0;border-left:4px solid var(--clay);border-radius:6px;
+    padding:1px 6px;text-align:left;font:inherit;font-size:12px;line-height:1.25;color:var(--ink);cursor:pointer;overflow:hidden;
+    display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(66,57,47,.15)}
+  .kal-ev:hover{filter:brightness(.97);z-index:4}
+  .kal-ev b{font-size:12px}
+  .kal-ev .klein{font-size:11.5px;color:#5E5346}
+  .kal-ev.st-bestaetigt{border-left-color:#7D8A63}
+  .kal-ev.st-stattgefunden{opacity:.7;border-left-color:var(--muted)}
+  .kal-ev.st-abgesagt{opacity:.45;text-decoration:line-through;border-left-color:var(--muted)}
+  .kal-sperre{display:block;overflow:visible}
+  .kal-sperre-text{position:sticky;top:44px;display:flex;flex-direction:column}
+  .kal-sperre{left:2px;right:2px;width:auto;background:repeating-linear-gradient(45deg,#E4D8CC,#E4D8CC 6px,#EDE4D9 6px,#EDE4D9 12px);border-left-color:var(--muted)}
+  .kal-jetzt{position:absolute;left:0;right:0;height:2px;background:#C0504D;z-index:5;pointer-events:none}
+  .kal-jetzt::before{content:'';position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:#C0504D}
+  .zeile{cursor:pointer}.zeile:hover{background:var(--cream)}
+  /* Fenster */
+  .modal-hg{position:fixed;inset:0;background:rgba(66,57,47,.35);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px;overflow:auto}
+  .modal{background:var(--paper);border-radius:14px;width:100%;max-width:640px;box-shadow:0 20px 50px rgba(66,57,47,.25)}
+  .modal-kopf{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .modal-kopf h2{margin:0;font-size:19px}
+  .m-zu{background:none;border:0;font-size:26px;line-height:1;color:var(--muted);cursor:pointer}
+  .modal-inhalt{padding:18px 22px 20px}
+  .modal-fuss{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px;margin-top:4px}
+  .m-art{margin-bottom:14px}
+  .m-lbl{font-size:14px;color:var(--muted);display:block;margin-bottom:4px}
+  .m-suche{position:relative;flex:1}
+  .m-suche input{width:100%}
+  .m-treffer{position:absolute;left:0;right:0;top:100%;background:var(--paper);border:1px solid var(--line);border-radius:10px;z-index:5;box-shadow:0 6px 18px rgba(66,57,47,.15);max-height:220px;overflow:auto}
+  .m-treffer button{display:block;width:100%;text-align:left;background:none;border:0;padding:8px 10px;font:inherit;cursor:pointer;color:var(--ink)}
+  .m-treffer button:hover{background:var(--sand)}
+  .m-gewaehlt{margin-top:8px;background:var(--sand);border-radius:10px;padding:8px 12px;display:flex;gap:8px;align-items:center}
+  .m-weg{margin-left:auto;background:none;border:0;font-size:18px;cursor:pointer;color:var(--muted)}
+  .m-dl{display:grid;grid-template-columns:130px 1fr;gap:8px 12px;margin-bottom:14px}
+  .m-dl dt{color:var(--muted)}
+  .farbwahl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .fw{width:26px;height:26px;border-radius:50%;border:2px solid rgba(66,57,47,.12);cursor:pointer;padding:0;position:relative}
+  .fw.an{outline:2px solid var(--ink);outline-offset:2px}
+  .fw-std{width:auto;border-radius:999px;padding:0 10px;background:var(--paper);font:inherit;font-size:12.5px;color:var(--ink)}
+  .fw-eigen{background:conic-gradient(#F4C7C3,#F2DFA7,#C9D8B6,#CFE0DE,#D6E4F0,#D9D2E3,#F4C7C3);overflow:hidden}
+  .fw-eigen input{opacity:0;position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+  .kat-farbe{width:44px;height:30px;padding:2px;border-radius:8px;cursor:pointer}
+  .kal-legende{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);margin:-4px 0 10px}
+  .kal-legende i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .kal-ev .klein{opacity:.85;color:inherit}
+  .m-info{background:var(--cream);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:14px}
+  .m-status{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--sand-2);margin-right:6px}
+  .m-status.st-bestaetigt{background:#DDE0D2}.m-status.st-abgesagt{background:#F4C7C3}.m-status.st-stattgefunden{background:#E2DDD8}
+  .m-satz{margin-top:6px;font-style:italic;color:var(--muted)}
+  .kal-ev{touch-action:none;user-select:none;-webkit-user-select:none}
+  .kal-ev.zieht{opacity:.85;z-index:10;box-shadow:0 8px 20px rgba(66,57,47,.3);cursor:grabbing;pointer-events:none}
+  .kal-griff{position:absolute;left:0;right:0;bottom:0;height:7px;cursor:ns-resize}
+  .kal-ev:hover .kal-griff{background:linear-gradient(transparent 2px,rgba(66,57,47,.25) 2px,rgba(66,57,47,.25) 4px,transparent 4px);background-size:24px 100%;background-repeat:no-repeat;background-position:center}
+  body.am-ziehen{cursor:grabbing}
+  .kal-meldung{background:#DDE0D2;border-radius:10px;padding:8px 12px;font-size:14px;margin:-2px 0 10px}
+  .kal-meldung.fehler{background:#F4C7C3}
+  .modal.modal-breit{max-width:900px}
+  /*RDOC*/
+  .rdoc-rahmen{background:#EFEBE5;border-radius:10px;padding:14px;max-height:62vh;overflow:auto}
+  .rdoc-rahmen .rdoc{box-shadow:0 2px 10px rgba(66,57,47,.12)}
+  .re-summen{display:flex;flex-wrap:wrap;gap:22px;font-size:14px;color:var(--muted);margin:2px 0 10px}
+  .re-summen b{color:var(--ink)}
+  .m-status.st-re-offen{background:#F2DFA7}.m-status.st-re-bezahlt{background:#DDE0D2}.m-status.st-re-storniert{background:#E2DDD8;text-decoration:line-through}
+  .nr-pos{width:100%}.nr-pos td{padding:4px 4px}.nr-pos input{padding:7px 9px}
+  .nr-termin{display:flex;margin:4px 0}
+  .nr-summe{font-size:16px}
+  .vl-raster{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;margin-top:12px;align-items:start}
+  .vl-form{grid-template-columns:1fr 1fr}
+  .vl-form input[type=color]{width:64px;height:38px;padding:3px;cursor:pointer}
+  .vl-vorschau{position:sticky;top:12px}
+  .vl-vorschau .rdoc-rahmen{max-height:80vh}
+  .vl-vorschau .rdoc{zoom:.72}
+  @media(max-width:1100px){.vl-raster{grid-template-columns:1fr}.vl-vorschau{position:static}}
+  [hidden]{display:none!important}
+  .login{max-width:380px;margin:12vh auto 0}
+  .login input{width:100%;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Anmeldung -->
+  <div id="v-login" class="login karte">
+    <h1>Anmelden</h1>
+    <p class="hinweis">Nur für Sandra. Termine und Kundendaten.</p>
+    <form id="f-login">
+      <input id="l-email" type="email" autocomplete="username" placeholder="E-Mail" required>
+      <input id="l-pw" type="password" autocomplete="current-password" placeholder="Passwort" required>
+      <button class="btn" style="width:100%;margin-top:14px">Anmelden</button>
+      <p class="fehler" id="l-fehler" role="alert"></p>
+    </form>
+  </div>
+
+  <!-- Bereich nach Anmeldung -->
+  <div id="v-app" hidden>
+    <div class="kopf">
+      <h1>Termine</h1>
+      <button class="btn btn-2 btn-klein" id="b-logout">Abmelden</button>
+    </div>
+    <div class="tabs" role="tablist">
+      <button data-tab="kalender" class="an">Kalender</button>
+      <button data-tab="zeiten">Arbeitszeiten</button>
+      <button data-tab="angebote">Angebote &amp; Preise</button>
+      <button data-tab="kunden">Kunden</button>
+      <button data-tab="rechnungen">Rechnungen</button>
+      <button data-tab="pakete">Gebuchte Pakete</button>
+      <button data-tab="einst">Einstellungen</button>
+      <button data-tab="aufgaben">Aufgaben</button>
+    </div>
+
+    <!-- Kalender -->
+    <section id="t-kalender">
+      <div class="karte kal-karte">
+        <div class="kal-leiste">
+          <div class="reihe">
+            <div class="knopfgruppe">
+              <button class="kb" id="k-prev" aria-label="Zurück">‹</button><button class="kb" id="k-next" aria-label="Weiter">›</button>
+            </div>
+            <button class="kb" id="k-heute">Heute</button>
+          </div>
+          <b class="kal-titel" id="k-titel"></b>
+          <div class="reihe">
+            <select id="k-filter" aria-label="Dienstleistungen filtern"><option value="">Alle Dienstleistungen</option></select>
+            <div class="knopfgruppe" role="group" aria-label="Ansicht">
+              <button class="kb an" data-ansicht="woche">Woche</button><button class="kb" data-ansicht="tag">Tag</button><button class="kb" data-ansicht="liste">Liste</button>
+            </div>
+            <button class="btn btn-klein" id="k-neu">+ Neuer Termin</button>
+          </div>
+        </div>
+        <div class="kal-legende" id="k-legende"></div>
+        <div class="kal-meldung" id="k-meldung" role="status" hidden></div>
+        <div id="kal" class="kal"></div>
+        <p class="hinweis">Klick in eine freie Zeit legt dort einen Termin an. Weiß = Arbeitszeit, grau = außerhalb.</p>
+      </div>
+    </section>
+
+    <!-- Arbeitszeiten -->
+    <section id="t-zeiten" hidden>
+      <div class="karte">
+        <h2>Wöchentliche Zeiten, in denen gebucht werden kann</h2>
+        <table><thead><tr><th>Tag</th><th>von</th><th>bis</th><th></th></tr></thead><tbody id="z-liste"></tbody></table>
+        <div class="reihe" style="margin-top:12px">
+          <button class="btn btn-2 btn-klein" id="z-neu">+ Zeitfenster</button>
+          <button class="btn btn-klein" id="z-speichern">Speichern</button>
+        </div>
+        <p class="hinweis">Schon gebuchte Termine bleiben bestehen, auch wenn du hier Zeiten entfernst.</p>
+        <p id="z-meldung"></p>
+      </div>
+    </section>
+
+    <!-- Angebote & Preise -->
+    <section id="t-angebote" hidden>
+      <div class="karte">
+        <div class="kopf">
+          <h2 style="margin:0">Angebote, Pakete und Preise</h2>
+          <button class="btn btn-klein" id="an-neu">+ Neues Angebot</button>
+        </div>
+        <p class="hinweis">Leistungen in sichtbaren Kategorien erscheinen auf der Seite im Buchungsfeld – mit Dauer und Preis. „Nur intern" bucht nur Sandra im Kalender.</p>
+        <div id="an-liste" style="margin-top:8px"></div>
+      </div>
+
+      <div class="modal-hg" id="an-form-karte" hidden>
+       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="an-form-titel">
+        <div class="modal-kopf"><h2 id="an-form-titel">Angebot</h2><button type="button" class="m-zu" id="an-zu" aria-label="Schließen">×</button></div>
+        <div class="modal-inhalt">
+        <form id="an-form" class="formular">
+          <label>Kategorie<select id="an-kat"></select></label>
+          <label>Titel<input id="an-titel" maxlength="120" required placeholder="z. B. Einzelsitzung"></label>
+          <label class="breit">Beschreibung (erscheint auf der Seite)<textarea id="an-beschr" rows="2" maxlength="400"></textarea></label>
+          <label>Dauer pro Sitzung (Minuten)<input id="an-dauer" type="number" min="15" max="240" step="5" required></label>
+          <label>Preis in € (leer = kein Preis anzeigen, 0 = kostenlos)<input id="an-preis" inputmode="decimal" placeholder="z. B. 90 oder 89,50"></label>
+          <label class="haken"><input type="checkbox" id="an-paket"> Das ist ein Paket (mehrere Sitzungen)</label>
+          <label id="an-anz-wrap">Anzahl Sitzungen im Paket<input id="an-anz" type="number" min="2" max="50"></label>
+          <label class="haken"><input type="checkbox" id="an-aktiv" checked> Eingeschaltet (Sichtbarkeit für Kundinnen steuert die Kategorie)</label>
+          <label>Reihenfolge in der Kategorie<input id="an-sort" type="number" min="0" max="999"></label>
+          <p class="breit an-vorschau" id="an-vorschau"></p>
+          <div class="breit modal-fuss">
+            <button type="button" class="btn btn-2" id="an-loeschen" style="margin-right:auto">Löschen</button>
+            <button class="btn">Speichern</button>
+            <button type="button" class="btn btn-2" id="an-abbr">Abbrechen</button>
+          </div>
+          <p class="breit fehler" id="an-fehler"></p>
+        </form>
+        </div>
+       </div>
+      </div>
+
+      <div class="karte">
+        <h2>Kategorien</h2>
+        <table><thead><tr><th>Name</th><th>Beschreibung</th><th style="width:90px">Reihenfolge</th><th style="width:70px">Farbe</th><th style="width:110px">Für Kundinnen sichtbar</th><th>Angebote</th><th></th></tr></thead>
+          <tbody id="kat-liste"></tbody></table>
+        <div class="reihe" style="margin-top:12px"><button class="btn btn-2 btn-klein" id="kat-neu">+ Kategorie</button></div>
+        <p class="hinweis">Ohne Haken bei „Für Kundinnen sichtbar" sind alle Leistungen der Kategorie nur intern: Sie erscheinen nicht auf der Seite, du kannst sie aber im Kalender mit „+ Termin eintragen" buchen.</p>
+        <p id="kat-meldung"></p>
+      </div>
+    </section>
+
+    <!-- Kunden -->
+    <section id="t-kunden" hidden>
+      <div class="karte">
+        <div class="kopf">
+          <h2 style="margin:0">Kunden <span class="hinweis" id="ku-anzahl"></span></h2>
+          <div class="reihe">
+            <input id="ku-suche" type="search" placeholder="Name, Telefon, E-Mail oder Ort …" style="width:300px">
+            <button class="btn btn-klein" id="ku-neu">+ Neuer Kunde</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;margin-top:12px">
+          <table><thead><tr><th>Name</th><th>Telefon</th><th>E-Mail</th><th>Ort</th><th>Termine</th><th>Letzter Termin</th></tr></thead><tbody id="ku-liste"></tbody></table>
+        </div>
+        <div class="reihe" style="margin-top:12px;justify-content:space-between">
+          <button class="btn btn-2 btn-klein" id="ku-zurueck">‹ Zurück</button>
+          <span class="hinweis" id="ku-seite"></span>
+          <button class="btn btn-2 btn-klein" id="ku-weiter">Weiter ›</button>
+        </div>
+      </div>
+      <div class="modal-hg" id="ku-modal" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="ku-titel">
+          <div class="modal-kopf"><h2 id="ku-titel">Kunde</h2><button type="button" class="m-zu" id="ku-zu" aria-label="Schließen">×</button></div>
+          <div class="modal-inhalt">
+            <form id="ku-form" class="formular">
+              <label class="breit">Name<input id="ku-name" required maxlength="120"></label>
+              <label>Telefon<input id="ku-tel"></label>
+              <label>Telefon 2<input id="ku-tel2"></label>
+              <label>E-Mail<input id="ku-email" type="email"></label>
+              <label>Geburtstag<input id="ku-geb" type="date"></label>
+              <label>Straße<input id="ku-str"></label>
+              <label>Hausnummer<input id="ku-hnr"></label>
+              <label>PLZ<input id="ku-plz"></label>
+              <label>Ort<input id="ku-ort"></label>
+              <label class="breit">Notiz (nur für dich)<textarea id="ku-notiz" rows="3"></textarea></label>
+              <p class="breit hinweis" id="ku-herkunft"></p>
+              <div class="breit" id="ku-termine"></div>
+              <div class="breit modal-fuss">
+                <button type="button" class="btn btn-2" id="ku-loeschen" style="margin-right:auto">Löschen</button>
+                <button class="btn">Speichern</button>
+                <button type="button" class="btn btn-2" id="ku-abbr">Abbrechen</button>
+              </div>
+              <p class="breit fehler" id="ku-fehler"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rechnungen -->
+    <section id="t-rechnungen" hidden>
+      <div class="karte">
+        <div class="kal-leiste">
+          <div class="reihe">
+            <div class="knopfgruppe"><button class="kb" id="re-prev" aria-label="Zurück">‹</button><button class="kb" id="re-next" aria-label="Weiter">›</button></div>
+            <b class="kal-titel" id="re-titel"></b>
+            <select id="re-zeitraum" aria-label="Zeitraum"><option value="monat">Monat</option><option value="jahr">Jahr</option></select>
+          </div>
+          <div class="reihe">
+            <input id="re-suche" type="search" placeholder="Nummer oder Kunde …" style="width:220px">
+            <button class="btn btn-2 btn-klein" id="re-vorlage">Vorlage bearbeiten</button>
+            <button class="btn btn-2 btn-klein" id="re-csv">CSV für Steuerberater</button>
+            <button class="btn btn-klein" id="re-neu">+ Neue Rechnung</button>
+          </div>
+        </div>
+        <div class="re-summen" id="re-summen"></div>
+        <div style="overflow-x:auto"><table><thead><tr><th>Nummer</th><th>Datum</th><th>Kunde</th><th style="text-align:right">Betrag</th><th>Status</th><th>Zahlung</th></tr></thead><tbody id="re-liste"></tbody></table></div>
+        <p class="hinweis">Rechnungen sind nach dem Erstellen unveränderbar und können nicht gelöscht werden (8 Jahre Aufbewahrung). Korrekturen laufen über „Stornieren" – dabei entsteht eine Stornorechnung mit eigener Nummer.</p>
+      </div>
+    </section>
+
+    <!-- Pakete -->
+    <section id="t-pakete" hidden>
+      <div class="karte">
+        <h2>Pakete</h2>
+        <table><thead><tr><th>Kundin</th><th>Paket</th><th>Code</th><th>Gebucht</th><th>Status</th></tr></thead><tbody id="p-liste"></tbody></table>
+      </div>
+    </section>
+
+    <!-- Aufgaben -->
+    <section id="t-aufgaben" hidden>
+      <div class="karte">
+        <div class="kopf">
+          <h2 style="margin:0">Aufgaben</h2>
+          <div class="reihe">
+            <select id="a-filter">
+              <option value="">Alle</option><option>Sandra</option><option>Ralph</option><option>Beide</option>
+            </select>
+            <label class="hinweis" style="margin:0"><input type="checkbox" id="a-erledigte"> Erledigte zeigen</label>
+          </div>
+        </div>
+        <form id="f-aufgabe" class="reihe" style="margin:14px 0 6px">
+          <input id="a-titel" placeholder="Neue Aufgabe …" style="flex:1;min-width:220px" required maxlength="200">
+          <select id="a-wer"><option>Sandra</option><option>Ralph</option><option selected>Beide</option></select>
+          <input id="a-bereich" placeholder="Bereich" style="width:130px" list="a-bereiche">
+          <datalist id="a-bereiche"></datalist>
+          <button class="btn btn-klein">Hinzufügen</button>
+        </form>
+        <div id="a-liste"></div>
+        <p class="hinweis" id="a-stand"></p>
+      </div>
+    </section>
+
+    <!-- Einstellungen -->
+    <section id="t-einst" hidden>
+      <div class="karte">
+        <h2>Einstellungen</h2>
+        <form id="f-einst" style="display:grid;gap:12px;max-width:520px">
+          <label>Zoom-Link für Online-Termine<br><input id="e-zoom" style="width:100%" placeholder="https://…zoom.us/j/…"></label>
+          <p class="hinweis" style="margin-top:-6px">Tipp: In Zoom den Warteraum einschalten – der Link wird bei jeder Online-Buchung angezeigt.</p>
+          <label>Frühestens buchbar (Stunden vorher) <input id="e-vorlauf" type="number" min="0" max="336"></label>
+          <label>Buchbar im Voraus (Wochen) <input id="e-wochen" type="number" min="1" max="52"></label>
+          <label>Pause zwischen Terminen (Minuten) <input id="e-puffer" type="number" min="0" max="120"></label>
+          <button class="btn" style="justify-self:start">Speichern</button>
+          <p id="e-meldung"></p>
+        </form>
+      </div>
+      <div class="karte">
+        <h2>Rechnungsdaten</h2>
+        <p class="hinweis" style="margin-top:-6px">Diese Angaben erscheinen auf jeder Rechnung (Pflichtangaben nach § 14 UStG). Vor der ersten Rechnung vollständig ausfüllen – am besten mit dem Steuerberater abstimmen.</p>
+        <form id="f-redaten" class="formular" style="margin-top:12px">
+          <label>Name (Rechnungssteller)<input id="f-re_name" placeholder="Vor- und Nachname"></label>
+          <label>Zusatz (freiwillig)<input id="f-re_zusatz" placeholder="z. B. Coaching &amp; Wimpernstudio"></label>
+          <label>Straße und Hausnummer<input id="f-re_strasse"></label>
+          <label>PLZ<input id="f-re_plz"></label>
+          <label>Ort<input id="f-re_ort"></label>
+          <label>Telefon (freiwillig)<input id="f-re_telefon"></label>
+          <label>E-Mail (freiwillig)<input id="f-re_email"></label>
+          <label>Steuernummer<input id="f-re_steuernummer"></label>
+          <label>USt-IdNr. (falls vorhanden)<input id="f-re_ust_id"></label>
+          <label>Kleinunternehmerin (§ 19 UStG)?<select id="f-re_kleinunternehmer"><option value="">– bitte wählen –</option><option value="true">Ja – keine Umsatzsteuer</option><option value="false">Nein – mit Umsatzsteuer</option></select></label>
+          <label>Umsatzsteuersatz in % (nur wenn „Nein")<input id="f-re_ust_satz" type="number" step="0.01" min="0" max="30"></label>
+          <label>Zahlungsziel (Tage)<input id="f-re_zahlungsziel_tage" type="number" min="0" max="90"></label>
+          <label>Bank (freiwillig)<input id="f-re_bank"></label>
+          <label>IBAN<input id="f-re_iban"></label>
+          <label>BIC (freiwillig)<input id="f-re_bic"></label>
+          <label>Kürzel vor der Rechnungsnummer<input id="f-re_praefix" maxlength="10"></label>
+          <label class="breit">Fußtext (freiwillig)<input id="f-re_fusstext" placeholder="z. B. Vielen Dank für dein Vertrauen."></label>
+          <p class="breit hinweis">Preise im System sind Endpreise (brutto). Bei „Nein" rechnet die Rechnung die enthaltene Umsatzsteuer heraus.</p>
+          <div class="breit"><button class="btn">Rechnungsdaten speichern</button></div>
+          <p class="breit" id="re-daten-meldung"></p>
+        </form>
+      </div>
+      <div class="karte">
+        <h2>Rechnungsvorlage</h2>
+        <p class="hinweis" style="margin-top:-6px">So sehen deine Rechnungen aus. Pflichtangaben (Nummer, Datum, Beträge, Steuer, Steuernummer) setzt das System immer selbst. Die Vorlage wird beim Erstellen in jede Rechnung übernommen – spätere Änderungen betreffen nur neue Rechnungen.</p>
+        <div class="vl-raster">
+          <form id="f-vorlage" class="formular vl-form">
+            <div class="breit"><span class="m-lbl">Logo</span>
+              <div class="reihe"><input type="file" id="vl-logo-datei" accept="image/png,image/jpeg,image/webp"><button type="button" class="btn btn-2 btn-klein" id="vl-logo-weg">Logo entfernen</button></div></div>
+            <label>Logo-Position<select id="vl-logo_pos"><option value="rechts">Rechts über der Anschrift</option><option value="links">Links oben</option></select></label>
+            <label>Logo-Breite<input id="vl-logo_breite" type="range" min="60" max="260" step="10"></label>
+            <label>Akzentfarbe<input id="vl-farbe" type="color"></label>
+            <label>Schrift<select id="vl-schrift"><option value="modern">Modern</option><option value="klassisch">Klassisch (Serifen)</option><option value="schlicht">Schlicht</option></select></label>
+            <label>Überschrift<input id="vl-titel" maxlength="40"></label>
+            <label>Überschrift Storno<input id="vl-titel_storno" maxlength="40"></label>
+            <label class="breit">Einleitung (freiwillig)<textarea id="vl-einleitung" rows="2" placeholder="z. B. Hallo {name}, vielen Dank für deinen Besuch. Hiermit berechne ich:"></textarea></label>
+            <label class="breit">Text bei offener Rechnung<textarea id="vl-text_offen" rows="2"></textarea></label>
+            <label class="breit">Text bei bezahlter Rechnung<textarea id="vl-text_bezahlt" rows="2"></textarea></label>
+            <label class="breit">Schlusssatz (freiwillig)<textarea id="vl-schluss" rows="2" placeholder="z. B. Ich freue mich auf unser nächstes Treffen."></textarea></label>
+            <label class="haken"><input type="checkbox" id="vl-spalte_datum"> Spalte „Datum" zeigen</label>
+            <label class="haken"><input type="checkbox" id="vl-spalte_menge"> Spalten „Menge" und „Einzelpreis" zeigen</label>
+            <p class="breit hinweis">Platzhalter: {name} · {nummer} · {datum} · {betrag} · {zahlungsziel} · {bezahlt_am} · {zahlungsart}</p>
+            <div class="breit reihe"><button class="btn">Vorlage speichern</button><button type="button" class="btn btn-2" id="vl-standard">Standard wiederherstellen</button>
+              <select id="vl-muster" aria-label="Vorschau als"><option value="offen">Vorschau: offen, mit USt</option><option value="bezahlt">Vorschau: bezahlt, mit USt</option><option value="klein">Vorschau: Kleinunternehmerin</option></select></div>
+            <p class="breit" id="vl-meldung"></p>
+          </form>
+          <div class="vl-vorschau"><div class="rdoc-rahmen" id="vl-vorschau"></div></div>
+        </div>
+      </div>
+    </section>
+  <!-- Fenster für Termin anlegen / ansehen -->
+  <div class="modal-hg" id="modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-titel">
+      <div class="modal-kopf"><h2 id="m-titel"></h2><button class="m-zu" id="m-zu" aria-label="Schließen">×</button></div>
+      <div class="modal-inhalt" id="m-inhalt"></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var BASE = 'https://haurbpfkfaaehorirzee.supabase.co';
+  var KEY = 'sb_publishable_fssomLkMP88GLADjt8eaKQ_Gq6SN0-e';
+  var TZ = 'Europe/Berlin';
+  var TAGE = ['','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+  var sitzung = null;
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function merk(s){ sitzung = s; try{ s ? sessionStorage.setItem('coaching_sitzung', JSON.stringify(s)) : sessionStorage.removeItem('coaching_sitzung'); }catch(e){} }
+  try{ sitzung = JSON.parse(sessionStorage.getItem('coaching_sitzung')); }catch(e){}
+
+  function auth(pfad, body){
+    return fetch(BASE + '/auth/v1/' + pfad, {method:'POST', headers:{'apikey':KEY,'Content-Type':'application/json'}, body:JSON.stringify(body)})
+      .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error_description||j.msg||'Anmeldung fehlgeschlagen'); return j; }); });
+  }
+  function erneuern(){
+    return auth('token?grant_type=refresh_token', {refresh_token: sitzung.refresh_token}).then(function(j){ merk(j); });
+  }
+  function rpc(fn, body, zweiterVersuch){
+    return fetch(BASE + '/rest/v1/rpc/' + fn, {method:'POST',
+      headers:{'apikey':KEY,'Authorization':'Bearer ' + sitzung.access_token,'Content-Type':'application/json'},
+      body: JSON.stringify(body||{})}).then(function(r){
+        if (r.status === 401 && !zweiterVersuch) return erneuern().then(function(){ return rpc(fn, body, true); });
+        return r.text().then(function(t){ var j = t ? JSON.parse(t) : null; if(!r.ok) throw new Error((j&&j.message)||'Fehler'); return j; });
+      });
+  }
+
+  /* Anmeldung */
+  $('f-login').addEventListener('submit', function(e){
+    e.preventDefault(); $('l-fehler').textContent = '';
+    auth('token?grant_type=password', {email:$('l-email').value, password:$('l-pw').value})
+      .then(function(j){ merk(j); return start(); })
+      .catch(function(err){ $('l-fehler').textContent = err.message; });
+  });
+  $('b-logout').addEventListener('click', function(){ merk(null); location.reload(); });
+
+  function start(){
+    return rpc('coaching_ist_admin').then(function(ok){
+      if (!ok) { merk(null); throw new Error('Dieses Konto hat keinen Zugriff.'); }
+      $('v-login').hidden = true; $('v-app').hidden = false; ladeWoche();
+    }).catch(function(err){ merk(null); $('v-login').hidden = false; $('v-app').hidden = true; $('l-fehler').textContent = err.message; });
+  }
+
+  /* Reiter */
+  document.querySelectorAll('.tabs button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.tabs button').forEach(function(x){ x.classList.toggle('an', x===b); });
+      ['kalender','zeiten','angebote','kunden','rechnungen','pakete','einst','aufgaben'].forEach(function(t){ $('t-'+t).hidden = t !== b.dataset.tab; });
+      ({kalender:ladeWoche, zeiten:ladeZeiten, angebote:ladeAngebote, kunden:ladeKunden, rechnungen:ladeRechnungen, pakete:ladePakete, einst:function(){ ladeEinst(); ladeRechnungsdaten(); ladeVorlage(); }, aufgaben:ladeAufgaben})[b.dataset.tab]();
+    });
+  });
+
+  /* Kalender (Zeitraster wie Bookly: Woche / Tag / Liste) */
+  var PX = 0.8;               // Pixel pro Minute (30 Min. = 24 px)
+  var STEP = 15;              // Raster in Minuten
+  var ansicht = 'woche', startTag = montag(new Date()), termine = [], sperren = [], arbeitszeiten = [], alleAngs = [];
+  var vonStd = 7, bisStd = 21;
+  var FARBEN = ['#E6CFC4','#DDE0D2','#EADFC8','#D9D2E3','#CFE0DE','#EBD3C2'];
+  function montag(d){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - (x.getDay()+6)%7); return x; }
+  function tagAnfang(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function plusTage(d,n){ var x = new Date(d); x.setDate(x.getDate()+n); return x; }
+  function tagKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function uhr(d){ return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+  function langDatum(d){ return new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(d); }
+  function minuten(d){ return d.getHours()*60 + d.getMinutes(); }
+  function hhmm(m){ return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+  function farbe(kat){ if (!kat) return FARBEN[0]; var h = 0; for (var i=0;i<kat.length;i++) h = (h*31 + kat.charCodeAt(i))>>>0; return FARBEN[h % FARBEN.length]; }
+  /* Farben: Termin-Farbe vor Kategorie-Farbe vor automatischer Farbe */
+  var FARBWAHL = [['#E6CFC4','Rosé'],['#F4C7C3','Koralle'],['#EBD3C2','Pfirsich'],['#F2DFA7','Sand'],['#DDE0D2','Salbei'],
+                  ['#C9D8B6','Grün'],['#CFE0DE','Mint'],['#D6E4F0','Hellblau'],['#D9D2E3','Lavendel'],['#E2DDD8','Grau'],
+                  ['#A97B63','Ton'],['#6F8FAF','Blau']];
+  function terminFarbe(t){ return t.farbe || t.kategorie_farbe || farbe(t.kategorie); }
+  function textFarbe(hex){ var r = parseInt(hex.substr(1,2),16), g = parseInt(hex.substr(3,2),16), b = parseInt(hex.substr(5,2),16);
+    return (0.299*r + 0.587*g + 0.114*b) < 150 ? '#FFFFFF' : '#42392F'; }
+  function farbAuswahl(id, aktuell, mitStandard){
+    return '<div class="farbwahl" id="'+id+'" data-wert="'+(aktuell||'')+'">'+
+      (mitStandard ? '<button type="button" class="fw fw-std'+(!aktuell?' an':'')+'" data-farbe="" title="Farbe der Kategorie">Kategorie</button>' : '')+
+      FARBWAHL.map(function(f){ return '<button type="button" class="fw'+(aktuell===f[0]?' an':'')+'" data-farbe="'+f[0]+'" title="'+f[1]+'" aria-label="'+f[1]+'" style="background:'+f[0]+'"></button>'; }).join('')+
+      '<label class="fw fw-eigen" title="Eigene Farbe"><input type="color" value="'+(aktuell||'#E6CFC4')+'"></label></div>';
+  }
+  function farbAuswahlAktiv(box){
+    function setze(w){ box.dataset.wert = w; box.querySelectorAll('.fw').forEach(function(x){ x.classList.toggle('an', (x.dataset.farbe||'') === w && !x.classList.contains('fw-eigen')); }); }
+    box.addEventListener('click', function(e){ var b = e.target.closest('button.fw'); if (b) setze(b.dataset.farbe); });
+    box.querySelector('input[type=color]').addEventListener('input', function(){ setze(this.value.toUpperCase()); this.parentNode.classList.add('an'); });
+  }
+  function anzahlTage(){ return ansicht === 'tag' ? 1 : 7; }
+
+  function ladeWoche(){
+    var von = new Date(startTag), bis = plusTage(startTag, anzahlTage());
+    var f = new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'short'}), fj = new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'short',year:'numeric'});
+    $('k-titel').textContent = ansicht === 'tag' ? langDatum(von) : f.format(von) + ' – ' + fj.format(plusTage(bis,-1));
+    return Promise.all([
+      rpc('coaching_admin_termine', {p_von: von.toISOString(), p_bis: bis.toISOString()}),
+      rpc('coaching_admin_sperrzeiten', {p_von: von.toISOString(), p_bis: bis.toISOString()}),
+      rpc('coaching_admin_verfuegbarkeit'),
+      rpc('coaching_admin_angebote')
+    ]).then(function(r){
+      termine = r[0]; sperren = r[1]; arbeitszeiten = r[2]; alleAngs = r[3];
+      fuelleFilter(); zeichneLegende(); zeichne();
+    });
+  }
+  function fuelleFilter(){
+    var sel = $('k-filter'), wert = sel.value, kats = {};
+    alleAngs.forEach(function(a){ kats[a.kategorie || 'Ohne Kategorie'] = 1; });
+    sel.innerHTML = '<option value="">Alle Dienstleistungen</option>' + Object.keys(kats).map(function(k){
+      return '<option'+(k===wert?' selected':'')+'>'+esc(k)+'</option>'; }).join('');
+  }
+  function zeichneLegende(){
+    var k = {}; alleAngs.forEach(function(a){ var n = a.kategorie || 'Ohne Kategorie'; if (!(n in k)) k[n] = a.kategorie_farbe || farbe(a.kategorie); });
+    $('k-legende').innerHTML = Object.keys(k).map(function(n){ return '<span><i style="background:'+k[n]+'"></i>'+esc(n)+'</span>'; }).join('');
+  }
+  function sichtbar(t){ var f = $('k-filter').value; return !f || (t.kategorie || 'Ohne Kategorie') === f; }
+
+  function zeichne(){
+    if (ansicht === 'liste') return zeichneListe();
+    // Zeitfenster aus Arbeitszeiten und Terminen ableiten
+    var min = 8*60, max = 18*60;
+    arbeitszeiten.forEach(function(z){ min = Math.min(min, +z.beginn.slice(0,2)*60); max = Math.max(max, +z.ende.slice(0,2)*60 + (+z.ende.slice(3,5)?60:0)); });
+    termine.forEach(function(t){ var b = new Date(t.beginn), e = new Date(t.ende); min = Math.min(min, b.getHours()*60); max = Math.max(max, e.getHours()*60 + (e.getMinutes()?60:0)); });
+    vonStd = Math.max(0, Math.floor(min/60) - 1); bisStd = Math.min(24, Math.ceil(max/60) + 1);
+    var hoehe = (bisStd - vonStd) * 60 * PX, n = anzahlTage(), heute = tagKey(new Date());
+
+    var kopf = '<div class="kal-ecke"></div>', spalten = '';
+    for (var i=0;i<n;i++){
+      var d = plusTage(startTag, i), k = tagKey(d), wt = (d.getDay()+6)%7 + 1;
+      kopf += '<div class="kal-tagkopf'+(k===heute?' heute':'')+'">'+new Intl.DateTimeFormat('de-DE',{weekday:'short',day:'numeric'}).format(d)+'</div>';
+      var inhalt = '';
+      // Arbeitszeit als weiße Fläche
+      arbeitszeiten.filter(function(z){ return z.wochentag === wt; }).forEach(function(z){
+        var a = +z.beginn.slice(0,2)*60 + +z.beginn.slice(3,5), b = +z.ende.slice(0,2)*60 + +z.ende.slice(3,5);
+        inhalt += '<div class="kal-arbeit" style="top:'+((a-vonStd*60)*PX)+'px;height:'+((b-a)*PX)+'px"></div>';
+      });
+      // Blockierte Zeiten
+      var t0 = tagAnfang(d), t1 = plusTage(t0,1);
+      sperren.forEach(function(s){
+        var v = new Date(s.von), bb = new Date(s.bis); if (bb <= t0 || v >= t1) return;
+        var a = v < t0 ? vonStd*60 : Math.max(minuten(v), vonStd*60), b = bb >= t1 ? bisStd*60 : Math.min(minuten(bb), bisStd*60);
+        if (b <= a) return;
+        inhalt += '<div role="button" tabindex="0" class="kal-ev kal-sperre" data-sperre="'+s.id+'" style="top:'+((a-vonStd*60)*PX)+'px;height:'+((b-a)*PX)+'px">'+
+          '<div class="kal-sperre-text"><b>'+(v <= t0 && bb >= t1 ? 'Ganztägig' : v <= t0 ? 'bis '+uhr(bb) : bb >= t1 ? 'ab '+uhr(v) : uhr(v)+' – '+uhr(bb))+'</b><span>Blockiert'+(s.grund?': '+esc(s.grund):'')+'</span></div></div>';
+      });
+      // Termine mit Spalten bei Überschneidung
+      var tt = termine.filter(function(t){ return tagKey(new Date(t.beginn)) === k && sichtbar(t); })
+        .map(function(t){ return {t:t, a:minuten(new Date(t.beginn)), b:minuten(new Date(t.ende)) || 24*60}; })
+        .sort(function(x,y){ return x.a - y.a || y.b - x.b; });
+      var gruppe = [], gEnde = -1;
+      function schliesse(){ var bahnen = [];
+        gruppe.forEach(function(x){ var j = 0; while (bahnen[j] > x.a) j++; bahnen[j] = x.b; x.bahn = j; });
+        gruppe.forEach(function(x){ x.n = bahnen.length; }); gruppe = []; }
+      tt.forEach(function(x){ if (x.a >= gEnde) { schliesse(); gEnde = -1; } gruppe.push(x); gEnde = Math.max(gEnde, x.b); });
+      schliesse();
+      tt.forEach(function(x){
+        var t = x.t, h = Math.max((x.b-x.a)*PX, 18), w = 100/x.n;
+        inhalt += '<button class="kal-ev st-'+t.status+'" data-id="'+t.id+'" style="top:'+((x.a-vonStd*60)*PX)+'px;height:'+h+'px;'+
+          'left:calc('+(w*x.bahn)+'% + 2px);width:calc('+w+'% - 4px);background:'+terminFarbe(t)+';color:'+textFarbe(terminFarbe(t))+'" title="'+esc(t.name+' – '+t.angebot)+'">'+
+          '<b>'+uhr(new Date(t.beginn))+' – '+uhr(new Date(t.ende))+'</b><span>'+esc(t.name)+'</span><span class="klein">'+esc(t.angebot)+
+          (t.preis_cent!=null?' – '+euro(t.preis_cent):'')+'</span>'+(t.status!=='abgesagt'?'<span class="kal-griff" title="Ziehen, um die Dauer zu ändern"></span>':'')+'</button>';
+      });
+      if (k === heute) { var jetzt = minuten(new Date()); if (jetzt >= vonStd*60 && jetzt <= bisStd*60) inhalt += '<div class="kal-jetzt" style="top:'+((jetzt-vonStd*60)*PX)+'px"></div>'; }
+      spalten += '<div class="kal-spalte'+(k===heute?' heute':'')+'" data-tag="'+k+'" style="height:'+hoehe+'px">'+inhalt+'</div>';
+    }
+    var achse = '';
+    for (var s=vonStd; s<bisStd; s++){
+      achse += '<div class="kal-std" style="top:'+((s-vonStd)*60*PX)+'px">'+hhmm(s*60)+'</div>';
+      achse += '<div class="kal-std halb" style="top:'+((s-vonStd)*60*PX+30*PX)+'px">'+hhmm(s*60+30)+'</div>';
+    }
+    $('kal').innerHTML = '<div class="kal-raster" style="--n:'+n+'">'+kopf+'<div class="kal-achse" style="height:'+hoehe+'px">'+achse+'</div>'+spalten+'</div>';
+    $('kal').style.setProperty('--px-std', (60*PX)+'px');
+    // zur ersten Arbeitsstunde scrollen
+    var ersteArbeit = $('kal').querySelector('.kal-arbeit');
+    $('kal').scrollTop = ersteArbeit ? Math.max(0, ersteArbeit.offsetTop - 40) : 0;
+  }
+
+  function zeichneListe(){
+    var tt = termine.filter(sichtbar);
+    $('kal').innerHTML = tt.length ? '<table><thead><tr><th>Wann</th><th>Kundin</th><th>Dienstleistung</th><th>Status</th></tr></thead><tbody>'+
+      tt.map(function(t){ var b = new Date(t.beginn);
+        return '<tr class="zeile" data-id="'+t.id+'"><td>'+new Intl.DateTimeFormat('de-DE',{weekday:'short',day:'numeric',month:'numeric'}).format(b)+', '+uhr(b)+'–'+uhr(new Date(t.ende))+'</td>'+
+          '<td>'+esc(t.name)+'</td><td>'+esc(t.angebot)+'</td><td>'+STATUS[t.status]+'</td></tr>'; }).join('')+'</tbody></table>'
+      : '<p class="hinweis" style="padding:12px">Keine Termine in diesem Zeitraum.</p>';
+  }
+  var STATUS = {gebucht:'Gebucht', bestaetigt:'Bestätigt', abgesagt:'Abgesagt', stattgefunden:'Stattgefunden'};
+
+  $('k-prev').addEventListener('click', function(){ startTag = plusTage(startTag, -anzahlTage()); ladeWoche(); });
+  $('k-next').addEventListener('click', function(){ startTag = plusTage(startTag, anzahlTage()); ladeWoche(); });
+  $('k-heute').addEventListener('click', function(){ startTag = ansicht === 'tag' ? tagAnfang(new Date()) : montag(new Date()); ladeWoche(); });
+  $('k-filter').addEventListener('change', zeichne);
+  document.querySelectorAll('[data-ansicht]').forEach(function(b){
+    b.addEventListener('click', function(){
+      ansicht = b.dataset.ansicht;
+      document.querySelectorAll('[data-ansicht]').forEach(function(x){ x.classList.toggle('an', x===b); });
+      if (ansicht === 'tag') { var h = new Date(); startTag = (h >= startTag && h < plusTage(startTag,7)) ? tagAnfang(h) : startTag; }
+      else startTag = montag(startTag);
+      ladeWoche();
+    });
+  });
+  $('k-neu').addEventListener('click', function(){ var d = new Date(); d.setMinutes(Math.ceil(d.getMinutes()/15)*15,0,0); neuerTermin(d); });
+
+  /* Drag & Drop: Termin verschieben (auch auf andere Tage) oder unten am Rand die Dauer ziehen */
+  var zug = null, zogGerade = false, meldTimer = null;
+  function melde(text, fehler){
+    var m = $('k-meldung'); m.textContent = text; m.className = 'kal-meldung' + (fehler ? ' fehler' : ''); m.hidden = false;
+    clearTimeout(meldTimer); meldTimer = setTimeout(function(){ m.hidden = true; }, 4000);
+  }
+  $('kal').addEventListener('pointerdown', function(e){
+    var ev = e.target.closest('.kal-ev[data-id]'); if (!ev || e.button !== 0) return;
+    var t = termine.find(function(x){ return x.id === ev.dataset.id; }); if (!t || t.status === 'abgesagt') return;
+    zug = {ev:ev, t:t, groesse: e.target.classList.contains('kal-griff'), x0:e.clientX, y0:e.clientY, aktiv:false,
+           h0: parseFloat(ev.style.height), id: e.pointerId};
+  });
+  document.addEventListener('pointermove', function(e){
+    if (!zug || e.pointerId !== zug.id) return;
+    var dx = e.clientX - zug.x0, dy = e.clientY - zug.y0;
+    if (!zug.aktiv) { if (Math.abs(dx) + Math.abs(dy) < 6) return; zug.aktiv = true; zug.ev.classList.add('zieht'); document.body.classList.add('am-ziehen'); }
+    var schritt = STEP * PX, dyR = Math.round(dy / schritt) * schritt;
+    if (zug.groesse) {
+      zug.ev.style.height = Math.max(schritt, zug.h0 + dyR) + 'px';
+      var neu = Math.max(STEP, Math.round((zug.h0 + dyR) / PX / STEP) * STEP);
+      zug.ev.querySelector('b').textContent = uhr(new Date(zug.t.beginn)) + ' – ' + uhr(new Date(new Date(zug.t.beginn).getTime() + neu*60000));
+    } else {
+      zug.ev.style.transform = 'translate(' + dx + 'px,' + dyR + 'px)';
+      var b = new Date(new Date(zug.t.beginn).getTime() + Math.round(dy / PX / STEP) * STEP * 60000);
+      var dauer = (new Date(zug.t.ende) - new Date(zug.t.beginn)) / 60000;
+      zug.ev.querySelector('b').textContent = uhr(b) + ' – ' + uhr(new Date(b.getTime() + dauer*60000));
+    }
+  });
+  function zugEnde(e){
+    if (!zug || e.pointerId !== zug.id) return;
+    var z = zug; zug = null; document.body.classList.remove('am-ziehen');
+    if (!z.aktiv) return;
+    zogGerade = true; setTimeout(function(){ zogGerade = false; }, 0);
+    var t = z.t, alt0 = new Date(t.beginn), alt1 = new Date(t.ende), dauer = (alt1 - alt0) / 60000;
+    var dMin = Math.round((e.clientY - z.y0) / PX / STEP) * STEP, beginn, ende;
+    if (z.groesse) {
+      beginn = alt0; ende = new Date(alt0.getTime() + Math.max(STEP, Math.round((z.h0 / PX + dMin) / STEP) * STEP) * 60000);
+    } else {
+      var spalte = document.elementsFromPoint(e.clientX, e.clientY).find(function(el){ return el.classList && el.classList.contains('kal-spalte'); });
+      if (!spalte) { zeichne(); return; }
+      var p = spalte.dataset.tag.split('-'), m = minuten(alt0) + dMin;
+      m = Math.max(0, Math.min(24*60 - dauer, m));
+      beginn = new Date(+p[0], +p[1]-1, +p[2], 0, m); ende = new Date(beginn.getTime() + dauer*60000);
+    }
+    if (+beginn === +alt0 && +ende === +alt1) { zeichne(); return; }
+    rpc('coaching_admin_termin_bearbeiten', {p_id:t.id, p_angebot_id:t.angebot_id, p_beginn:beginn.toISOString(), p_ende:ende.toISOString(),
+      p_kundin_id:t.kundin_id, p_art:t.art, p_notiz:t.notiz||'', p_farbe:t.farbe||null, p_zoom_link:t.zoom_link||null})
+      .then(function(){ melde(t.name + ': ' + new Intl.DateTimeFormat('de-DE',{weekday:'short',day:'numeric',month:'numeric'}).format(beginn) + ', ' + uhr(beginn) + ' – ' + uhr(ende) + ' Uhr'); ladeWoche(); })
+      .catch(function(err){ melde(err.message, true); zeichne(); });
+  }
+  document.addEventListener('pointerup', zugEnde);
+  document.addEventListener('pointercancel', function(e){ if (zug && e.pointerId === zug.id) { zug = null; document.body.classList.remove('am-ziehen'); zeichne(); } });
+
+  $('kal').addEventListener('click', function(e){
+    if (zogGerade) return;
+    var s = e.target.closest('[data-sperre]'); if (s) return zeigeSperre(sperren.find(function(x){ return x.id === s.dataset.sperre; }));
+    var ev = e.target.closest('[data-id]'); if (ev) { var tt = termine.find(function(t){ return t.id === ev.dataset.id; }); return neuerTermin(new Date(tt.beginn), tt); }
+    var sp = e.target.closest('.kal-spalte'); if (!sp) return;
+    var y = e.clientY - sp.getBoundingClientRect().top;
+    var m = vonStd*60 + Math.floor(y / PX / 30) * 30;   // Klick rastet auf 30 Minuten
+    var p = sp.dataset.tag.split('-'); neuerTermin(new Date(+p[0], +p[1]-1, +p[2], Math.floor(m/60), m%60));
+  });
+
+  /* Fenster */
+  function oeffne(titel, html){ $('modal').firstElementChild.classList.remove('modal-breit'); $('m-titel').textContent = titel; $('m-inhalt').innerHTML = html; $('modal').hidden = false;
+    var f = $('m-inhalt').querySelector('select,input,textarea,button'); if (f) f.focus(); }
+  function schliesseFenster(){ $('modal').hidden = true; $('m-inhalt').innerHTML = ''; }
+  $('m-zu').addEventListener('click', schliesseFenster);
+  $('modal').addEventListener('click', function(e){ if (e.target === this) schliesseFenster(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('modal').hidden) schliesseFenster(); });
+
+  function zeitOptionen(sel){ var h = ''; for (var m=0; m<24*60; m+=STEP) h += '<option value="'+m+'"'+(m===sel?' selected':'')+'>'+hhmm(m)+'</option>'; return h; }
+  function angebotOptionen(){
+    var html = '<option value="">– Dienstleistung wählen –</option>', letzte = null;
+    alleAngs.forEach(function(a,i){ if (!a.aktiv) return;
+      var k = (a.kategorie || 'Ohne Kategorie') + (a.fuer_kundinnen ? '' : ' – nur intern');
+      if (k !== letzte) { html += (letzte!==null?'</optgroup>':'') + '<optgroup label="'+esc(k)+'">'; letzte = k; }
+      html += '<option value="'+i+'">'+esc(a.titel)+' · '+dauerText(a.dauer_min)+(a.preis_cent!=null?' · '+euro(a.preis_cent):'')+'</option>';
+    });
+    return html + (letzte!==null?'</optgroup>':'');
+  }
+
+  function neuerTermin(beginn, t){
+    var m = minuten(beginn), mEnde = t ? (minuten(new Date(t.ende)) || 24*60-STEP) : m+STEP;
+    var info = t ? '<div class="m-info">'+
+        '<span class="m-status st-'+t.status+'">'+STATUS[t.status]+'</span>'+
+        (t.email?' <a href="mailto:'+esc(t.email)+'">'+esc(t.email)+'</a>':'')+(t.telefon?' · '+esc(t.telefon):'')+
+        (t.paket_stand?' · Paket '+esc(t.paketcode)+': '+esc(t.paket_stand):'')+
+        (t.ein_satz?'<div class="m-satz">„'+esc(t.ein_satz)+'"</div>':'')+'</div>' : '';
+    oeffne(t ? 'Termin bearbeiten' : 'Neuer Termin',
+      (t ? info : '<div class="knopfgruppe m-art" role="tablist"><button class="kb an" data-typ="termin">Termin</button><button class="kb" data-typ="sperre">Zeit blockieren</button></div>')+
+      '<form id="m-termin" class="formular">'+
+        '<label class="breit">Dienstleistung<select id="m-ang" required>'+angebotOptionen()+'</select></label>'+
+        '<label>Datum<input type="date" id="m-datum" value="'+tagKey(beginn)+'" required></label>'+
+        '<label>Zeitraum<span class="reihe" style="flex-wrap:nowrap"><select id="m-von">'+zeitOptionen(m)+'</select> bis <select id="m-bis">'+zeitOptionen(mEnde)+'</select></span></label>'+
+        '<div class="breit m-kunde"><span class="m-lbl">Kunde</span>'+
+          '<div class="reihe" style="flex-wrap:nowrap"><div class="m-suche"><input id="m-ksuche" placeholder="– Kunden suchen (Name, Telefon, E-Mail) –" autocomplete="off"><div class="m-treffer" id="m-treffer" hidden></div></div>'+
+          '<button type="button" class="btn btn-klein" id="m-kneu">+ Neuer Kunde</button></div>'+
+          '<div class="m-gewaehlt" id="m-gewaehlt" hidden></div>'+
+          '<div class="formular" id="m-kfelder" hidden style="margin-top:8px"><label>Name<input id="m-name" maxlength="120"></label>'+
+          '<label>E-Mail (freiwillig)<input id="m-email" type="email"></label><label>Telefon (freiwillig)<input id="m-tel"></label></div></div>'+
+        '<label>Art<select id="m-art"><option value="vor_ort">Vor Ort</option><option value="online">Online (Zoom)</option></select></label>'+
+        (t && t.art==='online' ? '<label class="breit">Zoom-Link<input id="m-zoom" value="'+esc(t.zoom_link||'')+'"></label>' : '')+
+        '<label class="breit">Interne Notiz<textarea id="m-notiz" rows="2">'+esc(t&&t.notiz||'')+'</textarea></label>'+
+        '<div class="breit"><span class="m-lbl">Farbe</span>'+farbAuswahl('m-farbe', t ? t.farbe : '', true)+'</div>'+
+        '<div class="breit modal-fuss">'+
+          (t ? (t.status==='gebucht'?'<button type="button" class="btn btn-2 btn-klein" data-st="bestaetigt">Bestätigen</button>':'')+
+               '<button type="button" class="btn btn-2 btn-klein" data-st="stattgefunden">Hat stattgefunden</button>'+
+               (t.status!=='abgesagt'?'<button type="button" class="btn btn-2 btn-klein" data-st="abgesagt">Absagen</button>':'')+
+               (t.rechnung_id ? '<span class="hinweis" style="margin-right:auto;align-self:center">abgerechnet</span>' : t.status!=='abgesagt' ? '<button type="button" class="btn btn-2 btn-klein" id="m-rechnung" style="margin-right:auto">Rechnung</button>' : '<span style="margin-right:auto"></span>') : '')+
+          '<button class="btn">Speichern</button><button type="button" class="btn btn-2" data-zu>Schließen</button></div>'+
+        '<p class="breit fehler" id="m-fehler"></p></form>'+
+      '<form id="m-sperre" class="formular" hidden>'+
+        '<label>Von Datum<input type="date" id="s-vd" value="'+tagKey(beginn)+'" required></label>'+
+        '<label>Uhrzeit<select id="s-vz">'+zeitOptionen(m)+'</select></label>'+
+        '<label>Bis Datum<input type="date" id="s-bd" value="'+tagKey(beginn)+'" required></label>'+
+        '<label>Uhrzeit<select id="s-bz">'+zeitOptionen(Math.min(m+60, 24*60-STEP))+'</select></label>'+
+        '<label class="haken breit"><input type="checkbox" id="s-ganz"> Ganze Tage (z. B. Urlaub)</label>'+
+        '<label class="breit">Grund (nur für dich)<input id="s-grund" placeholder="z. B. Urlaub, privat"></label>'+
+        '<div class="breit modal-fuss"><button class="btn">Speichern</button><button type="button" class="btn btn-2" data-zu>Schließen</button></div>'+
+        '<p class="breit fehler" id="s-fehler"></p></form>');
+
+    var kundinId = null;
+    farbAuswahlAktiv($('m-farbe'));
+    function zeigeGewaehlt(k){
+      kundinId = k.id; $('m-gewaehlt').innerHTML = '<b>'+esc(k.name)+'</b> '+esc(k.email||k.telefon||'')+' <button type="button" class="m-weg" aria-label="Anderer Kunde">×</button>';
+      $('m-gewaehlt').hidden = false; $('m-kfelder').hidden = true;
+      $('m-gewaehlt').querySelector('.m-weg').onclick = function(){ kundinId = null; $('m-gewaehlt').hidden = true; $('m-ksuche').focus(); };
+    }
+    if (t) {
+      var ai = alleAngs.findIndex(function(a){ return a.id === t.angebot_id; });
+      if (ai >= 0) { if (!$('m-ang').querySelector('option[value="'+ai+'"]')) $('m-ang').insertAdjacentHTML('beforeend','<option value="'+ai+'">'+esc(alleAngs[ai].titel)+'</option>'); $('m-ang').value = String(ai); }
+      $('m-art').value = t.art;
+      zeigeGewaehlt({id:t.kundin_id, name:t.name, email:t.email, telefon:t.telefon});
+      if ($('m-rechnung')) $('m-rechnung').onclick = function(){ neueRechnung({id:t.kundin_id, name:t.name, email:t.email, telefon:t.telefon}, t.id); };
+      $('m-inhalt').querySelectorAll('[data-st]').forEach(function(b){ b.onclick = function(){
+        if (b.dataset.st === 'abgesagt' && !b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Wirklich absagen?'; return; }
+        rpc('coaching_admin_termin_aendern', {p_id:t.id, p_status:b.dataset.st}).then(function(){ schliesseFenster(); ladeWoche(); });
+      }; });
+    }
+    $('m-inhalt').querySelectorAll('[data-zu]').forEach(function(b){ b.onclick = schliesseFenster; });
+    $('m-inhalt').querySelectorAll('[data-typ]').forEach(function(b){ b.onclick = function(){
+      $('m-inhalt').querySelectorAll('[data-typ]').forEach(function(x){ x.classList.toggle('an', x===b); });
+      $('m-termin').hidden = b.dataset.typ !== 'termin'; $('m-sperre').hidden = b.dataset.typ !== 'sperre'; }; });
+    function bisSetzen(){ var a = alleAngs[$('m-ang').value]; if (a) $('m-bis').value = String(Math.min(+$('m-von').value + a.dauer_min, 24*60-STEP)); }
+    $('m-ang').onchange = bisSetzen; $('m-von').onchange = bisSetzen;
+
+    var suchTimer = null;
+    $('m-ksuche').oninput = function(){
+      var q = this.value.trim(); clearTimeout(suchTimer);
+      if (q.length < 2) { $('m-treffer').hidden = true; return; }
+      suchTimer = setTimeout(function(){
+        rpc('coaching_admin_kundinnen', {p_suche:q}).then(function(liste){
+          $('m-treffer').innerHTML = liste.length ? liste.map(function(k,i){
+            return '<button type="button" data-k="'+i+'"><b>'+esc(k.name)+'</b> <small>'+esc(k.email||k.telefon||'')+'</small></button>'; }).join('')
+            : '<div class="hinweis" style="padding:8px 10px">Keine Kundin gefunden – „+ Neue Kundin" nutzen.</div>';
+          $('m-treffer').hidden = false;
+          $('m-treffer').querySelectorAll('[data-k]').forEach(function(b){ b.onclick = function(){
+            var k = liste[+b.dataset.k]; $('m-treffer').hidden = true; $('m-ksuche').value = ''; zeigeGewaehlt(k);
+          }; });
+        });
+      }, 250);
+    };
+    $('m-kneu').onclick = function(){ kundinId = null; $('m-gewaehlt').hidden = true; $('m-kfelder').hidden = false;
+      $('m-name').value = $('m-ksuche').value; $('m-ksuche').value = ''; $('m-treffer').hidden = true; $('m-name').focus(); };
+
+    $('m-termin').onsubmit = function(e){
+      e.preventDefault(); var f = $('m-fehler'); f.textContent = '';
+      var a = alleAngs[$('m-ang').value]; if (!a) { f.textContent = 'Bitte eine Dienstleistung wählen.'; return; }
+      if (!kundinId && ($('m-kfelder').hidden || !$('m-name').value.trim())) { f.textContent = 'Bitte eine Kundin suchen oder „+ Neue Kundin" anlegen.'; return; }
+      var p = $('m-datum').value.split('-'), von = +$('m-von').value, bis = +$('m-bis').value;
+      if (bis <= von) { f.textContent = 'Das Ende muss nach dem Beginn liegen.'; return; }
+      var b = new Date(+p[0], +p[1]-1, +p[2], 0, von), en = new Date(+p[0], +p[1]-1, +p[2], 0, bis);
+      if (t) {
+        if (!kundinId) { f.textContent = 'Bitte einen Kunden wählen.'; return; }
+        return rpc('coaching_admin_termin_bearbeiten', {p_id:t.id, p_angebot_id:a.id, p_beginn:b.toISOString(), p_ende:en.toISOString(),
+          p_kundin_id:kundinId, p_art:$('m-art').value, p_notiz:$('m-notiz').value, p_farbe:$('m-farbe').dataset.wert||null,
+          p_zoom_link: $('m-zoom') ? $('m-zoom').value : null})
+          .then(function(){ schliesseFenster(); ladeWoche(); })
+          .catch(function(err){ f.textContent = err.message; });
+      }
+      rpc('coaching_admin_termin_anlegen', {p_angebot_id:a.id, p_beginn:b.toISOString(), p_ende:en.toISOString(), p_kundin_id:kundinId,
+        p_name: kundinId ? null : $('m-name').value, p_email: kundinId ? null : ($('m-email').value||null), p_telefon: kundinId ? null : ($('m-tel').value||null),
+        p_art:$('m-art').value, p_notiz:$('m-notiz').value||null, p_farbe:$('m-farbe').dataset.wert||null})
+        .then(function(){ schliesseFenster(); ladeWoche(); })
+        .catch(function(err){ f.textContent = err.message; });
+    };
+    $('s-ganz').onchange = function(){ $('s-vz').disabled = $('s-bz').disabled = this.checked; };
+    $('m-sperre').onsubmit = function(e){
+      e.preventDefault(); var f = $('s-fehler'); f.textContent = '';
+      var v = $('s-vd').value.split('-'), w = $('s-bd').value.split('-'), ganz = $('s-ganz').checked;
+      var von = new Date(+v[0], +v[1]-1, +v[2], 0, ganz ? 0 : +$('s-vz').value);
+      var bis = ganz ? new Date(+w[0], +w[1]-1, +w[2]+1, 0, 0) : new Date(+w[0], +w[1]-1, +w[2], 0, +$('s-bz').value);
+      if (!(bis > von)) { f.textContent = '„Bis" muss nach „Von" liegen.'; return; }
+      rpc('coaching_admin_sperrzeit_anlegen', {p_von:von.toISOString(), p_bis:bis.toISOString(), p_grund:$('s-grund').value||null})
+        .then(function(){ schliesseFenster(); ladeWoche(); })
+        .catch(function(err){ f.textContent = err.message; });
+    };
+  }
+
+  function zeigeSperre(s){
+    oeffne('Blockierte Zeit',
+      '<dl class="m-dl"><dt>Von</dt><dd>'+langDatum(new Date(s.von))+', '+uhr(new Date(s.von))+' Uhr</dd>'+
+      '<dt>Bis</dt><dd>'+langDatum(new Date(s.bis))+', '+uhr(new Date(s.bis))+' Uhr</dd>'+
+      '<dt>Grund</dt><dd>'+esc(s.grund||'–')+'</dd></dl>'+
+      '<div class="modal-fuss"><button class="btn btn-2" id="m-sweg">Blockierung aufheben</button><button class="btn btn-2" data-zu>Schließen</button></div>');
+    $('m-inhalt').querySelector('[data-zu]').onclick = schliesseFenster;
+    $('m-sweg').onclick = function(){
+      if (!this.dataset.sicher) { this.dataset.sicher = '1'; this.textContent = 'Wirklich aufheben?'; return; }
+      rpc('coaching_admin_sperrzeit_loeschen', {p_id:s.id}).then(function(){ schliesseFenster(); ladeWoche(); });
+    };
+  }
+
+  function zeigeDetail(t){
+    oeffne(t.name,
+      '<dl class="m-dl"><dt>Wann</dt><dd>'+langDatum(new Date(t.beginn))+', '+uhr(new Date(t.beginn))+'–'+uhr(new Date(t.ende))+' Uhr</dd>'+
+      '<dt>Dienstleistung</dt><dd>'+esc(t.angebot)+(t.preis_cent!=null?' · '+euro(t.preis_cent):'')+(t.paket_stand?'<br><small>Paket '+esc(t.paketcode)+': '+esc(t.paket_stand)+'</small>':'')+'</dd>'+
+      '<dt>Art</dt><dd>'+(t.art==='online'?'Online (Zoom)':'Vor Ort')+'</dd>'+
+      '<dt>E-Mail</dt><dd>'+(t.email?'<a href="mailto:'+esc(t.email)+'">'+esc(t.email)+'</a>':'–')+'</dd>'+
+      (t.telefon?'<dt>Telefon</dt><dd>'+esc(t.telefon)+'</dd>':'')+
+      (t.ein_satz?'<dt>Ihr Satz</dt><dd>„'+esc(t.ein_satz)+'"</dd>':'')+
+      '<dt>Status</dt><dd>'+STATUS[t.status]+'</dd>'+
+      (t.art==='online'?'<dt>Zoom-Link</dt><dd><input id="d-zoom" style="width:100%" value="'+esc(t.zoom_link||'')+'"></dd>':'')+
+      '<dt>Interne Notiz</dt><dd><textarea id="d-notiz" rows="2" style="width:100%">'+esc(t.notiz||'')+'</textarea></dd>'+
+      '<dt>Farbe</dt><dd>'+farbAuswahl('d-farbe', t.farbe, true)+'</dd></dl>'+
+      '<div class="modal-fuss">'+
+        (t.status==='gebucht'?'<button class="btn btn-klein" data-st="bestaetigt">Bestätigen</button>':'')+
+        '<button class="btn btn-2 btn-klein" data-st="stattgefunden">Hat stattgefunden</button>'+
+        (t.status!=='abgesagt'?'<button class="btn btn-2 btn-klein" data-st="abgesagt">Absagen</button>':'')+
+        '<button class="btn btn-2 btn-klein" data-st="">Speichern</button></div>'+
+      '<p class="hinweis">Absagen gibt die Zeit sofort wieder frei. Die Kundin wird noch nicht automatisch informiert.</p>');
+    farbAuswahlAktiv($('d-farbe'));
+    $('m-inhalt').querySelectorAll('[data-st]').forEach(function(b){
+      b.onclick = function(){
+        if (b.dataset.st === 'abgesagt' && !b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Wirklich absagen?'; return; }
+        rpc('coaching_admin_termin_aendern', {p_id:t.id, p_status:b.dataset.st||null,
+          p_zoom_link: $('d-zoom') ? $('d-zoom').value : null, p_notiz:$('d-notiz').value, p_farbe:$('d-farbe').dataset.wert})
+          .then(function(){ schliesseFenster(); ladeWoche(); });
+      };
+    });
+  }
+
+  /* Arbeitszeiten */
+  var zeiten = [];
+  function ladeZeiten(){ rpc('coaching_admin_verfuegbarkeit').then(function(z){ zeiten = z; zeichneZeiten(); }); }
+  function zeichneZeiten(){
+    $('z-liste').innerHTML = zeiten.map(function(z,i){
+      return '<tr><td><select data-i="'+i+'" data-f="wochentag">'+TAGE.slice(1).map(function(t,j){
+          return '<option value="'+(j+1)+'"'+(z.wochentag===j+1?' selected':'')+'>'+t+'</option>'; }).join('')+'</select></td>'+
+        '<td><input type="time" data-i="'+i+'" data-f="beginn" value="'+z.beginn+'"></td>'+
+        '<td><input type="time" data-i="'+i+'" data-f="ende" value="'+z.ende+'"></td>'+
+        '<td><button class="btn btn-2 btn-klein" data-weg="'+i+'">Entfernen</button></td></tr>';
+    }).join('');
+  }
+  $('z-liste').addEventListener('change', function(e){
+    var el = e.target; if (el.dataset.i==null) return;
+    zeiten[el.dataset.i][el.dataset.f] = el.dataset.f === 'wochentag' ? +el.value : el.value;
+  });
+  $('z-liste').addEventListener('click', function(e){
+    var b = e.target.closest('[data-weg]'); if (!b) return; zeiten.splice(+b.dataset.weg,1); zeichneZeiten();
+  });
+  $('z-neu').addEventListener('click', function(){ zeiten.push({wochentag:1, beginn:'09:00', ende:'12:00'}); zeichneZeiten(); });
+  $('z-speichern').addEventListener('click', function(){
+    var m = $('z-meldung');
+    if (zeiten.some(function(z){ return !(z.ende > z.beginn); })) { m.className='fehler'; m.textContent='Bei einem Zeitfenster liegt „bis" vor „von".'; return; }
+    rpc('coaching_admin_verfuegbarkeit_setzen', {p_zeiten: zeiten})
+      .then(function(){ m.className='ok'; m.textContent='Gespeichert.'; })
+      .catch(function(err){ m.className='fehler'; m.textContent=err.message; });
+  });
+
+  /* Pakete */
+  function ladePakete(){
+    rpc('coaching_admin_pakete').then(function(p){
+      $('p-liste').innerHTML = p.length ? p.map(function(x){
+        return '<tr><td>'+esc(x.name)+'<br><small>'+esc(x.email)+'</small></td><td>'+esc(x.angebot)+'</td><td><b>'+esc(x.code)+'</b></td><td>'+x.gebucht+' von '+x.gesamt+'</td><td>'+esc(x.status)+'</td></tr>';
+      }).join('') : '<tr><td colspan="5" class="hinweis">Noch keine Pakete gebucht.</td></tr>';
+    });
+  }
+
+  /* Einstellungen */
+  function ladeEinst(){
+    rpc('coaching_admin_einstellungen').then(function(e){
+      $('e-zoom').value = e.zoom_link||''; $('e-vorlauf').value = e.vorlauf_stunden;
+      $('e-wochen').value = e.buchbar_wochen; $('e-puffer').value = e.puffer_min;
+    });
+  }
+  $('f-einst').addEventListener('submit', function(ev){
+    ev.preventDefault(); var m = $('e-meldung');
+    rpc('coaching_admin_einstellungen_setzen', {p_zoom_link:$('e-zoom').value, p_vorlauf_stunden:+$('e-vorlauf').value,
+      p_buchbar_wochen:+$('e-wochen').value, p_puffer_min:+$('e-puffer').value})
+      .then(function(){ m.className='ok'; m.textContent='Gespeichert.'; })
+      .catch(function(err){ m.className='fehler'; m.textContent=err.message; });
+  });
+
+  /* Angebote & Preise */
+  var kats = [], angs = [], anEdit = null;
+  function euro(c){ return c == null ? '' : c === 0 ? 'kostenlos' : (c/100).toLocaleString('de-DE',{style:'currency',currency:'EUR'}); }
+  function dauerText(min){ var h = Math.floor(min/60), m = min%60; return h ? h+' Std.'+(m?' '+m+' Min.':'') : m+' Min.'; }
+  function angDauer(a){ return a.ist_paket ? a.anzahl_sitzungen+' × '+a.dauer_min+' Min. (gesamt '+dauerText(a.anzahl_sitzungen*a.dauer_min)+')' : a.dauer_min+' Min.'; }
+  function ladeAngebote(){
+    return Promise.all([rpc('coaching_admin_kategorien'), rpc('coaching_admin_angebote')]).then(function(r){
+      kats = r[0]; angs = r[1]; zeichneAngebote(); zeichneKats();
+    });
+  }
+  function zeichneAngebote(){
+    var gruppen = {};
+    angs.forEach(function(a){ var g = a.kategorie || 'Ohne Kategorie'; (gruppen[g] = gruppen[g] || []).push(a); });
+    $('an-liste').innerHTML = Object.keys(gruppen).map(function(g){
+      return '<h3 style="font-size:14px;color:var(--muted);margin:16px 0 4px">'+esc(g)+'</h3>'+
+        '<table><thead><tr><th>Angebot</th><th>Dauer</th><th>Preis</th><th>Status</th><th></th></tr></thead><tbody>'+
+        gruppen[g].map(function(a){
+          var pps = a.ist_paket && a.preis_cent ? '<br><small class="hinweis">'+euro(Math.round(a.preis_cent/a.anzahl_sitzungen))+' pro Sitzung</small>' : '';
+          return '<tr><td><b>'+esc(a.titel)+'</b>'+(a.ist_paket?' <span class="wer">Paket</span>':'')+
+            (a.beschreibung?'<br><small class="hinweis">'+esc(a.beschreibung)+'</small>':'')+'</td>'+
+            '<td>'+angDauer(a)+'</td><td>'+(a.preis_cent==null?'<span class="hinweis">kein Preis</span>':euro(a.preis_cent))+pps+'</td>'+
+            '<td>'+(!a.aktiv?'<span class="hinweis">ausgeschaltet</span>':a.fuer_kundinnen?'Kundinnen buchen selbst':'<span class="wer wer-Sandra" style="margin:0">nur intern</span>')+(a.termine?'<br><small class="hinweis">'+a.termine+' Termine</small>':'')+'</td>'+
+            '<td><button class="btn btn-2 btn-klein" data-bearb="'+a.id+'">Bearbeiten</button></td></tr>';
+        }).join('')+'</tbody></table>';
+    }).join('') || '<p class="hinweis">Noch keine Angebote.</p>';
+  }
+  function katOptionen(sel){
+    return '<option value="">– ohne Kategorie –</option>'+kats.map(function(k){
+      return '<option value="'+k.id+'"'+(k.id===sel?' selected':'')+'>'+esc(k.name)+'</option>'; }).join('');
+  }
+  function oeffneAngebot(a){
+    anEdit = a || null;
+    $('an-form-titel').textContent = a ? 'Angebot bearbeiten' : 'Neues Angebot';
+    $('an-kat').innerHTML = katOptionen(a ? a.kategorie_id : (kats[0]&&kats[0].id));
+    $('an-titel').value = a ? a.titel : ''; $('an-beschr').value = a && a.beschreibung || '';
+    $('an-dauer').value = a ? a.dauer_min : 60;
+    $('an-preis').value = a && a.preis_cent != null ? String(a.preis_cent/100).replace('.',',') : '';
+    $('an-paket').checked = !!(a && a.ist_paket); $('an-anz').value = a && a.ist_paket ? a.anzahl_sitzungen : 5;
+    $('an-aktiv').checked = a ? a.aktiv : true; $('an-sort').value = a ? a.sortierung : 0;
+    $('an-loeschen').hidden = !a; $('an-fehler').textContent = '';
+    delete $('an-loeschen').dataset.sicher; $('an-loeschen').textContent = 'Löschen';
+    vorschau(); $('an-form-karte').hidden = false; $('an-titel').focus();
+  }
+  function preisCent(){
+    var t = $('an-preis').value.trim().replace(/\s|€/g,''); if (t === '') return null;
+    t = t.replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.'); var n = Number(t);
+    return isFinite(n) && n >= 0 ? Math.round(n*100) : NaN;
+  }
+  function vorschau(){
+    var paket = $('an-paket').checked; $('an-anz-wrap').hidden = !paket;
+    var a = {ist_paket:paket, anzahl_sitzungen:+$('an-anz').value||0, dauer_min:+$('an-dauer').value||0};
+    var p = preisCent();
+    $('an-vorschau').innerHTML = 'So steht es im Buchungsfeld: <b>'+esc($('an-titel').value||'…')+'</b> · '+angDauer(a)+
+      (p==null||isNaN(p)?'':' · '+euro(p)+(paket&&p&&a.anzahl_sitzungen?' ('+euro(Math.round(p/a.anzahl_sitzungen))+' pro Sitzung)':''));
+  }
+  ['an-titel','an-dauer','an-preis','an-anz','an-paket'].forEach(function(id){ $(id).addEventListener('input', vorschau); });
+  $('an-neu').addEventListener('click', function(){ oeffneAngebot(null); });
+  $('an-abbr').addEventListener('click', function(){ $('an-form-karte').hidden = true; });
+  $('an-zu').addEventListener('click', function(){ $('an-form-karte').hidden = true; });
+  $('an-form-karte').addEventListener('click', function(e){ if (e.target === this) this.hidden = true; });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { $('an-form-karte').hidden = true; if ($('ku-modal')) $('ku-modal').hidden = true; } });
+  $('an-liste').addEventListener('click', function(e){
+    var b = e.target.closest('[data-bearb]'); if (!b) return;
+    oeffneAngebot(angs.find(function(a){ return a.id === b.dataset.bearb; }));
+  });
+  $('an-form').addEventListener('submit', function(e){
+    e.preventDefault(); var f = $('an-fehler'); f.textContent = '';
+    var p = preisCent(); if (isNaN(p)) { f.textContent = 'Den Preis bitte als Zahl eingeben, z. B. 90 oder 89,50.'; return; }
+    rpc('coaching_admin_angebot_speichern', {p_id: anEdit ? anEdit.id : null, p_titel:$('an-titel').value, p_beschreibung:$('an-beschr').value,
+      p_kategorie_id:$('an-kat').value||null, p_dauer_min:+$('an-dauer').value, p_preis_cent:p,
+      p_ist_paket:$('an-paket').checked, p_anzahl_sitzungen:+$('an-anz').value, p_aktiv:$('an-aktiv').checked, p_sortierung:+$('an-sort').value||0})
+      .then(function(){ $('an-form-karte').hidden = true; ladeAngebote(); })
+      .catch(function(err){ f.textContent = err.message; });
+  });
+  $('an-loeschen').addEventListener('click', function(){
+    var b = this;
+    if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Wirklich löschen?'; return; }
+    rpc('coaching_admin_angebot_loeschen', {p_id: anEdit.id})
+      .then(function(){ $('an-form-karte').hidden = true; ladeAngebote(); })
+      .catch(function(err){ $('an-fehler').textContent = err.message; delete b.dataset.sicher; b.textContent = 'Löschen'; });
+  });
+
+  function zeichneKats(){
+    $('kat-liste').innerHTML = kats.map(function(k,i){
+      return '<tr data-k="'+i+'"><td><input data-f="name" value="'+esc(k.name)+'" maxlength="80"></td>'+
+        '<td><input data-f="beschreibung" value="'+esc(k.beschreibung||'')+'" style="width:100%"></td>'+
+        '<td><input data-f="sortierung" type="number" value="'+k.sortierung+'" style="width:70px"></td>'+
+        '<td><input data-f="farbe" type="color" class="kat-farbe" value="'+(k.farbe||'#E6CFC4')+'" title="Farbe im Kalender"></td>'+
+        '<td><input data-f="aktiv" type="checkbox"'+(k.aktiv?' checked':'')+'></td>'+
+        '<td>'+(k.anzahl||0)+'</td>'+
+        '<td class="reihe"><button class="btn btn-klein" data-kspeichern="'+i+'">Speichern</button>'+
+        (k.id?'<button class="btn btn-2 btn-klein" data-kweg="'+i+'">✕</button>':'')+'</td></tr>';
+    }).join('');
+  }
+  $('kat-neu').addEventListener('click', function(){ kats.push({id:null,name:'',beschreibung:'',sortierung:kats.length+1,aktiv:true,anzahl:0}); zeichneKats(); });
+  $('kat-liste').addEventListener('click', function(e){
+    var m = $('kat-meldung'); m.textContent = '';
+    var s = e.target.closest('[data-kspeichern]'), w = e.target.closest('[data-kweg]');
+    if (s) {
+      var tr = s.closest('tr'), k = kats[+s.dataset.kspeichern];
+      function v(f){ var el = tr.querySelector('[data-f="'+f+'"]'); return el.type==='checkbox' ? el.checked : el.value; }
+      rpc('coaching_admin_kategorie_speichern', {p_id:k.id, p_name:v('name'), p_beschreibung:v('beschreibung'), p_sortierung:+v('sortierung'), p_aktiv:v('aktiv'), p_farbe:v('farbe').toUpperCase()})
+        .then(function(){ m.className='ok'; m.textContent='Gespeichert.'; ladeAngebote(); })
+        .catch(function(err){ m.className='fehler'; m.textContent=err.message; });
+    }
+    if (w) {
+      if (!w.dataset.sicher) { w.dataset.sicher='1'; w.textContent='Löschen?'; return; }
+      rpc('coaching_admin_kategorie_loeschen', {p_id:kats[+w.dataset.kweg].id})
+        .then(ladeAngebote).catch(function(err){ m.className='fehler'; m.textContent=err.message; });
+    }
+  });
+
+  /* Rechnungen */
+  var reListe = [], reAktMonat = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  var ZAHLART = {bar:'Bar', ueberweisung:'Überweisung', karte:'Karte', paypal:'PayPal', sonstiges:'Sonstiges'};
+  var RESTATUS = {offen:'Offen', bezahlt:'Bezahlt', storniert:'Storniert'};
+  function datumDE(d){ if (!d) return ''; var p = String(d).slice(0,10).split('-'); return p[2]+'.'+p[1]+'.'+p[0]; }
+  function isoTag(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function reZeitraum(){
+    var modus = $('re-zeitraum').value, j = reAktMonat.getFullYear(), m = reAktMonat.getMonth();
+    if (modus === 'jahr') return {von: new Date(j,0,1), bis: new Date(j,11,31), titel: String(j)};
+    return {von: new Date(j,m,1), bis: new Date(j,m+1,0), titel: new Intl.DateTimeFormat('de-DE',{month:'long',year:'numeric'}).format(reAktMonat)};
+  }
+  function ladeRechnungen(){
+    var z = reZeitraum(); $('re-titel').textContent = z.titel;
+    return rpc('coaching_admin_rechnungen', {p_von: isoTag(z.von), p_bis: isoTag(z.bis), p_suche: $('re-suche').value || null}).then(function(l){
+      reListe = l;
+      // Stornorechnungen sind negativ und heben das Original auf
+      var summe = 0, ust = 0, offen = 0;
+      l.forEach(function(r){ summe += r.brutto_cent; ust += r.ust_cent; if (r.status === 'offen') offen += r.brutto_cent; });
+      $('re-summen').innerHTML = '<span>Umsatz <b>'+euro0(summe)+'</b></span><span>darin USt <b>'+euro0(ust)+'</b></span><span>offen <b>'+euro0(offen)+'</b></span><span>'+l.length+' Belege</span>';
+      $('re-liste').innerHTML = l.length ? l.map(function(r){
+        return '<tr class="zeile" data-re="'+r.id+'"><td><b>'+esc(r.nummer)+'</b>'+(r.art==='storno'?' <span class="wer">Storno zu '+esc(r.storno_zu_nummer||'')+'</span>':'')+'</td>'+
+          '<td>'+datumDE(r.datum)+'</td><td>'+esc(r.name)+'</td><td style="text-align:right">'+euro0(r.brutto_cent)+'</td>'+
+          '<td><span class="m-status st-re-'+r.status+'">'+RESTATUS[r.status]+'</span>'+(r.status==='offen' && r.zahlungsziel && r.zahlungsziel < isoTag(new Date()) ? ' <small class="fehler" style="margin:0">überfällig</small>' : '')+'</td>'+
+          '<td>'+(ZAHLART[r.zahlungsart]||'')+'</td></tr>';
+      }).join('') : '<tr><td colspan="6" class="hinweis">Keine Rechnungen in diesem Zeitraum.</td></tr>';
+    });
+  }
+  function euro0(c){ return ((c||0)/100).toLocaleString('de-DE',{style:'currency',currency:'EUR'}); }
+  $('re-prev').addEventListener('click', function(){ reAktMonat = $('re-zeitraum').value === 'jahr' ? new Date(reAktMonat.getFullYear()-1, 0, 1) : new Date(reAktMonat.getFullYear(), reAktMonat.getMonth()-1, 1); ladeRechnungen(); });
+  $('re-next').addEventListener('click', function(){ reAktMonat = $('re-zeitraum').value === 'jahr' ? new Date(reAktMonat.getFullYear()+1, 0, 1) : new Date(reAktMonat.getFullYear(), reAktMonat.getMonth()+1, 1); ladeRechnungen(); });
+  $('re-zeitraum').addEventListener('change', ladeRechnungen);
+  var reTimer; $('re-suche').addEventListener('input', function(){ clearTimeout(reTimer); reTimer = setTimeout(ladeRechnungen, 250); });
+  $('re-liste').addEventListener('click', function(e){ var z = e.target.closest('[data-re]'); if (z) zeigeRechnung(z.dataset.re); });
+  $('re-neu').addEventListener('click', function(){ neueRechnung(); });
+  $('re-vorlage').addEventListener('click', function(){ document.querySelector('[data-tab="einst"]').click(); setTimeout(function(){ $('f-vorlage').scrollIntoView({behavior:'smooth'}); }, 300); });
+  $('re-csv').addEventListener('click', function(){
+    var z = reZeitraum(), zeilen = [['Rechnungsnummer','Art','Datum','Kunde','Brutto','Netto','USt','USt-Satz','Status','Bezahlt am','Zahlungsart','Storno zu']];
+    reListe.slice().reverse().forEach(function(r){
+      zeilen.push([r.nummer, r.art === 'storno' ? 'Storno' : 'Rechnung', datumDE(r.datum), r.name, (r.brutto_cent/100).toFixed(2).replace('.',','),
+        (r.netto_cent/100).toFixed(2).replace('.',','), (r.ust_cent/100).toFixed(2).replace('.',','), String(r.ust_satz).replace('.',','),
+        RESTATUS[r.status], datumDE(r.bezahlt_am), ZAHLART[r.zahlungsart]||'', r.storno_zu_nummer||'']);
+    });
+    var csv = '﻿' + zeilen.map(function(z){ return z.map(function(f){ f = String(f==null?'':f); return /[;"\n]/.test(f) ? '"'+f.replace(/"/g,'""')+'"' : f; }).join(';'); }).join('\r\n');
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    a.download = 'rechnungen_' + isoTag(z.von) + '_bis_' + isoTag(z.bis) + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  /* Rechnung als Dokument (für Ansicht und Druck/PDF) – Gestaltung aus der Rechnungsvorlage */
+  var VORLAGE_STD = {
+    logo: '', logo_pos: 'rechts', logo_breite: 160, farbe: '#2B2520', schrift: 'modern',
+    titel: 'Rechnung', titel_storno: 'Stornorechnung',
+    einleitung: '',
+    text_offen: 'Bitte überweise den Betrag von {betrag} bis zum {zahlungsziel} auf das unten genannte Konto. Verwendungszweck: {nummer}.',
+    text_bezahlt: 'Den Betrag von {betrag} habe ich am {bezahlt_am} ({zahlungsart}) erhalten. Vielen Dank!',
+    schluss: '', spalte_datum: true, spalte_menge: true
+  };
+  var SCHRIFTEN = {
+    modern: "Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif",
+    klassisch: "Georgia,'Times New Roman',serif",
+    schlicht: "Helvetica,Arial,sans-serif"
+  };
+  function rechnungHtml(r){
+    var a = r.aussteller || {}, e = r.empfaenger || {}, storno = r.art === 'storno';
+    var v = Object.assign({}, VORLAGE_STD, a.vorlage || {});
+    function fuelle(t){
+      return esc(t || '').replace(/\{(\w+)\}/g, function(m, k){
+        var w = {name: e.name, nummer: r.nummer, datum: datumDE(r.datum), zahlungsziel: datumDE(r.zahlungsziel), bezahlt_am: datumDE(r.bezahlt_am),
+                 zahlungsart: ZAHLART[r.zahlungsart] || '', betrag: euro0(r.summe_brutto_cent)}[k];
+        return w == null ? m : esc(w);
+      }).replace(/\n/g, '<br>');
+    }
+    var abs = [a.name, a.strasse, [a.plz, a.ort].filter(Boolean).join(' ')].filter(Boolean).map(esc).join(' · ');
+    var mitDatum = v.spalte_datum !== false, mitMenge = v.spalte_menge !== false;
+    var spalten = 3 + (mitDatum ? 1 : 0) + (mitMenge ? 2 : 0);
+    var pos = (r.positionen||[]).map(function(p){
+      return '<tr><td>'+p.pos+'</td><td>'+esc(p.bezeichnung)+'</td>'+(mitDatum ? '<td>'+datumDE(p.leistungsdatum)+'</td>' : '')+
+        (mitMenge ? '<td class="r">'+String(p.menge).replace('.',',').replace(/,00?$/,'')+'</td><td class="r">'+euro0(p.einzel_brutto_cent)+'</td>' : '')+
+        '<td class="r">'+euro0(p.gesamt_brutto_cent)+'</td></tr>'; }).join('');
+    var sp = spalten - 1;
+    var summen = r.kleinunternehmer
+      ? '<tr class="summe"><td colspan="'+sp+'">Gesamtbetrag</td><td class="r">'+euro0(r.summe_brutto_cent)+'</td></tr>'
+      : '<tr><td colspan="'+sp+'">Nettobetrag</td><td class="r">'+euro0(r.summe_netto_cent)+'</td></tr>'+
+        '<tr><td colspan="'+sp+'">zzgl. '+String(r.ust_satz).replace('.',',').replace(/,00?$/,'')+' % Umsatzsteuer</td><td class="r">'+euro0(r.summe_ust_cent)+'</td></tr>'+
+        '<tr class="summe"><td colspan="'+sp+'">Gesamtbetrag</td><td class="r">'+euro0(r.summe_brutto_cent)+'</td></tr>';
+    var zahl = storno ? '' : fuelle(r.status === 'bezahlt' ? v.text_bezahlt : v.text_offen);
+    var leistung = r.leistung_von && r.leistung_bis && r.leistung_von !== r.leistung_bis ? datumDE(r.leistung_von)+' – '+datumDE(r.leistung_bis) : datumDE(r.leistung_von || r.datum);
+    var logo = v.logo ? '<img class="rdoc-logo" src="'+esc(v.logo)+'" alt="" style="width:'+(+v.logo_breite||160)+'px">' : '';
+    var firma = '<div class="rdoc-firma'+(v.logo_pos === 'links' ? ' links' : '')+'">'+(v.logo_pos !== 'links' ? logo : '')+'<div><b>'+esc(a.name||'')+'</b>'+(a.zusatz?'<br>'+esc(a.zusatz):'')+'<br>'+esc(a.strasse||'')+'<br>'+esc((a.plz||'')+' '+(a.ort||''))+
+        (a.telefon?'<br>Tel. '+esc(a.telefon):'')+(a.email?'<br>'+esc(a.email):'')+'</div></div>';
+    return '<div class="rdoc" style="font-family:'+(SCHRIFTEN[v.schrift]||SCHRIFTEN.modern)+';--akzent:'+(v.farbe||'#2B2520')+'">'+
+      '<div class="rdoc-kopf">'+(v.logo_pos === 'links' && logo ? '<div>'+logo+'</div>' : '<div></div>')+firma+'</div>'+
+      '<div class="rdoc-abs">'+abs+'</div>'+
+      '<div class="rdoc-an">'+esc(e.name||'')+(e.strasse?'<br>'+esc(e.strasse):'')+((e.plz||e.ort)?'<br>'+esc((e.plz||'')+' '+(e.ort||'')):'')+'</div>'+
+      '<div class="rdoc-meta"><div><h1>'+esc(storno ? v.titel_storno : v.titel)+'</h1>'+(storno ? '<p>zur Rechnung Nr. '+esc(r.storno_zu_nummer||'')+(r.notiz?' – Grund: '+esc(r.notiz):'')+'</p>' : '')+'</div>'+
+        '<table><tr><td>Rechnungsnummer</td><td><b>'+esc(r.nummer)+'</b></td></tr><tr><td>Rechnungsdatum</td><td>'+datumDE(r.datum)+'</td></tr><tr><td>Leistungsdatum</td><td>'+leistung+'</td></tr></table></div>'+
+      (v.einleitung && !storno ? '<p class="rdoc-einleitung">'+fuelle(v.einleitung)+'</p>' : '')+
+      '<table class="rdoc-pos"><thead><tr><th>Pos.</th><th>Leistung</th>'+(mitDatum?'<th>Datum</th>':'')+(mitMenge?'<th class="r">Menge</th><th class="r">Einzelpreis</th>':'')+'<th class="r">Gesamt</th></tr></thead><tbody>'+pos+'</tbody><tfoot>'+summen+'</tfoot></table>'+
+      (r.kleinunternehmer ? '<p class="rdoc-hinweis">Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.</p>' : '')+
+      (zahl ? '<p class="rdoc-hinweis">'+zahl+'</p>' : '')+
+      (v.schluss && !storno ? '<p class="rdoc-hinweis">'+fuelle(v.schluss)+'</p>' : '')+
+      (a.fusstext ? '<p class="rdoc-hinweis">'+esc(a.fusstext)+'</p>' : '')+
+      '<div class="rdoc-fuss"><div>'+esc(a.name||'')+'<br>'+esc(a.strasse||'')+'<br>'+esc((a.plz||'')+' '+(a.ort||''))+'</div>'+
+        '<div>'+(a.steuernummer?'Steuernummer: '+esc(a.steuernummer)+'<br>':'')+(a.ust_id?'USt-IdNr.: '+esc(a.ust_id):'')+'</div>'+
+        '<div>'+(a.bank?esc(a.bank)+'<br>':'')+(a.iban?'IBAN: '+esc(a.iban.replace(/(.{4})/g,'$1 ').trim())+'<br>':'')+(a.bic?'BIC: '+esc(a.bic):'')+'</div></div>'+
+    '</div>';
+  }
+  var RDOC_CSS = '.rdoc{color:#2b2520;font-size:12.5px;line-height:1.45;background:#fff;padding:36px 40px;max-width:800px;margin:0 auto}'+
+    '.rdoc table{width:auto;border-collapse:collapse}.rdoc td,.rdoc th{border:0;color:inherit}'+
+    '.rdoc-kopf{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;min-height:60px}'+
+    '.rdoc-firma{text-align:right;font-size:11.5px;display:flex;flex-direction:column;align-items:flex-end;gap:10px}.rdoc-firma.links{align-items:flex-end}'+
+    '.rdoc-logo{display:block;height:auto;max-height:110px;object-fit:contain}'+
+    '.rdoc-abs{font-size:9.5px;color:#7c6f63;border-bottom:1px solid #ccc;display:inline-block;margin-top:26px;padding-bottom:2px}'+
+    '.rdoc-an{margin:8px 0 34px;min-height:70px}'+
+    '.rdoc-meta{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}.rdoc-meta h1{font-size:22px;margin:0 0 4px;color:var(--akzent,#2b2520)}.rdoc-meta p{margin:0}'+
+    '.rdoc-meta table td{padding:1px 0 1px 14px}.rdoc-meta table td:first-child{color:#7c6f63;padding-left:0}'+
+    '.rdoc-einleitung{margin:0 0 16px}'+
+    '.rdoc .rdoc-pos{width:100%;border-collapse:collapse}.rdoc-pos th{font-size:11px;text-align:left;border-bottom:1.5px solid var(--akzent,#2b2520);padding:6px 6px}.rdoc-pos td{padding:6px;border-bottom:1px solid #e3ddd6;vertical-align:top}'+
+    '.rdoc-pos .r{text-align:right;white-space:nowrap}.rdoc-pos tfoot td{border:0;padding:4px 6px;text-align:right}'+
+    '.rdoc-pos tfoot .summe td{font-weight:700;font-size:14px;border-top:1.5px solid var(--akzent,#2b2520);padding-top:8px;color:var(--akzent,#2b2520)}'+
+    '.rdoc-hinweis{margin:14px 0 0}.rdoc-fuss{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:10px;border-top:1px solid #ccc;font-size:9.5px;color:#7c6f63}'+
+    '@page{size:A4;margin:14mm}@media print{.rdoc{padding:0;max-width:none}}';
+  (function(){ var st = document.createElement('style'); st.textContent = RDOC_CSS.replace(/@page[^}]*}/,'').replace(/@media print\{[^}]*\}\}/,''); document.head.appendChild(st); })();
+  function druckeRechnung(r){
+    var w = window.open('', '_blank');
+    if (!w) { melde('Bitte Pop-ups für diese Seite erlauben, um zu drucken.', true); return; }
+    w.document.write('<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><title>'+esc(r.nummer)+'</title><style>body{margin:0}'+RDOC_CSS+'</style></head><body>'+rechnungHtml(r)+
+      '<script>window.onload=function(){window.print();}<\/script></body></html>');
+    w.document.close();
+  }
+
+  function zeigeRechnung(id){
+    rpc('coaching_admin_rechnung', {p_id:id}).then(function(r){
+      var storno = r.art === 'storno';
+      oeffne((storno ? 'Stornorechnung ' : 'Rechnung ') + r.nummer,
+        '<div class="rdoc-rahmen">'+rechnungHtml(r)+'</div>'+
+        (r.storniert_durch ? '<p class="hinweis">Storniert durch '+esc(r.storniert_durch)+'.</p>' : '')+
+        '<details class="hinweis" style="margin-top:8px"><summary>Protokoll</summary>'+(r.protokoll||[]).map(function(p){
+          return '<div>'+new Intl.DateTimeFormat('de-DE',{dateStyle:'short',timeStyle:'short'}).format(new Date(p.zeitpunkt))+' – '+esc(p.aktion)+'</div>'; }).join('')+'</details>'+
+        '<div id="re-storno-feld" hidden style="margin-top:12px"><label class="m-lbl">Grund für die Stornierung</label><input id="re-grund" style="width:100%" placeholder="z. B. falscher Betrag, Termin ausgefallen"></div>'+
+        '<div class="modal-fuss">'+
+          (!storno && r.status !== 'storniert' ? '<button type="button" class="btn btn-2 btn-klein" id="re-storno" style="margin-right:auto">Stornieren</button>' : '<span style="margin-right:auto"></span>')+
+          (!storno && r.status === 'offen' ? '<select id="re-zahlart" aria-label="Zahlungsart">'+Object.keys(ZAHLART).map(function(k){ return '<option value="'+k+'"'+(r.zahlungsart===k?' selected':'')+'>'+ZAHLART[k]+'</option>'; }).join('')+'</select><button type="button" class="btn btn-klein" id="re-bezahlt">Als bezahlt markieren</button>' : '')+
+          (!storno && r.status === 'bezahlt' ? '<button type="button" class="btn btn-2 btn-klein" id="re-offen">Wieder auf offen</button>' : '')+
+          '<button type="button" class="btn btn-klein" id="re-druck">Drucken / PDF</button>'+
+          '<button type="button" class="btn btn-2 btn-klein" data-zu>Schließen</button></div>'+
+        '<p class="fehler" id="re-fehler"></p>');
+      $('modal').firstElementChild.classList.add('modal-breit');
+      $('m-inhalt').querySelector('[data-zu]').onclick = schliesseFenster;
+      $('re-druck').onclick = function(){ druckeRechnung(r); };
+      if ($('re-bezahlt')) $('re-bezahlt').onclick = function(){
+        rpc('coaching_admin_rechnung_bezahlt', {p_id:r.id, p_bezahlt:true, p_datum:isoTag(new Date()), p_zahlungsart:$('re-zahlart').value})
+          .then(function(){ zeigeRechnung(r.id); ladeRechnungen(); }).catch(function(err){ $('re-fehler').textContent = err.message; }); };
+      if ($('re-offen')) $('re-offen').onclick = function(){
+        rpc('coaching_admin_rechnung_bezahlt', {p_id:r.id, p_bezahlt:false}).then(function(){ zeigeRechnung(r.id); ladeRechnungen(); }); };
+      if ($('re-storno')) $('re-storno').onclick = function(){
+        var b = this;
+        if ($('re-storno-feld').hidden) { $('re-storno-feld').hidden = false; $('re-grund').focus(); b.textContent = 'Stornorechnung erstellen'; return; }
+        if (!$('re-grund').value.trim()) { $('re-fehler').textContent = 'Bitte einen Grund angeben.'; return; }
+        rpc('coaching_admin_rechnung_stornieren', {p_id:r.id, p_grund:$('re-grund').value})
+          .then(function(s){ ladeRechnungen(); zeigeRechnung(s.id); }).catch(function(err){ $('re-fehler').textContent = err.message; });
+      };
+    });
+  }
+
+  /* Neue Rechnung */
+  function neueRechnung(vorKunde, vorTerminId){
+    oeffne('Neue Rechnung',
+      '<form id="nr-form" class="formular">'+
+        '<div class="breit m-kunde"><span class="m-lbl">Kunde</span>'+
+          '<div class="m-suche"><input id="nr-ksuche" placeholder="– Kunden suchen (Name, Telefon, E-Mail) –" autocomplete="off"><div class="m-treffer" id="nr-treffer" hidden></div></div>'+
+          '<div class="m-gewaehlt" id="nr-gewaehlt" hidden></div><p class="hinweis" id="nr-adresse" style="margin-top:6px"></p></div>'+
+        '<div class="breit" id="nr-termine"></div>'+
+        '<div class="breit"><span class="m-lbl">Positionen</span><table class="nr-pos"><thead><tr><th>Leistung</th><th>Datum</th><th style="width:70px">Menge</th><th style="width:110px">Einzelpreis €</th><th></th></tr></thead><tbody id="nr-pos"></tbody></table>'+
+          '<button type="button" class="btn btn-2 btn-klein" id="nr-pos-neu" style="margin-top:8px">+ Freie Position</button></div>'+
+        '<label>Rechnungsdatum<input type="date" id="nr-datum" value="'+isoTag(new Date())+'" required></label>'+
+        '<label>Zahlungsart<select id="nr-zahlart">'+Object.keys(ZAHLART).map(function(k){ return '<option value="'+k+'"'+(k==='bar'?' selected':'')+'>'+ZAHLART[k]+'</option>'; }).join('')+'</select></label>'+
+        '<label class="haken breit"><input type="checkbox" id="nr-bezahlt" checked> Schon bezahlt (z. B. bar beim Termin)</label>'+
+        '<p class="breit nr-summe" id="nr-summe"></p>'+
+        '<p class="breit hinweis">Nach dem Erstellen bekommt die Rechnung eine feste Nummer und kann nicht mehr geändert werden – nur noch storniert.</p>'+
+        '<div class="breit modal-fuss"><button class="btn">Rechnung erstellen</button><button type="button" class="btn btn-2" data-zu>Abbrechen</button></div>'+
+        '<p class="breit fehler" id="nr-fehler"></p></form>');
+    $('modal').firstElementChild.classList.add('modal-breit');
+    $('m-inhalt').querySelector('[data-zu]').onclick = schliesseFenster;
+    var kunde = null;
+    function posZeile(p){
+      var tr = document.createElement('tr'); if (p.termin_id) tr.dataset.termin = p.termin_id;
+      tr.innerHTML = '<td><input class="nr-bez" value="'+esc(p.bezeichnung||'')+'" style="width:100%"></td><td><input class="nr-dat" type="date" value="'+(p.leistungsdatum||'')+'"></td>'+
+        '<td><input class="nr-menge" type="number" min="0.5" step="0.5" value="'+(p.menge||1)+'" style="width:64px"></td>'+
+        '<td><input class="nr-preis" inputmode="decimal" value="'+(p.einzel_brutto_cent!=null?String(p.einzel_brutto_cent/100).replace('.',','):'')+'" style="width:100px"></td>'+
+        '<td><button type="button" class="btn btn-2 btn-klein nr-weg" aria-label="Position entfernen">✕</button></td>';
+      $('nr-pos').appendChild(tr); summe();
+    }
+    function cent(t){ t = String(t||'').trim().replace(/\s|€/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.'); var n = Number(t); return t !== '' && isFinite(n) ? Math.round(n*100) : NaN; }
+    function positionen(){
+      return Array.prototype.map.call($('nr-pos').querySelectorAll('tr'), function(tr){
+        return {bezeichnung: tr.querySelector('.nr-bez').value, leistungsdatum: tr.querySelector('.nr-dat').value || null,
+                menge: +tr.querySelector('.nr-menge').value || 0, einzel_brutto_cent: cent(tr.querySelector('.nr-preis').value), termin_id: tr.dataset.termin || null};
+      });
+    }
+    function summe(){
+      var s = 0, ok = true; positionen().forEach(function(p){ if (isNaN(p.einzel_brutto_cent)) ok = false; else s += Math.round(p.menge * p.einzel_brutto_cent); });
+      $('nr-summe').innerHTML = ok ? 'Gesamtbetrag: <b>'+euro0(s)+'</b>' : '<span class="fehler">Bitte bei jeder Position einen Preis eintragen.</span>';
+    }
+    $('nr-pos').addEventListener('input', summe);
+    $('nr-pos').addEventListener('click', function(e){
+      var b = e.target.closest('.nr-weg'); if (!b) return;
+      var tr = b.closest('tr'); if (tr.dataset.termin) { var c = $('nr-termine').querySelector('[data-t="'+tr.dataset.termin+'"]'); if (c) c.checked = false; }
+      tr.remove(); summe();
+    });
+    $('nr-pos-neu').onclick = function(){ posZeile({menge:1, leistungsdatum: isoTag(new Date())}); $('nr-pos').lastElementChild.querySelector('.nr-bez').focus(); };
+    function waehleKunde(k){
+      kunde = k; $('nr-treffer').hidden = true; $('nr-ksuche').value = ''; $('nr-ksuche').parentNode.hidden = true;
+      $('nr-gewaehlt').innerHTML = '<b>'+esc(k.name)+'</b> '+esc(k.email||k.telefon||'')+' <button type="button" class="m-weg" aria-label="Anderer Kunde">×</button>';
+      $('nr-gewaehlt').hidden = false;
+      $('nr-gewaehlt').querySelector('.m-weg').onclick = function(){ kunde = null; $('nr-gewaehlt').hidden = true; $('nr-ksuche').parentNode.hidden = false; $('nr-termine').innerHTML = ''; $('nr-adresse').textContent = ''; $('nr-pos').innerHTML = ''; summe(); };
+      rpc('coaching_admin_kunde', {p_id:k.id}).then(function(d){
+        var adr = [d.strasse && (d.strasse+' '+(d.hausnummer||'')).trim(), [d.plz, d.ort].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+        $('nr-adresse').textContent = adr ? 'Anschrift auf der Rechnung: ' + adr : 'Keine Anschrift hinterlegt – bei Beträgen über 250 € ist sie Pflicht. Unter „Kunden" ergänzen.';
+      });
+      rpc('coaching_admin_offene_termine', {p_kundin_id:k.id}).then(function(ts){
+        $('nr-termine').innerHTML = ts.length ? '<span class="m-lbl">Noch nicht abgerechnete Termine</span>'+ts.map(function(t){
+          var b = new Date(t.beginn);
+          return '<label class="haken nr-termin"><input type="checkbox" data-t="'+t.id+'"'+(t.id===vorTerminId?' checked':'')+'> '+datumDE(isoTag(b))+', '+uhr(b)+' – '+esc(t.angebot)+(t.preis_cent!=null?' · '+euro0(t.preis_cent):'')+'</label>';
+        }).join('') : '<p class="hinweis">Keine offenen Termine – freie Position nutzen.</p>';
+        $('nr-termine').querySelectorAll('[data-t]').forEach(function(c){
+          var t = ts.find(function(x){ return x.id === c.dataset.t; });
+          function an(){ posZeile({bezeichnung:t.angebot, leistungsdatum:isoTag(new Date(t.beginn)), menge:1, einzel_brutto_cent:t.preis_cent, termin_id:t.id}); }
+          c.onchange = function(){ if (c.checked) an(); else { var tr = $('nr-pos').querySelector('[data-termin="'+t.id+'"]'); if (tr) tr.remove(); summe(); } };
+          if (c.checked) an();
+        });
+      });
+    }
+    var suchTimer = null;
+    $('nr-ksuche').oninput = function(){
+      var q = this.value.trim(); clearTimeout(suchTimer);
+      if (q.length < 2) { $('nr-treffer').hidden = true; return; }
+      suchTimer = setTimeout(function(){
+        rpc('coaching_admin_kundinnen', {p_suche:q}).then(function(liste){
+          $('nr-treffer').innerHTML = liste.length ? liste.map(function(k,i){ return '<button type="button" data-k="'+i+'"><b>'+esc(k.name)+'</b> <small>'+esc(k.email||k.telefon||'')+'</small></button>'; }).join('')
+            : '<div class="hinweis" style="padding:8px 10px">Kein Kunde gefunden – unter „Kunden" anlegen.</div>';
+          $('nr-treffer').hidden = false;
+          $('nr-treffer').querySelectorAll('[data-k]').forEach(function(b){ b.onclick = function(){ waehleKunde(liste[+b.dataset.k]); }; });
+        });
+      }, 250);
+    };
+    if (vorKunde) waehleKunde(vorKunde);
+    summe();
+    $('nr-form').onsubmit = function(e){
+      e.preventDefault(); var f = $('nr-fehler'); f.textContent = '';
+      if (!kunde) { f.textContent = 'Bitte einen Kunden wählen.'; return; }
+      var pos = positionen();
+      if (!pos.length) { f.textContent = 'Bitte mindestens eine Position hinzufügen.'; return; }
+      if (pos.some(function(p){ return !p.bezeichnung.trim() || isNaN(p.einzel_brutto_cent) || !(p.menge > 0); })) { f.textContent = 'Bitte bei jeder Position Leistung, Menge und Preis ausfüllen.'; return; }
+      var knopf = this.querySelector('.btn'); knopf.disabled = true;
+      rpc('coaching_admin_rechnung_erstellen', {p_kundin_id:kunde.id, p_datum:$('nr-datum').value, p_positionen:pos,
+        p_zahlungsart:$('nr-zahlart').value, p_bezahlt:$('nr-bezahlt').checked})
+        .then(function(r){ if (!$('t-rechnungen').hidden) ladeRechnungen(); zeigeRechnung(r.id); if (!$('t-kalender').hidden) ladeWoche(); })
+        .catch(function(err){ f.textContent = err.message; knopf.disabled = false; });
+    };
+  }
+
+  /* Rechnungsvorlage-Editor mit Live-Vorschau */
+  var vlDaten = {}, vlLogo = '', vlEinst = {};
+  var VL_FELDER = ['logo_pos','logo_breite','farbe','schrift','titel','titel_storno','einleitung','text_offen','text_bezahlt','schluss'];
+  function vlLesen(){
+    var v = {logo: vlLogo};
+    VL_FELDER.forEach(function(f){ v[f] = $('vl-'+f).value; });
+    v.logo_breite = +v.logo_breite; v.farbe = v.farbe.toUpperCase();
+    v.spalte_datum = $('vl-spalte_datum').checked; v.spalte_menge = $('vl-spalte_menge').checked;
+    return v;
+  }
+  function vlSetzen(v){
+    v = Object.assign({}, VORLAGE_STD, v || {}); vlLogo = v.logo || '';
+    VL_FELDER.forEach(function(f){ $('vl-'+f).value = v[f]; });
+    $('vl-spalte_datum').checked = v.spalte_datum !== false; $('vl-spalte_menge').checked = v.spalte_menge !== false;
+    vlVorschau();
+  }
+  function vlVorschau(){
+    var e = vlEinst, muster = $('vl-muster').value, klein = muster === 'klein';
+    var heute = isoTag(new Date()), ziel = isoTag(new Date(Date.now() + (e.re_zahlungsziel_tage || 14) * 864e5));
+    var pos = [{pos:1, bezeichnung:'Einzelbegleitung', leistungsdatum:heute, menge:1, einzel_brutto_cent:11900, gesamt_brutto_cent:11900},
+               {pos:2, bezeichnung:'Wimpern färben', leistungsdatum:heute, menge:2, einzel_brutto_cent:1500, gesamt_brutto_cent:3000}];
+    var satz = +(e.re_ust_satz || 19), brutto = 14900, ust = klein ? 0 : Math.round(brutto * satz / (100 + satz));
+    var r = {nummer:(e.re_praefix||'RE')+'-'+new Date().getFullYear()+'-0001', art:'rechnung', datum:heute, leistung_von:heute, leistung_bis:heute,
+      kleinunternehmer:klein, ust_satz: klein ? 0 : satz, summe_brutto_cent:brutto, summe_netto_cent:brutto-ust, summe_ust_cent:ust,
+      status: muster === 'offen' ? 'offen' : 'bezahlt', zahlungsart: muster === 'offen' ? 'ueberweisung' : 'bar', zahlungsziel:ziel, bezahlt_am:heute,
+      empfaenger:{name:'Maria Beispiel', strasse:'Musterweg 1', plz:'94469', ort:'Deggendorf'},
+      aussteller:{name:e.re_name||'Sandra [Nachname]', zusatz:e.re_zusatz, strasse:e.re_strasse||'[Straße]', plz:e.re_plz||'[PLZ]', ort:e.re_ort||'[Ort]',
+        telefon:e.re_telefon, email:e.re_email, steuernummer:e.re_steuernummer||'[Steuernummer]', ust_id:e.re_ust_id,
+        iban:e.re_iban||'DE00000000000000000000', bic:e.re_bic, bank:e.re_bank, fusstext:e.re_fusstext, vorlage: vlLesen()},
+      positionen: pos};
+    $('vl-vorschau').innerHTML = rechnungHtml(r);
+  }
+  function ladeVorlage(){
+    rpc('coaching_admin_einstellungen').then(function(e){ vlEinst = e; vlSetzen(e.re_vorlage); });
+  }
+  $('f-vorlage').addEventListener('input', vlVorschau);
+  $('f-vorlage').addEventListener('change', vlVorschau);
+  $('vl-logo-datei').addEventListener('change', function(){
+    var f = this.files[0]; if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var max = 600, s = Math.min(1, max / img.width), c = document.createElement('canvas');
+        c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        var url = c.toDataURL('image/png');
+        if (url.length > 380000) url = c.toDataURL('image/jpeg', 0.85);
+        if (url.length > 380000) { $('vl-meldung').className = 'fehler'; $('vl-meldung').textContent = 'Das Logo ist zu groß – bitte eine kleinere Datei wählen.'; return; }
+        vlLogo = url; vlVorschau();
+      };
+      img.src = rd.result;
+    };
+    rd.readAsDataURL(f);
+  });
+  $('vl-logo-weg').addEventListener('click', function(){ vlLogo = ''; $('vl-logo-datei').value = ''; vlVorschau(); });
+  $('vl-standard').addEventListener('click', function(){ var l = vlLogo; vlSetzen(Object.assign({}, VORLAGE_STD, {logo:l})); });
+  $('f-vorlage').addEventListener('submit', function(ev){
+    ev.preventDefault(); var m = $('vl-meldung');
+    rpc('coaching_admin_rechnungsvorlage_setzen', {p: vlLesen()})
+      .then(function(){ m.className = 'ok'; m.textContent = 'Vorlage gespeichert. Gilt für alle neuen Rechnungen.'; })
+      .catch(function(err){ m.className = 'fehler'; m.textContent = err.message; });
+  });
+
+  /* Rechnungsdaten (Einstellungen) */
+  var RE_FELDER = ['re_name','re_zusatz','re_strasse','re_plz','re_ort','re_telefon','re_email','re_steuernummer','re_ust_id','re_ust_satz','re_iban','re_bic','re_bank','re_zahlungsziel_tage','re_praefix','re_fusstext'];
+  function ladeRechnungsdaten(){
+    rpc('coaching_admin_einstellungen').then(function(e){
+      RE_FELDER.forEach(function(f){ $('f-'+f).value = e[f] == null ? '' : e[f]; });
+      $('f-re_kleinunternehmer').value = e.re_kleinunternehmer == null ? '' : String(e.re_kleinunternehmer);
+    });
+  }
+  $('f-redaten').addEventListener('submit', function(ev){
+    ev.preventDefault(); var m = $('re-daten-meldung'), d = {};
+    RE_FELDER.forEach(function(f){ d[f] = $('f-'+f).value; }); d.re_kleinunternehmer = $('f-re_kleinunternehmer').value;
+    rpc('coaching_admin_rechnungsdaten_setzen', {p:d})
+      .then(function(){ m.className='ok'; m.textContent='Gespeichert. Gilt für alle neuen Rechnungen – bestehende bleiben unverändert.'; })
+      .catch(function(err){ m.className='fehler'; m.textContent=err.message; });
+  });
+
+  /* Kunden */
+  var kuSeite = 0, kuGesamt = 0, kuEdit = null, kuTimer = null, PRO_SEITE = 50;
+  function ladeKunden(){
+    return rpc('coaching_admin_kunden_liste', {p_suche:$('ku-suche').value||null, p_seite:kuSeite, p_pro_seite:PRO_SEITE}).then(function(r){
+      kuGesamt = r.gesamt;
+      $('ku-anzahl').textContent = '(' + r.gesamt + ')';
+      $('ku-liste').innerHTML = r.liste.length ? r.liste.map(function(k){
+        return '<tr class="zeile" data-ku="'+k.id+'"><td><b>'+esc(k.name)+'</b></td><td>'+esc(k.telefon||'')+'</td><td>'+esc(k.email||'')+'</td>'+
+          '<td>'+esc(k.ort||'')+'</td><td>'+(k.termine||'')+'</td><td>'+(k.letzter?new Intl.DateTimeFormat('de-DE').format(new Date(k.letzter)):'')+'</td></tr>';
+      }).join('') : '<tr><td colspan="6" class="hinweis">Kein Kunde gefunden.</td></tr>';
+      var seiten = Math.max(1, Math.ceil(kuGesamt / PRO_SEITE));
+      $('ku-seite').textContent = 'Seite ' + (kuSeite+1) + ' von ' + seiten;
+      $('ku-zurueck').disabled = kuSeite === 0; $('ku-weiter').disabled = kuSeite >= seiten-1;
+    });
+  }
+  $('ku-suche').addEventListener('input', function(){ clearTimeout(kuTimer); kuTimer = setTimeout(function(){ kuSeite = 0; ladeKunden(); }, 250); });
+  $('ku-zurueck').addEventListener('click', function(){ if (kuSeite > 0) { kuSeite--; ladeKunden(); } });
+  $('ku-weiter').addEventListener('click', function(){ kuSeite++; ladeKunden(); });
+  $('ku-neu').addEventListener('click', function(){ oeffneKunde(null); });
+  $('ku-liste').addEventListener('click', function(e){
+    var z = e.target.closest('[data-ku]'); if (!z) return;
+    rpc('coaching_admin_kunde', {p_id: z.dataset.ku}).then(oeffneKunde);
+  });
+  function oeffneKunde(k){
+    kuEdit = k;
+    $('ku-titel').textContent = k ? k.name : 'Neuer Kunde';
+    var f = {name:'ku-name', telefon:'ku-tel', telefon2:'ku-tel2', email:'ku-email', geburtstag:'ku-geb', strasse:'ku-str', hausnummer:'ku-hnr', plz:'ku-plz', ort:'ku-ort', notiz:'ku-notiz'};
+    Object.keys(f).forEach(function(key){ $(f[key]).value = k && k[key] ? k[key] : ''; });
+    $('ku-herkunft').textContent = k ? ('Angelegt am ' + new Intl.DateTimeFormat('de-DE').format(new Date(k.created_at)) +
+      (k.quelle ? ' · ' + k.quelle : '') + (k.bookly_ids ? ' · Bookly-Nr. ' + k.bookly_ids.join(', ') : '')) : '';
+    var t = k && k.termine || [];
+    $('ku-termine').innerHTML = k ? '<h3 style="font-size:15px;margin:4px 0 6px">Termine ('+t.length+')</h3>' + (t.length ?
+      '<table><tbody>' + t.map(function(x){ var b = new Date(x.beginn);
+        return '<tr><td>'+new Intl.DateTimeFormat('de-DE').format(b)+', '+uhr(b)+'</td><td>'+esc(x.angebot)+'</td><td>'+(x.preis_cent!=null?euro(x.preis_cent):'')+'</td><td>'+STATUS[x.status]+'</td></tr>'; }).join('') +
+      '</tbody></table>' : '<p class="hinweis">Noch keine Termine im neuen System.</p>') : '';
+    $('ku-loeschen').hidden = !k; delete $('ku-loeschen').dataset.sicher; $('ku-loeschen').textContent = 'Löschen';
+    $('ku-fehler').textContent = ''; $('ku-modal').hidden = false; $('ku-name').focus();
+  }
+  function schliesseKunde(){ $('ku-modal').hidden = true; }
+  $('ku-zu').addEventListener('click', schliesseKunde);
+  $('ku-abbr').addEventListener('click', schliesseKunde);
+  $('ku-modal').addEventListener('click', function(e){ if (e.target === this) schliesseKunde(); });
+  $('ku-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    rpc('coaching_admin_kunde_speichern', {p_id: kuEdit ? kuEdit.id : null, p_daten: {
+      name:$('ku-name').value, telefon:$('ku-tel').value, telefon2:$('ku-tel2').value, email:$('ku-email').value,
+      geburtstag:$('ku-geb').value, strasse:$('ku-str').value, hausnummer:$('ku-hnr').value, plz:$('ku-plz').value,
+      ort:$('ku-ort').value, notiz:$('ku-notiz').value}})
+      .then(function(){ schliesseKunde(); ladeKunden(); })
+      .catch(function(err){ $('ku-fehler').textContent = err.message; });
+  });
+  $('ku-loeschen').addEventListener('click', function(){
+    var b = this;
+    if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Wirklich löschen?'; return; }
+    rpc('coaching_admin_kunde_loeschen', {p_id: kuEdit.id})
+      .then(function(){ schliesseKunde(); ladeKunden(); })
+      .catch(function(err){ $('ku-fehler').textContent = err.message; delete b.dataset.sicher; b.textContent = 'Löschen'; });
+  });
+
+  /* Aufgaben */
+  var aufgaben = [];
+  function ladeAufgaben(){ rpc('coaching_admin_aufgaben').then(function(a){ aufgaben = a; zeichneAufgaben(); }); }
+  function zeichneAufgaben(){
+    var wer = $('a-filter').value, alle = $('a-erledigte').checked;
+    var liste = aufgaben.filter(function(a){ return (!wer || a.wer === wer) && (alle || !a.erledigt); });
+    var gruppen = {};
+    liste.forEach(function(a){ var g = a.bereich || 'Sonstiges'; (gruppen[g] = gruppen[g] || []).push(a); });
+    $('a-liste').innerHTML = Object.keys(gruppen).map(function(g){
+      return '<h3 style="font-size:14px;color:var(--muted);margin:16px 0 4px">'+esc(g)+'</h3>' + gruppen[g].map(function(a){
+        return '<div class="aufg'+(a.erledigt?' fertig':'')+'">'+
+          '<input type="checkbox" data-ok="'+a.id+'"'+(a.erledigt?' checked':'')+' aria-label="Erledigt">'+
+          '<div style="flex:1"><div class="a-t">'+esc(a.titel)+' <span class="wer wer-'+a.wer+'">'+a.wer+'</span></div>'+
+          (a.notiz?'<div class="hinweis" style="margin:2px 0 0">'+esc(a.notiz)+'</div>':'')+'</div>'+
+          '<button class="btn btn-2 btn-klein" data-weg="'+a.id+'" aria-label="Löschen">✕</button></div>';
+      }).join('');
+    }).join('') || '<p class="hinweis">Nichts offen.</p>';
+    var offen = aufgaben.filter(function(a){ return !a.erledigt; }).length;
+    $('a-stand').textContent = offen + ' offen · ' + (aufgaben.length - offen) + ' erledigt';
+    var bereiche = {}; aufgaben.forEach(function(a){ if (a.bereich) bereiche[a.bereich] = 1; });
+    $('a-bereiche').innerHTML = Object.keys(bereiche).map(function(b){ return '<option value="'+esc(b)+'">'; }).join('');
+  }
+  $('a-filter').addEventListener('change', zeichneAufgaben);
+  $('a-erledigte').addEventListener('change', zeichneAufgaben);
+  $('a-liste').addEventListener('change', function(e){
+    var c = e.target.closest('[data-ok]'); if (!c) return;
+    rpc('coaching_admin_aufgabe_erledigt', {p_id:c.dataset.ok, p_erledigt:c.checked}).then(ladeAufgaben);
+  });
+  $('a-liste').addEventListener('click', function(e){
+    var b = e.target.closest('[data-weg]'); if (!b) return;
+    if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Löschen?';
+      setTimeout(function(){ if (b.isConnected){ delete b.dataset.sicher; b.textContent = '✕'; } }, 4000); return; }
+    rpc('coaching_admin_aufgabe_loeschen', {p_id:b.dataset.weg}).then(ladeAufgaben);
+  });
+  $('f-aufgabe').addEventListener('submit', function(e){
+    e.preventDefault();
+    rpc('coaching_admin_aufgabe_speichern', {p_id:null, p_titel:$('a-titel').value, p_notiz:null,
+      p_wer:$('a-wer').value, p_bereich:$('a-bereich').value})
+      .then(function(){ $('a-titel').value = ''; ladeAufgaben(); });
+  });
+
+  if (sitzung) start();
+})();
+</script>
+</body>
+</html>

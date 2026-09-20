@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sandra [Nachname] – Coaching, wenn du dich selbst aus den Augen verloren hast</title>
+<meta name="description" content="Persönliches Coaching für Menschen, die ein Leben führen, das sich nicht wie ihres anfühlt. Schwerpunkt: Glaubenssätze und die Arbeit mit dem inneren Kind. Kostenloses Erstgespräch.">
+<style>
+  :root{
+    --cream:#FBF7F1; --paper:#FFFDFA; --sand:#EFE6DA; --sand-2:#E4D8CC;
+    --rose:#E6CFC4; --clay:#A97B63; --clay-dark:#8B6049; --olive:#A9AE97;
+    --ink:#42392F; --muted:#7C6F63; --line:#E7DCCF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-size:17.5px;line-height:1.7;
+       font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 26px}
+  .narrow{max-width:780px;margin:0 auto;padding:0 26px}
+  a{color:inherit}
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  .btn{display:inline-block;background:var(--clay);color:#fff;text-decoration:none;
+       padding:15px 30px;border-radius:999px;font-size:16px;font-weight:600;
+       border:2px solid var(--clay);transition:background .2s,border-color .2s;cursor:pointer}
+  .btn:hover{background:var(--clay-dark);border-color:var(--clay-dark)}
+  .btn-2{background:transparent;color:var(--clay-dark);border-color:var(--sand-2)}
+  .btn-2:hover{background:var(--sand);border-color:var(--sand)}
+
+  header{position:sticky;top:0;z-index:40;background:rgba(251,247,241,.92);
+         backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s}
+  header.stuck{border-bottom-color:var(--line)}
+  .nav{max-width:1080px;margin:0 auto;padding:16px 26px;display:flex;
+       align-items:center;justify-content:space-between;gap:16px}
+  .brand{font-size:15.5px;font-weight:600;color:var(--muted)}
+  .nav .mini{text-decoration:none;font-size:15px;font-weight:600;color:var(--clay-dark);
+             border-bottom:1.5px solid var(--rose);padding-bottom:2px}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:26px 0 78px}
+  .eyebrow{text-align:center;font-size:12.5px;font-weight:700;letter-spacing:.24em;
+           text-transform:uppercase;color:var(--clay);margin-bottom:26px}
+  .stage{max-width:540px;margin:0 auto}
+  .frame{position:relative;border-radius:26px;overflow:hidden;background:var(--paper);
+         border:1px solid var(--line);box-shadow:0 26px 60px -38px rgba(66,57,47,.55);
+         aspect-ratio:1122/1402}
+  .frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+             opacity:0;transition:opacity .9s ease}
+  .frame img.on{opacity:1}
+  .cap{text-align:center;min-height:92px;margin-top:26px;position:relative}
+  .cap p{position:absolute;left:0;right:0;top:0;font-size:19px;color:var(--muted);
+         opacity:0;transition:opacity .6s ease;padding:0 6px}
+  .cap p.on{opacity:1}
+  .dots{display:flex;gap:10px;justify-content:center;margin-top:8px}
+  .dots button{width:34px;height:5px;border-radius:99px;border:0;padding:0;cursor:pointer;
+               background:var(--sand-2);transition:background .3s}
+  .dots button[aria-current="true"]{background:var(--clay)}
+  .dots button:focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+  .pitch{text-align:center;max-width:34em;margin:44px auto 0}
+  .pitch p{font-size:19.5px}
+  .cta{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+  .reassure{font-size:14.5px;color:var(--muted);margin-top:18px}
+  @media(max-width:760px){.stage{max-width:100%}.cap p{font-size:17px}
+    .pitch p{font-size:17.5px}.hero{padding-bottom:52px}}
+
+  /* ---------- Abschnitte ---------- */
+  section{padding:78px 0}
+  h2{font-size:32px;line-height:1.25;letter-spacing:-.02em;font-weight:600}
+  h3{font-size:21px;font-weight:600}
+  .head{max-width:33em;margin-bottom:44px}
+  .head.mid{text-align:center;margin-left:auto;margin-right:auto}
+  .head p{color:var(--muted);margin-top:12px}
+  .band{background:var(--sand)}
+  @media(max-width:760px){section{padding:54px 0}h2{font-size:25px}}
+
+  /* Ursachenkette */
+  .chain{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .link{position:relative;padding-right:28px}
+  .link:not(:last-child):after{content:"";position:absolute;right:12px;top:34px;
+    width:10px;height:10px;border-top:2px solid var(--rose);border-right:2px solid var(--rose);
+    transform:rotate(45deg)}
+  .link .k{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+           color:var(--clay);margin-bottom:10px}
+  .link b{display:block;font-size:19px;font-weight:600;margin-bottom:8px;line-height:1.35}
+  .link span{font-size:15.5px;color:var(--muted)}
+  @media(max-width:760px){.chain{grid-template-columns:1fr;gap:30px}
+    .link{padding-right:0}.link:not(:last-child):after{display:none}}
+  /* Glaubenssatz-Spiegel */
+  .beliefs{display:flex;flex-wrap:wrap;gap:11px;margin-top:22px}
+  .belief{background:var(--paper);border:1px solid var(--line);border-radius:999px;
+          padding:11px 20px;font-size:16px;cursor:pointer;font-family:inherit;
+          color:var(--ink);transition:border-color .2s,background .2s}
+  .belief:hover{border-color:var(--clay)}
+  .belief[aria-expanded="true"]{background:var(--clay);border-color:var(--clay);color:#fff}
+  .belief:focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+  .mirror{margin-top:20px;background:var(--paper);border:1px solid var(--sand-2);
+          border-radius:20px;padding:30px 32px;max-width:820px;display:none}
+  .mirror.open{display:block}
+  .mirror h4{font-size:20px;font-weight:600;margin-bottom:22px;font-style:italic;
+             color:var(--clay-dark)}
+  .mirror .part{margin-bottom:18px}
+  .mirror .part:last-child{margin-bottom:0}
+  .mirror .part b{display:block;font-size:12.5px;font-weight:700;letter-spacing:.16em;
+                  text-transform:uppercase;color:var(--clay);margin-bottom:5px}
+  .mirror .part p{font-size:16.5px;color:var(--ink)}
+  .mirror .part.q p{font-size:18.5px;font-style:italic}
+  .mirror-hint{font-size:14px;color:var(--muted);margin-top:14px}
+  @media(max-width:760px){.mirror{padding:24px 22px}}
+  .bridge{margin-top:36px;padding-left:22px;border-left:3px solid var(--rose);
+          font-size:19px;max-width:38em}
+
+  /* Karten */
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .box{background:var(--paper);border:1px solid var(--line);border-radius:20px;
+       padding:30px 26px;display:flex;flex-direction:column}
+  .box b{display:block;font-size:18px;font-weight:600;margin-bottom:8px}
+  .box span{font-size:15.5px;color:var(--muted);flex:1}
+  .box .p{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+          font-size:14.5px;font-weight:600;color:var(--clay-dark)}
+  @media(max-width:760px){.three{grid-template-columns:1fr}}
+
+  /* Phasen */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;counter-reset:s}
+  .step{padding-top:48px;position:relative}
+  .step:before{counter-increment:s;content:counter(s);position:absolute;top:0;left:0;
+    width:34px;height:34px;border-radius:99px;background:var(--clay);color:#fff;
+    display:grid;place-items:center;font-size:15px;font-weight:700}
+  .step b{display:block;font-size:18px;font-weight:600;margin-bottom:6px}
+  .step span{font-size:15.5px;color:var(--muted)}
+  @media(max-width:760px){.steps{grid-template-columns:1fr}}
+
+  /* FAQ */
+  .faq{display:flex;flex-direction:column;gap:12px;max-width:780px}
+  details{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+          padding:0 24px}
+  details[open]{border-color:var(--sand-2)}
+  summary{cursor:pointer;list-style:none;padding:20px 0;font-size:17.5px;font-weight:600;
+          display:flex;justify-content:space-between;align-items:center;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary:after{content:"+";font-size:22px;color:var(--clay);font-weight:400;flex:none}
+  details[open] summary:after{content:"–"}
+  details p{padding:0 0 22px;color:var(--muted);font-size:16px;max-width:52em}
+  details p+p{padding-top:0;margin-top:-8px}
+
+  /* Sandra */
+  .about{display:grid;grid-template-columns:.72fr 1.28fr;gap:52px;align-items:center}
+  .ph{background:linear-gradient(140deg,var(--sand),var(--rose));border:1px dashed #D2BDAE;
+      border-radius:22px;display:flex;align-items:center;justify-content:center;
+      text-align:center;color:var(--clay-dark);font-size:13.5px;font-weight:600;
+      padding:20px;aspect-ratio:4/5}
+  @media(max-width:760px){.about{grid-template-columns:1fr;gap:30px}}
+
+  /* Buchung */
+  .book{background:var(--paper);border:1px solid var(--line);border-radius:26px;
+        overflow:hidden;display:grid;grid-template-columns:.85fr 1.15fr}
+  .book-l{background:var(--clay);color:#fff;padding:44px 38px}
+  .book-l h3{font-size:25px;line-height:1.25;margin-bottom:12px;color:#fff}
+  .book-l p{color:#F3E3DA;font-size:15.5px}
+  .book-l ul{list-style:none;margin-top:24px;display:flex;flex-direction:column;gap:11px;
+             font-size:15px;color:#F8ECE5}
+  .book-r{padding:34px}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0 22px}
+  .cal div{aspect-ratio:1/1;display:grid;place-items:center;font-size:14px;border-radius:10px;
+           color:#B3A798}
+  .cal .d{background:var(--sand);color:var(--clay-dark);font-weight:600}
+  .cal .sel{background:var(--clay);color:#fff;font-weight:700}
+  .cal .h{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#B3A798}
+  .times{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .t{border:1px solid var(--line);border-radius:10px;padding:11px 0;text-align:center;
+     font-size:14.5px;cursor:pointer}
+  .t.on{border-color:var(--clay);background:var(--sand);font-weight:700;color:var(--clay-dark)}
+  .note{font-size:13px;color:#9C9084;margin-top:18px}
+  .bk-lbl{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+  .bk-in{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+    font:inherit;font-size:15.5px;color:var(--ink);background:var(--paper);margin-bottom:10px}
+  .bk-in:focus{outline:2px solid var(--clay);outline-offset:1px;border-color:var(--clay)}
+  .bk-monat{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .bk-nav{background:none;border:1px solid var(--line);border-radius:999px;width:34px;height:34px;
+    font-size:18px;color:var(--clay-dark);cursor:pointer}
+  .bk-nav:disabled{opacity:.35;cursor:default}
+  .cal button{aspect-ratio:1/1;border:0;border-radius:10px;font:inherit;font-size:14px;cursor:pointer}
+  .t{background:none;font:inherit;color:inherit}
+  .bk-gewaehlt{font-weight:600;color:var(--clay-dark);margin-bottom:14px}
+  .bk-art{display:flex;gap:18px;font-size:15px;margin:4px 0 12px}
+  .bk-ok{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted);line-height:1.5}
+  .bk-ok input{margin-top:3px}
+  .bk-zurueck{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;margin-top:10px;cursor:pointer}
+  .bk-fehler{color:#9B3B2E;font-size:14.5px;margin-top:8px}
+  .bk-kat{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#F3E3DA;margin-bottom:6px}
+  .bk-karte-kat{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .bk-karte-link{display:inline-block;margin-top:12px;font-size:14.5px;font-weight:600;color:var(--clay-dark);text-decoration:none}
+  .bk-karte-link:hover{text-decoration:underline}
+  .bk-l-fakt{margin-top:14px;font-weight:600;color:#fff!important}
+  [hidden]{display:none!important}
+  @media(max-width:760px){.book{grid-template-columns:1fr}.book-l{padding:34px 26px}
+    .book-r{padding:26px 22px}}
+
+  .safety{background:var(--sand-2);border-radius:18px;padding:24px 28px;margin-top:44px;
+          font-size:15.5px;color:#5E5346;max-width:780px}
+  .safety b{display:block;margin-bottom:6px;color:var(--ink)}
+
+  /* Ein Satz statt Formular */
+  .onesentence{max-width:640px;margin:56px auto 0;text-align:center}
+  .onesentence h3{font-size:22px}
+  .onesentence>p{color:var(--muted);margin-top:8px}
+  .onesentence form{margin-top:22px;text-align:left}
+  .onesentence textarea{width:100%;border:1px solid var(--line);border-radius:16px;
+    padding:16px 18px;font:inherit;font-size:17px;color:var(--ink);background:var(--paper);
+    resize:vertical;min-height:64px}
+  .onesentence textarea:focus,.onesentence input:focus{outline:2px solid var(--clay);
+    outline-offset:1px;border-color:var(--clay)}
+  .os-row{display:flex;gap:10px;margin-top:10px}
+  .os-row input{flex:1;border:1px solid var(--line);border-radius:999px;
+    padding:0 18px;font:inherit;font-size:15.5px;color:var(--ink);background:var(--paper)}
+  .os-row .btn{padding:13px 24px;flex:none}
+  .os-note{font-size:13.5px;color:var(--muted);margin-top:14px;text-align:left}
+  @media(max-width:560px){.os-row{flex-direction:column}.os-row input{padding:14px 18px}}
+
+  footer{background:var(--ink);color:#C4B6A8;padding:52px 0 40px;font-size:14.5px;margin-top:78px}
+  .foot{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap}
+  .foot a{text-decoration:none}.foot a:hover{color:var(--rose)}
+  .tag{position:fixed;left:14px;bottom:14px;background:var(--ink);color:#fff;font-size:12px;
+       padding:8px 14px;border-radius:20px;z-index:60;text-decoration:none}
+  @media(prefers-reduced-motion:reduce){.frame img,.cap p{transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div style="background:#42392F;color:#fff;text-align:center;font-size:13.5px;padding:8px 16px">Diese Seite ist im Aufbau – Inhalte, Angebote und Preise sind vorläufig.</div>
+
+<header id="top">
+  <div class="nav">
+    <div class="brand">Sandra [Nachname]</div>
+    <a href="#termin" class="mini">Termin finden</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Wenn du dich selbst aus den Augen verloren hast</p>
+
+    <div class="stage">
+      <div class="frame" id="frame">
+        <img class="on" src="bilder/frage-1-warum-bin-ich-hier.jpg"
+             alt="Aquarell: Eine Frau sitzt am Tisch, den Kopf in die Hand gestützt, und blickt nachdenklich nach oben. In einer Gedankenblase steht: Warum bin ich hier?">
+        <img src="bilder/frage-2-spielplatz.jpg"
+             alt="Aquarell: Eine Frau sitzt erschöpft vor ihrem Laptop und stützt den Kopf. In einer Gedankenblase steht: Spiele ich auf meinem Spielplatz?">
+        <img src="bilder/frage-3-erfuelltes-leben.jpg"
+             alt="Aquarell: Eine Frau kocht, im Hintergrund spielen zwei Kinder und ein Mann kommt erschöpft zur Tür herein. In einer Gedankenblase steht: Führe ich ein erfülltes Leben?">
+      </div>
+
+      <h1 class="sr">Warum bin ich hier? Spiele ich auf meinem Spielplatz?
+        Führe ich ein erfülltes Leben? – Persönliches Coaching mit Sandra [Nachname]</h1>
+
+      <div class="cap" id="cap">
+        <p class="on">Wenn du nicht mehr weißt, wohin dein Weg eigentlich führen soll.</p>
+        <p>Wenn die Arbeit jeden Tag mehr nimmt, als sie dir zurückgibt.</p>
+        <p>Wenn von außen alles stimmt – und sich innen trotzdem etwas leer anfühlt.</p>
+      </div>
+
+      <div class="dots" id="dots" role="tablist" aria-label="Bild wählen"></div>
+    </div>
+
+    <div class="pitch">
+      <p>Solche Gedanken verschwinden nicht, wenn du sie ignorierst.
+         Du musst sie aber auch nicht allein sortieren.</p>
+      <div class="cta">
+        <a href="#termin" class="btn">Kostenloses Erstgespräch</a>
+        <a href="#woher" class="btn btn-2">Woher das kommt</a>
+      </div>
+      <div class="reassure">30 Minuten · unverbindlich · online oder in [Ort]</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WOHER ============ -->
+<section id="woher">
+  <div class="wrap">
+    <div class="head">
+      <h2>Woher das kommt</h2>
+      <p>Kaum jemand entscheidet sich bewusst für ein Leben, das sich fremd anfühlt.
+         Man wächst hinein.</p>
+    </div>
+
+    <div class="chain">
+      <div class="link">
+        <div class="k">Zuerst</div>
+        <b>Du lernst, wie man dazugehört</b>
+        <span>Sei brav. Mach keine Umstände. Kümmer dich. Kinder lernen früh, was sie
+              tun müssen, damit es gut läuft – und sie lernen es gründlich.</span>
+      </div>
+      <div class="link">
+        <div class="k">Daraus wird</div>
+        <b>Ein Satz, den du für wahr hältst</b>
+        <span>Sei es perfekt sein zu wollen, es allen recht zu machen oder keine
+              Schwäche zu zeigen: Aus der Erfahrung wird eine Regel. Sie läuft mit,
+              ohne dass du sie noch bemerkst.</span>
+      </div>
+      <div class="link">
+        <div class="k">Am Ende</div>
+        <b>Ein Leben nach fremdem Maß</b>
+        <span>Dazu kommt, was von außen dazukommt: Vergleiche, Werbung, Erwartungen.
+              Irgendwann führst du ein Leben, das gut aussieht und sich nicht wie
+              deins anfühlt.</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top:56px">Kennst du einen dieser Sätze?</h3>
+    <p style="color:var(--muted);margin-top:6px">Tippe den an, der dir am bekanntesten
+      vorkommt.</p>
+    <div class="beliefs" id="beliefs"></div>
+    <div class="mirror" id="mirror" role="region" aria-live="polite"></div>
+    <p class="mirror-hint">Nichts davon wird gespeichert oder übertragen.
+      Das hier bleibt zwischen dir und deinem Bildschirm.</p>
+
+    <p class="bridge">Solche Sätze lösen sich nicht durch Nachdenken auf. Sie sind früh
+      entstanden – und genau dort müssen wir hin, um sie zu lösen. Das ist die Arbeit
+      mit dem inneren Kind.</p>
+  </div>
+</section>
+
+<!-- ============ ERWARTET ============ -->
+<section id="erwartet" class="band">
+  <div class="wrap">
+    <div class="head">
+      <h2>Was dich erwartet</h2>
+      <p>Bevor du wissen musst, wer ich bin, solltest du wissen, was du bekommst.</p>
+    </div>
+    <div class="three">
+      <div class="box"><b>Ein Gespräch, das nichts kostet</b>
+        <span>30 Minuten, in denen du erzählst, was los ist. Danach entscheidest du –
+              nicht ich, und nicht sofort.</span></div>
+      <div class="box"><b>Ein Rahmen statt guter Ratschläge</b>
+        <span>Feste Termine, ein klarer Ablauf und jemand, der die Fragen stellt,
+              die du dir selbst nicht stellst.</span></div>
+      <div class="box"><b>Kein Etikett, keine Diagnose</b>
+        <span>Du bist nicht krank, weil du gerade nicht weiterweißt. Hier bekommst du
+              keine Nummer und keine Schublade.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHASEN ============ -->
+<section id="ablauf">
+  <div class="wrap">
+    <div class="head">
+      <h2>Wie wir arbeiten</h2>
+      <p>Drei Schritte. Du steigst dort ein, wo du gerade stehst.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><b>Ankommen</b>
+        <span>Erst einmal Boden unter die Füße. Wir sortieren, was zuerst dran ist –
+              und was warten kann.</span></div>
+      <div class="step"><b>Verstehen</b>
+        <span>Welche Sätze laufen bei dir mit, und woher stammen sie? Hier arbeiten
+              wir mit deinem inneren Kind. Dort sind sie entstanden, und dort lösen
+              sie sich auch.</span></div>
+      <div class="step"><b>Neu ausrichten</b>
+        <span>Wenn die alten Sätze ihre Macht verlieren, wird die eigentliche Frage
+              beantwortbar: Was willst du erlebt haben, wenn du zurückschaust?</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANGEBOT ============ -->
+<section id="angebot" class="band">
+  <div class="wrap">
+    <div class="head">
+      <h2>Angebot</h2>
+      <p>Alles beginnt mit dem kostenfreien Erstgespräch. Erst danach entscheidest du.</p>
+    </div>
+    <div class="three" id="angebot-karten">
+      <div class="box">
+        <b>Erstgespräch</b>
+        <span>Ein ruhiges Kennenlernen. Du erzählst, was dich beschäftigt – ich sage
+              dir ehrlich, ob ich die Richtige für dich bin.</span>
+        <div class="p">30 Min · kostenfrei</div>
+      </div>
+      <div class="box">
+        <b>Einzelbegleitung</b>
+        <span>Regelmäßige Gespräche über einen Zeitraum, den wir gemeinsam festlegen.
+              Online oder in [Ort].</span>
+        <div class="p">60 Min · [Preis eintragen]</div>
+      </div>
+      <div class="box">
+        <b>Prozess: Inneres Kind</b>
+        <span>Der vertiefende Weg zu den Sätzen, die sich immer wiederholen –
+              in Beziehungen, im Beruf, im Umgang mit dir selbst.</span>
+        <div class="p">[Anzahl] Sitzungen · [Preis eintragen]</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="fragen">
+  <div class="wrap">
+    <div class="head">
+      <h2>Häufige Fragen</h2>
+      <p>Was viele wissen möchten, bevor sie sich melden.</p>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>Ist Coaching dasselbe wie Therapie?</summary>
+        <p>Nein. [Platzhalter – Sandra formuliert die Abgrenzung selbst. Wichtig auch
+        rechtlich: klar sagen, was das Angebot <em>nicht</em> ist. Coaching behandelt
+        keine Krankheiten und ersetzt keine Psychotherapie.]</p>
+      </details>
+      <details>
+        <summary>Wann ist Coaching nicht das Richtige?</summary>
+        <p>Wenn es dir sehr schlecht geht, wenn du seit Längerem nicht mehr schlafen
+        oder arbeiten kannst oder wenn du Gedanken hast, dir etwas anzutun, dann
+        brauchst du keine Begleitung, sondern Behandlung. Sag mir das ruhig – ich
+        sage dir dann offen, dass ich nicht die Richtige bin.</p>
+        <p>[Platzhalter – hier gehören konkrete Anlaufstellen hin. Bitte selbst
+        heraussuchen und prüfen, damit die Angaben stimmen.]</p>
+      </details>
+      <details>
+        <summary>Was kostet eine Sitzung?</summary>
+        <p>[Platzhalter – Preise eintragen.]</p>
+      </details>
+      <details>
+        <summary>Muss ich mich gleich festlegen?</summary>
+        <p>Nein. Nach dem Erstgespräch entscheidest du in Ruhe. Und wenn du
+        merkst, dass es doch nicht passt, kannst du jederzeit aufhören.</p>
+      </details>
+      <details>
+        <summary>Geht das auch online?</summary>
+        <p>Ja, per Video oder Telefon. Die Arbeit funktioniert genauso gut –
+        viele finden es zu Hause sogar leichter.</p>
+      </details>
+      <details>
+        <summary>Bleibt das unter uns?</summary>
+        <p>Ja. Was du erzählst, bleibt bei mir. [Platzhalter – Sandra ergänzt hier,
+        wie sie mit Aufzeichnungen und Notizen umgeht.]</p>
+      </details>
+    </div>
+
+    <div class="safety">
+      <b>Wenn es akut ist</b>
+      Dieses Angebot ist keine Krisenintervention. Wenn du dich in einer akuten
+      Notlage befindest, wende dich bitte an ärztliche oder psychotherapeutische
+      Hilfe. [Platzhalter – konkrete Anlaufstellen ergänzen, Angaben vorher prüfen.]
+    </div>
+  </div>
+</section>
+
+<!-- ============ SANDRA ============ -->
+<section id="ueber" class="band">
+  <div class="wrap">
+    <div class="about">
+      <div class="ph">Foto Sandra<br>
+        <span style="font-weight:400">steht bewusst erst hier</span></div>
+      <div>
+        <h2>Und wer begleitet dich dabei?</h2>
+        <p style="color:var(--muted);margin-top:16px">[Platzhalter – Sandras Text in
+        Ich-Form: warum sie das macht, was sie selbst gelernt hat, wie sie arbeitet.
+        Zwei bis drei Absätze. Dieser Abschnitt entscheidet über Vertrauen.]</p>
+        <p style="color:var(--muted);margin-top:14px">[Platzhalter – Ausbildung,
+        Qualifikationen, Zugehörigkeiten. Nur eintragen, was tatsächlich vorliegt.]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TERMIN ============ -->
+<section id="termin">
+  <div class="wrap">
+    <div class="head mid">
+      <h2>Der erste Schritt ist ein Gespräch</h2>
+      <p>Such dir einen Termin aus. Kein Formular, kein Anruf, keine Verpflichtung.</p>
+    </div>
+    <div class="book">
+      <div class="book-l">
+        <div class="bk-kat" id="bk-l-kat"></div>
+        <h3 id="bk-l-titel">Kostenloses Erstgespräch</h3>
+        <p id="bk-l-text">30 Minuten, unverbindlich, per Video oder Telefon.</p>
+        <p class="bk-l-fakt" id="bk-l-fakt"></p>
+        <ul>
+          <li>✓ Keine Vorbereitung nötig</li>
+          <li>✓ Absage jederzeit möglich</li>
+          <li>✓ Was du erzählst, bleibt bei mir</li>
+        </ul>
+      </div>
+      <div class="book-r" id="booking">
+        <label class="bk-lbl" for="bk-angebot">Was möchtest du buchen?</label>
+        <select id="bk-angebot" class="bk-in"></select>
+
+        <div id="bk-schritt1">
+          <div class="bk-monat">
+            <button type="button" class="bk-nav" id="bk-prev" aria-label="Vorheriger Monat">‹</button>
+            <b id="bk-monatname" style="font-size:16px"></b>
+            <button type="button" class="bk-nav" id="bk-next" aria-label="Nächster Monat">›</button>
+          </div>
+          <div class="cal" id="bk-cal" aria-label="Tage mit freien Zeiten"></div>
+          <div id="bk-tagname" style="font-size:14px;color:var(--muted);margin-bottom:10px"></div>
+          <div class="times" id="bk-times"></div>
+          <div class="note" id="bk-info">Freie Zeiten werden geladen …</div>
+        </div>
+
+        <form id="bk-schritt2" hidden novalidate>
+          <p class="bk-gewaehlt" id="bk-gewaehlt"></p>
+          <input class="bk-in" id="bk-name" autocomplete="name" placeholder="Dein Name" required>
+          <input class="bk-in" id="bk-email" type="email" autocomplete="email" placeholder="Deine E-Mail" required>
+          <label class="bk-ok" id="bk-hat-code-wrap" hidden><input type="checkbox" id="bk-hat-code">
+            Ich habe dieses Paket schon und buche eine weitere Sitzung</label>
+          <input class="bk-in" id="bk-code" placeholder="Dein Paketcode (z. B. A1B2C3D4)" hidden style="margin-top:8px">
+          <div class="bk-art">
+            <label><input type="radio" name="bk-art" value="online" checked> Online (Zoom)</label>
+            <label><input type="radio" name="bk-art" value="vor_ort"> Vor Ort</label>
+          </div>
+          <textarea class="bk-in" id="bk-satz" rows="2" maxlength="300"
+                    placeholder="Magst du in einem Satz sagen, was dich herführt? (freiwillig)"></textarea>
+          <label class="bk-ok"><input type="checkbox" id="bk-einw">
+            Ich bin einverstanden, dass meine Angaben zur Terminvereinbarung gespeichert werden.
+            [Platzhalter: Link zur Datenschutzerklärung]</label>
+          <button class="btn" type="submit" style="width:100%;margin-top:14px">Termin verbindlich buchen</button>
+          <button type="button" class="bk-zurueck" id="bk-zurueck">‹ Andere Zeit wählen</button>
+          <p class="bk-fehler" id="bk-fehler" role="alert"></p>
+        </form>
+
+        <div id="bk-fertig" hidden role="status"></div>
+      </div>
+    </div>
+
+    <!-- Ein Satz statt Formular -->
+    <div class="onesentence">
+      <h3>Noch nicht bereit für einen Termin?</h3>
+      <p>Dann schreib mir einfach, was los ist. <b>Ein Satz reicht.</b></p>
+      <form onsubmit="return false" aria-label="Kurznachricht an Sandra">
+        <textarea rows="2" maxlength="500" placeholder="Was ist gerade los?"
+                  aria-label="Deine Nachricht – ein Satz reicht"></textarea>
+        <div class="os-row">
+          <input type="email" placeholder="Deine E-Mail für die Antwort"
+                 aria-label="Deine E-Mail-Adresse">
+          <button class="btn" type="submit">Abschicken</button>
+        </div>
+      </form>
+      <p class="os-note">Du bekommst eine persönliche Antwort von mir – keine
+        automatische Mail, kein Newsletter. [Platzhalter: Datenschutzhinweis mit
+        Link, bitte rechtlich prüfen. Der Knopf ist im Entwurf ohne Funktion.]</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>© 2026 Sandra [Nachname] · [Anschrift]</div>
+    <div><a href="#">Impressum</a> · <a href="#">Datenschutz</a> · <a href="#top">Nach oben</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* Bildwechsler */
+  var imgs = document.querySelectorAll('#frame img');
+  var caps = document.querySelectorAll('#cap p');
+  var dots = document.getElementById('dots');
+  var frame = document.getElementById('frame');
+  var i = 0, timer = null, n = imgs.length;
+  var slow = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  for (var k = 0; k < n; k++) {
+    (function(k){
+      var b = document.createElement('button');
+      b.setAttribute('role','tab');
+      b.setAttribute('aria-label','Bild ' + (k+1) + ' von ' + n);
+      b.addEventListener('click', function(){ show(k); restart(); });
+      dots.appendChild(b);
+    })(k);
+  }
+  var btns = dots.querySelectorAll('button');
+
+  function show(k){
+    i = (k + n) % n;
+    for (var j = 0; j < n; j++){
+      imgs[j].classList.toggle('on', j === i);
+      caps[j].classList.toggle('on', j === i);
+      btns[j].setAttribute('aria-current', j === i ? 'true' : 'false');
+    }
+  }
+  function next(){ show(i + 1); }
+  function start(){ if (!slow) timer = setInterval(next, 6500); }
+  function stop(){ clearInterval(timer); }
+  function restart(){ stop(); start(); }
+
+  frame.addEventListener('mouseenter', stop);
+  frame.addEventListener('mouseleave', start);
+  dots.addEventListener('mouseenter', stop);
+  dots.addEventListener('mouseleave', start);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight'){ show(i+1); restart(); }
+    if (e.key === 'ArrowLeft'){ show(i-1); restart(); }
+  });
+  document.addEventListener('visibilitychange', function(){
+    document.hidden ? stop() : start();
+  });
+  show(0); start();
+
+  /* Kopfzeile bekommt beim Scrollen eine Linie */
+  var head = document.getElementById('top');
+  window.addEventListener('scroll', function(){
+    head.classList.toggle('stuck', window.scrollY > 12);
+  }, {passive:true});
+
+  /* Glaubenssatz-Spiegel */
+  var BELIEFS = [
+    { s:"Ich muss es allen recht machen.",
+      her:"Oft gelernt, wo die Stimmung zu Hause schwankte und das Kind sie lesen und ausgleichen musste. Harmonie herstellen wurde zur Aufgabe – und zur Überlebensstrategie.",
+      tut:"Du spürst sofort, was andere erwarten, aber kaum noch, was du selbst willst. Vor jedem Nein probst du innerlich die Rechtfertigung.",
+      frage:"Was würdest du entscheiden, wenn niemand enttäuscht sein könnte?" },
+    { s:"Nur perfekt bin ich gut genug.",
+      her:"Entsteht oft, wo Lob an Leistung hing: die Zwei war gut, aber warum keine Eins? Das Kind lernte, dass Liebe verdient werden muss – und dass die Latte immer weiterrückt.",
+      tut:"Du fängst manches gar nicht erst an, weil es perfekt werden müsste. Fertiges gibst du ungern aus der Hand, und Lob kommt bei dir nicht an – du hörst nur, was fehlt.",
+      frage:"Wer legt eigentlich fest, wann es gut genug ist – und warum darfst das nicht du sein?" },
+    { s:"Ich muss stark sein.",
+      her:"Häufig dort entstanden, wo Tränen als Schwäche galten oder ein Kind früh Verantwortung tragen musste, die nicht seine war.",
+      tut:"Du trägst alles allein und lässt niemanden helfen. Nähe wird schwer, weil Hilfe annehmen sich wie Versagen anfühlt.",
+      frage:"Wer hat dir beigebracht, dass du das alles allein tragen musst?" },
+    { s:"Erst die anderen, dann ich.",
+      her:"Meist gelernt in Familien, in denen jemand versorgt werden musste – ein Elternteil, ein Geschwister. Kümmern wurde belohnt, Bedürfnisse anmelden nicht.",
+      tut:"Dein eigener Punkt auf der Liste rutscht jeden Tag nach hinten. Irgendwann steht er gar nicht mehr drauf.",
+      frage:"Wann warst du das letzte Mal dran – ohne dass etwas übrig bleiben musste?" },
+    { s:"Ich bin wertvoll, wenn ich gebraucht werde.",
+      her:"Entsteht oft, wenn Zuwendung an Nützlichkeit geknüpft war: gesehen wurde, wer funktionierte.",
+      tut:"Du kannst schwer Nein sagen, denn jedes Nein fühlt sich an, als würdest du an Wert verlieren. Ruhe hältst du schlecht aus.",
+      frage:"Was bliebe von dir übrig, wenn du niemandem nützlich wärst – und warum macht diese Frage Angst?" },
+    { s:"Ich darf keine Fehler machen.",
+      her:"Oft dort gelernt, wo Fehler nicht besprochen, sondern bestraft oder lange nachgetragen wurden. Sicherheit gab es nur in der Fehlerlosigkeit.",
+      tut:"Entscheidungen schiebst du auf, bis sie jemand anders trifft. Nach jedem Fehler zerlegst du dich tagelang – für Dinge, die du anderen längst verziehen hättest.",
+      frage:"Wie sprichst du mit dir, wenn dir etwas misslingt – und würdest du so je mit einem Kind sprechen?" },
+    { s:"Ich falle anderen zur Last.",
+      her:"Entsteht oft, wo Eltern erschöpft oder überfordert waren und das Kind spürte: Meine Bedürfnisse sind zu viel. Es machte sich klein, um niemanden zu belasten.",
+      tut:"Du bittest nicht um Hilfe, selbst wenn du sie dringend brauchst. Wenn andere für dich da sind, fühlst du dich schuldig statt getragen.",
+      frage:"Warum darf jeder Mensch Unterstützung brauchen – nur du nicht?" },
+    { s:"Stell dich nicht so an.",
+      her:"Der Satz fiel wörtlich – bei Schmerz, bei Angst, bei Tränen. Das Kind lernte: Meine Wahrnehmung stimmt nicht.",
+      tut:"Du zweifelst an deinem eigenen Empfinden. Bevor du sagst, dass etwas zu viel ist, muss es erst unerträglich werden.",
+      frage:"Was würdest du fühlen, wenn du dir glauben würdest?" },
+    { s:"Für mich ist später noch Zeit.",
+      her:"Gelernt, wo Pflicht immer vor Wunsch kam und Eltern das eigene Leben auch aufgeschoben haben. Aufschub sah aus wie Vernunft.",
+      tut:"Das Später wandert mit. Erst nach der Ausbildung, erst wenn die Kinder groß sind, erst nach der Rente – und das Eigene bleibt liegen.",
+      frage:"Wie viel Später ist schon vergangen?" }
+  ];
+
+  var bwrap = document.getElementById('beliefs');
+  var mirror = document.getElementById('mirror');
+  var open = -1, bbtns = [];
+
+  BELIEFS.forEach(function(b, k){
+    var el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'belief';
+    el.textContent = b.s;
+    el.setAttribute('aria-expanded','false');
+    el.addEventListener('click', function(){ toggleBelief(k); });
+    bwrap.appendChild(el);
+    bbtns.push(el);
+  });
+
+  function toggleBelief(k){
+    if (open === k){
+      open = -1;
+      mirror.classList.remove('open');
+      mirror.innerHTML = '';
+      bbtns[k].setAttribute('aria-expanded','false');
+      return;
+    }
+    open = k;
+    bbtns.forEach(function(b,j){
+      b.setAttribute('aria-expanded', j===k ? 'true' : 'false');
+    });
+    var b = BELIEFS[k];
+    mirror.innerHTML =
+      '<h4>„' + b.s + '“</h4>' +
+      '<div class="part"><b>Woher er oft kommt</b><p>' + b.her + '</p></div>' +
+      '<div class="part"><b>Was er im Alltag anrichtet</b><p>' + b.tut + '</p></div>' +
+      '<div class="part q"><b>Eine Frage, die weiterhilft</b><p>' + b.frage + '</p></div>';
+    mirror.classList.add('open');
+  }
+
+})();
+</script>
+<script>
+/* Terminbuchung – Daten kommen aus Supabase (Schema coaching) */
+(function(){
+  var URL_ = 'https://haurbpfkfaaehorirzee.supabase.co/rest/v1/rpc/';
+  var KEY = 'sb_publishable_fssomLkMP88GLADjt8eaKQ_Gq6SN0-e';
+  var TZ = 'Europe/Berlin';
+  function rpc(fn, body){
+    return fetch(URL_ + fn, {method:'POST', headers:{'apikey':KEY,'Content-Type':'application/json'},
+      body: JSON.stringify(body||{})}).then(function(r){
+        return r.json().then(function(j){ if(!r.ok) throw new Error((j&&j.message)||'Fehler'); return j; });
+      });
+  }
+  var $ = function(id){ return document.getElementById(id); };
+  var angebote = [], angebot = null, slots = {}, monat = new Date(), gewaehlt = null, tagGewaehlt = null;
+  monat = new Date(monat.getFullYear(), monat.getMonth(), 1);
+
+  function tagKey(d){ return new Intl.DateTimeFormat('sv-SE',{timeZone:TZ}).format(d); }
+  function uhr(d){ return new Intl.DateTimeFormat('de-DE',{timeZone:TZ,hour:'2-digit',minute:'2-digit'}).format(d); }
+  function langTag(d){ return new Intl.DateTimeFormat('de-DE',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'}).format(d); }
+  function iso(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+  function ladeAngebote(){
+    rpc('coaching_angebote_liste').then(function(a){
+      angebote = a;
+      var html = '', letzte = null;
+      a.forEach(function(x,i){
+        var k = x.kategorie || 'Weitere Angebote';
+        if (k !== letzte) { html += (letzte!==null?'</optgroup>':'') + '<optgroup label="'+esc(k)+'">'; letzte = k; }
+        html += '<option value="'+i+'">'+esc(x.titel)+' · '+dauerText(x)+(x.preis_cent!=null?' · '+euro(x.preis_cent):'')+'</option>';
+      });
+      $('bk-angebot').innerHTML = html + (letzte!==null?'</optgroup>':'');
+      angebot = a[0]; zeigeAngebot(); ladeZeiten(); zeigeKarten();
+    }).catch(function(){ $('bk-info').textContent = 'Die Termine können gerade nicht geladen werden. Bitte versuch es später noch einmal.'; });
+  }
+
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function euro(c){ return c === 0 ? 'kostenlos' : (c/100).toLocaleString('de-DE',{style:'currency',currency:'EUR'}); }
+  function dauerText(x){ return x.ist_paket ? x.anzahl_sitzungen+' × '+x.dauer_min+' Min.' : x.dauer_min+' Min.'; }
+  function zeigeAngebot(){
+    var x = angebot;
+    $('bk-l-kat').textContent = x.kategorie || '';
+    $('bk-l-titel').textContent = x.titel;
+    $('bk-l-text').textContent = x.beschreibung || '';
+    var f = x.ist_paket ? x.anzahl_sitzungen+' Sitzungen à '+x.dauer_min+' Minuten' : x.dauer_min+' Minuten';
+    if (x.preis_cent != null) f += ' · ' + euro(x.preis_cent) +
+      (x.ist_paket && x.preis_cent ? ' (' + euro(Math.round(x.preis_cent/x.anzahl_sitzungen)) + ' pro Sitzung)' : '');
+    $('bk-l-fakt').textContent = f;
+  }
+  /* Abschnitt „Angebot": Karten aus der Datenbank (bei Fehler bleibt der feste Text stehen) */
+  function zeigeKarten(){
+    var box = $('angebot-karten'); if (!box || !angebote.length) return;
+    box.innerHTML = angebote.map(function(x,i){
+      var f = x.ist_paket ? x.anzahl_sitzungen+' Sitzungen à '+x.dauer_min+' Min' : x.dauer_min+' Min';
+      if (x.preis_cent != null) f += ' · ' + euro(x.preis_cent);
+      return '<div class="box">'+(x.kategorie?'<small class="bk-karte-kat">'+esc(x.kategorie)+'</small>':'')+
+        '<b>'+esc(x.titel)+'</b><span>'+esc(x.beschreibung||'')+'</span><div class="p">'+f+'</div>'+
+        '<a href="#termin" class="bk-karte-link" data-waehle="'+i+'">Termin dafür finden →</a></div>';
+    }).join('');
+  }
+  document.addEventListener('click', function(e){
+    var l = e.target.closest('[data-waehle]'); if (!l) return;
+    $('bk-angebot').value = l.dataset.waehle; angebot = angebote[l.dataset.waehle]; zeigeAngebot(); ladeZeiten();
+  });
+  function ladeZeiten(){
+    var von = new Date(monat), bis = new Date(monat.getFullYear(), monat.getMonth()+1, 0);
+    $('bk-info').textContent = 'Freie Zeiten werden geladen …';
+    rpc('coaching_freie_zeiten',{p_angebot_id:angebot.id, p_von:iso(von), p_bis:iso(bis)}).then(function(liste){
+      slots = {};
+      liste.forEach(function(s){ var d = new Date(s), k = tagKey(d); (slots[k]=slots[k]||[]).push(d); });
+      var tage = Object.keys(slots).sort();
+      tagGewaehlt = tage[0] || null;
+      $('bk-info').textContent = tage.length ? 'Belegte Zeiten sind automatisch ausgeblendet.'
+        : 'In diesem Monat ist nichts mehr frei – schau gern in den nächsten.';
+      zeichneKalender(); zeichneZeiten();
+    }).catch(function(e){ $('bk-info').textContent = e.message; });
+  }
+
+  function zeichneKalender(){
+    $('bk-monatname').textContent = new Intl.DateTimeFormat('de-DE',{month:'long',year:'numeric'}).format(monat);
+    var h = ['Mo','Di','Mi','Do','Fr','Sa','So'].map(function(x){ return '<div class="h">'+x+'</div>'; }).join('');
+    var start = (monat.getDay()+6)%7, tageImMonat = new Date(monat.getFullYear(), monat.getMonth()+1, 0).getDate();
+    for (var i=0;i<start;i++) h += '<div></div>';
+    for (var t=1;t<=tageImMonat;t++){
+      var k = iso(new Date(monat.getFullYear(), monat.getMonth(), t));
+      if (slots[k]) h += '<button type="button" class="d'+(k===tagGewaehlt?' sel':'')+'" data-k="'+k+'" aria-label="'+t+'. – freie Zeiten">'+t+'</button>';
+      else h += '<div>'+t+'</div>';
+    }
+    $('bk-cal').innerHTML = h;
+    var heute = new Date(); $('bk-prev').disabled = monat <= new Date(heute.getFullYear(), heute.getMonth(), 1);
+  }
+
+  function zeichneZeiten(){
+    if (!tagGewaehlt){ $('bk-tagname').textContent=''; $('bk-times').innerHTML=''; return; }
+    $('bk-tagname').textContent = langTag(slots[tagGewaehlt][0]);
+    $('bk-times').innerHTML = slots[tagGewaehlt].map(function(d,i){
+      return '<button type="button" class="t" data-i="'+i+'">'+uhr(d)+'</button>'; }).join('');
+  }
+
+  $('bk-angebot').addEventListener('change', function(){ angebot = angebote[this.value]; zeigeAngebot(); ladeZeiten(); });
+  $('bk-hat-code').addEventListener('change', function(){ $('bk-code').hidden = !this.checked; if (this.checked) $('bk-code').focus(); });
+  $('bk-prev').addEventListener('click', function(){ monat = new Date(monat.getFullYear(), monat.getMonth()-1, 1); ladeZeiten(); });
+  $('bk-next').addEventListener('click', function(){ monat = new Date(monat.getFullYear(), monat.getMonth()+1, 1); ladeZeiten(); });
+  $('bk-cal').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-k]'); if(!b) return;
+    tagGewaehlt = b.dataset.k; zeichneKalender(); zeichneZeiten();
+  });
+  $('bk-times').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-i]'); if(!b) return;
+    gewaehlt = slots[tagGewaehlt][b.dataset.i];
+    $('bk-gewaehlt').textContent = angebot.titel + ' – ' + langTag(gewaehlt) + ', ' + uhr(gewaehlt) + ' Uhr';
+    $('bk-hat-code-wrap').hidden = !angebot.ist_paket; $('bk-hat-code').checked = false;
+    $('bk-code').hidden = !angebot.nur_mit_paketcode;
+    $('bk-schritt1').hidden = true; $('bk-angebot').hidden = true; $('bk-schritt2').hidden = false;
+    document.querySelector('label[for="bk-angebot"]').hidden = true;
+    $('bk-name').focus();
+  });
+  $('bk-zurueck').addEventListener('click', function(){
+    $('bk-schritt2').hidden = true; $('bk-schritt1').hidden = false; $('bk-angebot').hidden = false;
+    document.querySelector('label[for="bk-angebot"]').hidden = false; $('bk-fehler').textContent = '';
+  });
+
+  $('bk-schritt2').addEventListener('submit', function(e){
+    e.preventDefault();
+    var f = $('bk-fehler'); f.textContent = '';
+    if (!$('bk-name').value.trim()) { f.textContent = 'Bitte gib deinen Namen an.'; return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('bk-email').value.trim())) { f.textContent = 'Bitte gib eine gültige E-Mail an.'; return; }
+    if (!$('bk-einw').checked) { f.textContent = 'Bitte bestätige die Einwilligung.'; return; }
+    var knopf = this.querySelector('.btn'); knopf.disabled = true; knopf.textContent = 'Wird gebucht …';
+    rpc('coaching_termin_buchen', {
+      p_angebot_id: angebot.id, p_beginn: gewaehlt.toISOString(),
+      p_name: $('bk-name').value, p_email: $('bk-email').value,
+      p_ein_satz: $('bk-satz').value, p_art: document.querySelector('input[name="bk-art"]:checked').value,
+      p_paketcode: $('bk-code').hidden ? null : $('bk-code').value, p_einwilligung: true
+    }).then(function(r){
+      var h = '<h3 style="font-size:22px;margin-bottom:10px">Dein Termin steht.</h3>' +
+        '<p>' + esc(r.angebot) + '<br><b>' + langTag(new Date(r.beginn)) + ', ' + uhr(new Date(r.beginn)) + ' Uhr</b></p>';
+      if (r.zoom_link) h += '<p style="margin-top:12px">Zoom-Link: <a href="'+encodeURI(r.zoom_link)+'" rel="noopener">'+r.zoom_link.replace(/</g,'&lt;')+'</a></p>';
+      if (r.rest != null) h += '<p style="margin-top:12px">Im Paket sind danach noch <b>' + r.rest + '</b> Sitzungen offen.</p>';
+      if (r.paketcode) h += '<p style="margin-top:12px">Dein Paketcode: <b style="letter-spacing:.1em">' + r.paketcode +
+        '</b><br><span class="note">Bitte aufschreiben – damit buchst du die weiteren Sitzungen: gleiches Paket wählen und „Ich habe dieses Paket schon" anhaken.</span></p>';
+      h += '<p class="note">Bitte notier dir den Termin. [Platzhalter: Bestätigungs-E-Mail folgt in Stufe 1b.]</p>';
+      $('bk-schritt2').hidden = true; $('bk-fertig').innerHTML = h; $('bk-fertig').hidden = false;
+    }).catch(function(err){
+      f.textContent = err.message; knopf.disabled = false; knopf.textContent = 'Termin verbindlich buchen';
+      if (/nicht mehr frei/.test(err.message)) { ladeZeiten(); }
+    });
+  });
+
+  ladeAngebote();
+})();
+</script>
+</body>
+</html>
