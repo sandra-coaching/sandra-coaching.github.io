@@ -202,6 +202,32 @@
     .wk-aus{flex-direction:column;gap:6px}
   }
 
+  /* Anleitung */
+  .anl-link{display:flex;gap:12px;align-items:center;background:var(--sand);border-radius:16px;padding:12px 16px;margin-top:16px;
+    font:inherit;font-size:15px;color:var(--ink);border:0;width:100%;text-align:left;cursor:pointer}
+  .anl-link:hover{background:var(--sand-2)}
+  .anl-link b{font-weight:600}
+  .anl-link .pf{margin-left:auto;color:var(--clay-dark)}
+  .kreis-mini{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:14px;font-size:14.5px}
+  .kreis-mini span{background:var(--paper);border:1.5px solid var(--sand-2);border-radius:999px;padding:5px 12px;font-weight:600}
+  .kreis-mini i{font-style:normal;color:var(--clay)}
+  .kreis-mini .zurueck{background:none;border:0;padding:0;font-weight:400;font-style:italic;color:var(--muted);font-size:13.5px}
+  .bsp-weg{list-style:none;margin-top:14px;display:flex;flex-direction:column}
+  .bsp-weg li{display:grid;grid-template-columns:30px 1fr;gap:0 12px;position:relative;padding-bottom:16px}
+  .bsp-weg li:not(:last-child)::before{content:'';position:absolute;left:14px;top:30px;bottom:2px;width:2px;background:var(--sand-2)}
+  .bsp-weg .nr{width:30px;height:30px;border-radius:50%;background:var(--sand);color:var(--clay-dark);font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;grid-row:span 2}
+  .bsp-weg .q{font-size:13.5px;color:var(--muted);padding-top:4px}
+  .bsp-weg .a{font-size:16px;margin-top:1px}
+  .bsp-weg li.wende .nr{background:var(--clay);color:#fff}
+  .bsp-weg li.wende .a{font-weight:600}
+  .bsp-weg .gruppe{grid-column:2;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin:-4px 0 4px}
+  .tipps{margin:10px 0 0 20px}
+  .tipps li{margin-bottom:6px}
+  .var-tab{display:flex;gap:8px;margin-top:14px}
+  .var-tab button{font:inherit;font-size:14.5px;border:1.5px solid var(--sand-2);background:var(--paper);color:var(--ink);border-radius:999px;padding:7px 16px;cursor:pointer}
+  .var-tab button.an{background:var(--clay);border-color:var(--clay);color:#fff}
+
   .safety{background:var(--sand-2);border-radius:16px;padding:16px 20px;margin-top:40px;font-size:14.5px;color:#5E5346}
   .safety b{display:block;color:var(--ink);margin-bottom:2px}
   footer{color:var(--muted);font-size:13.5px;padding:26px 0 50px;border-top:1px solid var(--line)}
@@ -327,6 +353,7 @@
   <section class="ansicht" id="v-uebersicht" hidden>
     <h1>Schön, dass du da bist, <span data-vorname></span></h1>
     <p class="leise">Nimm dir eine Situation, die dich beschäftigt, und geh sie Schritt für Schritt durch.</p>
+    <button class="anl-link" id="u-anleitung" type="button"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="flex:none;color:var(--clay-dark)"><path d="M3 5.5C5.5 4 8.5 4 12 6c3.5-2 6.5-2 9-.5V19c-2.5-1.5-5.5-1.5-9 .5-3.5-2-6.5-2-9-.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6v13.5" stroke="currentColor" stroke-width="1.6"/></svg><span><b>So funktioniert's</b> – kurze Erklärung mit Beispiel, 3 Minuten</span><span class="pf">›</span></button>
     <div class="neu-wahl">
       <button class="neu-karte" data-neu="B"><b>Ausführlich</b><span>Erst sortieren, was dir widerfahren ist und was bei dir liegt. Für Kränkungen und alles, was schwer wiegt. Etwa 20 Minuten.</span></button>
       <button class="neu-karte" data-neu="A"><b>Kurz</b><span>Fünf Fragen für den Alltag – wenn dich etwas ärgert oder nicht loslässt. Etwa 10 Minuten.</span></button>
@@ -385,6 +412,78 @@
     <div id="d-tabelle"></div>
     <div class="reihe" style="margin-top:34px">
       <button class="btn btn-rot" id="d-loeschen" hidden>Durchgang löschen</button>
+    </div>
+  </section>
+
+  <!-- ============ Anleitung ============ -->
+  <section class="ansicht" id="v-anleitung" hidden>
+    <button class="link-knopf" id="an-zurueck">‹ Übersicht</button>
+    <h1 style="margin-top:14px">So funktioniert's</h1>
+    <p class="leise">Kein Test, keine richtigen oder falschen Antworten. Du schaust dir eine Situation in Ruhe an – Schritt für Schritt.</p>
+
+    <div class="karte">
+      <h2>Die Idee in drei Sätzen</h2>
+      <p>Manche Situationen laufen immer gleich ab: Etwas passiert, ein alter Satz über dich springt an, du fühlst dich schlecht und handelst so wie immer.
+         Das Ergebnis bestätigt dann genau diesen Satz – und der Kreis beginnt von vorn.</p>
+      <div class="kreis-mini" aria-label="Der Kreislauf">
+        <span>Satz</span><i>→</i><span>Gefühl</span><i>→</i><span>Tun</span><i>→</i><span>Ergebnis</span><i>→</i><span class="zurueck">bestätigt den Satz ↺</span>
+      </div>
+      <p style="margin-top:14px">Der Durchgang macht diesen Kreis sichtbar. Wenn du ihn siehst, kannst du einen neuen Satz wählen – und beim nächsten Mal anders reagieren.</p>
+    </div>
+
+    <div class="karte">
+      <h2>Kurz oder ausführlich?</h2>
+      <p><b>Kurz</b> – für den Alltag: Etwas ärgert dich oder lässt dich nicht los. Fünf Fragen, etwa 10 Minuten.</p>
+      <p style="margin-top:8px"><b>Ausführlich</b> – wenn es schwer wiegt: eine Kränkung, ein Streit, etwas in deiner Beziehung.
+         Hier sortierst du zuerst, was die anderen getan haben und was bei dir liegt. Etwa 20 Minuten.</p>
+    </div>
+
+    <div class="karte">
+      <h2>Ein Beispiel</h2>
+      <p class="leise klein">Eine erfundene Situation, damit du siehst, wie die Antworten aussehen können. Kurze Stichworte reichen völlig.</p>
+      <div class="var-tab" role="tablist">
+        <button class="an" type="button" data-anl="B" role="tab">Ausführlich</button>
+        <button type="button" data-anl="A" role="tab">Kurz</button>
+      </div>
+      <ol class="bsp-weg" id="anl-B">
+        <li><span class="nr">1</span><span class="q">Worum geht es?</span><span class="a">Das Sonntagsessen</span></li>
+        <li><span class="gruppe">Sortieren</span><span class="nr">2</span><span class="q">Was ist passiert?</span><span class="a">Meine Mutter sagt vor allen: „Du hättest ruhig mal was Richtiges kochen können."</span></li>
+        <li><span class="nr">3</span><span class="q">Was davon hattest du in der Hand?</span><span class="a">Ihr Satz lag nicht bei mir. Bei mir liegt, dass ich gelacht und nichts gesagt habe.</span></li>
+        <li><span class="nr">4</span><span class="q">Was hat dich daran am meisten getroffen?</span><span class="a">Dass meine Mühe vor allen kleingemacht wurde.</span></li>
+        <li><span class="gruppe">Der Kreis</span><span class="nr">5</span><span class="q">Welchen Satz sagst du dir dabei über dich?</span><span class="a">„Egal, wie viel ich mache – es reicht nie."</span></li>
+        <li><span class="nr">6</span><span class="q">Was fühlst du dabei?</span><span class="a">Scham, dann Wut.</span></li>
+        <li><span class="nr">7</span><span class="q">Was machst du dann?</span><span class="a">Ich räume allein auf und bin den Rest des Tages still.</span></li>
+        <li><span class="nr">8</span><span class="q">Und was passiert danach?</span><span class="a">Keiner merkt, was los ist. Ich bin erschöpft und denke: Siehst du, es reicht nie.</span></li>
+        <li class="wende"><span class="gruppe">Neu wählen</span><span class="nr">9</span><span class="q">Welcher Satz wäre freundlicher und trotzdem wahr?</span><span class="a">„Ich habe mir Mühe gegeben. Ihr Kommentar sagt etwas über sie, nicht über meinen Wert."</span></li>
+        <li class="wende"><span class="nr">10</span><span class="q">Was brauchst du jetzt?</span><span class="a">Eine Stunde für mich. Und beim nächsten Mal sage ich: „Das hat mich getroffen."</span></li>
+      </ol>
+      <ol class="bsp-weg" id="anl-A" hidden>
+        <li><span class="nr">1</span><span class="q">Worum geht es?</span><span class="a">Die Nachricht vom Chef</span></li>
+        <li><span class="nr">2</span><span class="q">Was ist passiert?</span><span class="a">Mein Chef schreibt nur: „Bitte morgen kurz zu mir."</span></li>
+        <li><span class="nr">3</span><span class="q">Was sagst du dir darüber?</span><span class="a">„Ich habe bestimmt etwas falsch gemacht."</span></li>
+        <li><span class="nr">4</span><span class="q">Was fühlst du dabei?</span><span class="a">Angst, Unruhe.</span></li>
+        <li><span class="nr">5</span><span class="q">Was machst du dann?</span><span class="a">Ich gehe den ganzen Abend alles durch, was schiefgelaufen sein könnte.</span></li>
+        <li><span class="nr">6</span><span class="q">Und was passiert danach?</span><span class="a">Ich schlafe schlecht und gehe schon verunsichert ins Gespräch – als hätte ich etwas zu verteidigen.</span></li>
+        <li class="wende"><span class="nr">7</span><span class="q">Welchen Satz könntest du dir stattdessen sagen?</span><span class="a">„Ich weiß noch nicht, worum es geht. Ich höre mir morgen an, was er sagt."</span></li>
+      </ol>
+    </div>
+
+    <div class="karte">
+      <h2>Ein paar Tipps</h2>
+      <ul class="tipps">
+        <li><b>Stichworte reichen.</b> Du schreibst nur für dich.</li>
+        <li><b>Nimm eine konkrete Situation</b>, nicht „mein Leben" – je genauer, desto klarer wird der Satz.</li>
+        <li><b>Der Satz ist das Wichtigste.</b> Er beginnt oft mit „Ich bin …", „Ich muss …" oder „Ich darf nicht …".</li>
+        <li><b>Du kannst springen.</b> Oben in der Karte tippst du auf einen Schritt und änderst ihn. Gespeichert wird automatisch.</li>
+        <li><b>Taucht derselbe Satz öfter auf</b>, ist das kein Rückschritt – sondern genau das Muster, an dem es sich lohnt, im Termin mit Sandra weiterzuarbeiten.</li>
+        <li><b>Für Sandra freigeben</b> ist freiwillig. Nur freigegebene Durchgänge kann sie lesen.</li>
+        <li><b>Wird es dir zu viel</b>, hör einfach auf. Der Durchgang bleibt gespeichert, du kannst später weitermachen.</li>
+      </ul>
+    </div>
+
+    <div class="reihe">
+      <button class="btn" type="button" data-neu="A">Kurz starten</button>
+      <button class="btn btn-2" type="button" data-neu="B">Ausführlich starten</button>
     </div>
   </section>
 
@@ -668,7 +767,7 @@
     rpc('coaching_mitglied_einrichten', mit({p_huelle_pass: neuerDk.huellen[0], p_huelle_wh: neuerDk.huellen[1], p_einwilligung: $('e-einw').checked}))
       .then(function(){ var pw = neuerDk.pass; delete neuerDk.pass; dk = neuerDk; neuerDk = null; neuerWh = null; $('wh-code').textContent = ''; eintraege = []; info.eingerichtet = true;
         return Promise.all([ladeFreigabeSchluessel(), passAnmeldungSetzen(pw)]); })
-      .then(function(){ zeigeUebersicht(); })
+      .then(function(){ zeigeUebersicht(); zeige('v-anleitung'); })
       .catch(function(err){ f.textContent = err.message; })
       .then(function(){ laeuft(btn, false); });
   });
@@ -1021,6 +1120,14 @@
   /* ---------------- Einstellungen ---------------- */
   $('k-einst').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(function(){ akt = null; zeige('v-einst'); }); });
   $('s-zurueck').addEventListener('click', zeigeUebersicht);
+  $('u-anleitung').addEventListener('click', function(){ zeige('v-anleitung'); });
+  $('an-zurueck').addEventListener('click', zeigeUebersicht);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-anl]'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('[data-anl]'), function(x){ x.classList.toggle('an', x === b); });
+      $('anl-A').hidden = b.dataset.anl !== 'A'; $('anl-B').hidden = b.dataset.anl !== 'B';
+    });
+  });
   function uebernehmeTextSicher(){ if (akt) uebernehmeText(); }
 
   $('f-passneu').addEventListener('submit', function(e){
