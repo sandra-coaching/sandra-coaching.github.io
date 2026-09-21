@@ -94,7 +94,7 @@
   /* Durchgang */
   .fortschritt{height:6px;background:var(--sand-2);border-radius:999px;overflow:hidden;margin-top:14px}
   .fortschritt i{display:block;height:100%;background:var(--clay);transition:width .3s}
-  .schritt-nr{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-top:26px}
+  .schritt-nr{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-top:22px;font-weight:600}
   .frage{font-size:24px;line-height:1.3;margin-top:6px}
   .hilfe{color:var(--muted);margin-top:8px}
   details.bsp{margin-top:10px;font-size:14.5px;color:var(--muted)}
@@ -155,6 +155,10 @@
   .wk-svg .kn.ist rect{fill:var(--clay);stroke:var(--clay)}
   .wk-svg .kn.ist text{fill:#fff}
   .wk-svg .kn:hover rect,.wk-svg .kn:focus-visible rect{stroke:var(--clay-dark);stroke-width:2}
+  .wk-svg .kn.zu{opacity:.4;cursor:not-allowed}
+  .wk-svg .kn.zu:hover rect{stroke:var(--sand-2);stroke-width:1.5}
+  .wk-st.zu{opacity:.4;cursor:not-allowed}
+  .wk-st.zu:hover{border-color:var(--sand-2)}
   .wk-svg .ring{fill:none;stroke:var(--rose);stroke-width:3}
   .wk-svg .spitze{fill:var(--clay)}
   .wk-svg .linie{fill:none;stroke:var(--clay);stroke-width:1.6;opacity:.8}
@@ -373,18 +377,10 @@
   <section class="ansicht" id="v-durchgang" hidden>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
       <button class="link-knopf" id="d-zurueck-liste">‹ Übersicht</button>
-      <span class="marke marke-var" id="d-variante"></span>
+      <span style="display:flex;gap:12px;align-items:center"><button class="link-knopf klein" id="d-anleitung" type="button">So funktioniert's</button><span class="marke marke-var" id="d-variante"></span></span>
     </div>
     <div class="fortschritt"><i id="d-balken"></i></div>
 
-    <div class="karte-kopf">
-      <span class="leise" id="d-karte-hinweis">Tippe auf eine Station, um direkt dorthin zu springen.</span>
-      <button class="link-knopf klein" id="d-karte-knopf" aria-expanded="true" aria-controls="d-karte-box">Karte ausblenden</button>
-    </div>
-    <div id="d-karte-box">
-      <div class="wegkarte" id="d-karte"></div>
-      <p class="karte-info" id="d-karte-info" aria-live="polite"></p>
-    </div>
 
     <div id="d-schritt">
       <p class="schritt-nr" id="d-nr"></p>
@@ -408,6 +404,15 @@
     <div class="reihe" style="justify-content:space-between">
       <button class="btn btn-2" id="d-vor">Zurück</button>
       <button class="btn" id="d-weiter">Weiter</button>
+    </div>
+
+    <div class="karte-kopf" style="margin-top:34px">
+      <span class="leise" id="d-karte-hinweis">Dein Weg im Überblick – tippe auf eine Station, um dorthin zu springen.</span>
+      <button class="link-knopf klein" id="d-karte-knopf" aria-expanded="true" aria-controls="d-karte-box">Karte ausblenden</button>
+    </div>
+    <div id="d-karte-box">
+      <div class="wegkarte" id="d-karte"></div>
+      <p class="karte-info" id="d-karte-info" aria-live="polite"></p>
     </div>
     <div id="d-tabelle"></div>
     <div class="reihe" style="margin-top:34px">
@@ -958,7 +963,10 @@
   function kuerze(t, n){ t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).trim() + '…' : t; }
   function schrittIndex(k){ var s = schritte(); for (var i = 0; i < s.length; i++) if (s[i].k === k) return i; return -1; }
   function antw(k){ return String(akt.daten.antworten[k] || '').trim(); }
-  function zustand(k){ return schrittIndex(k) === schrittNr ? 'ist' : (antw(k) ? 'voll' : 'leer'); }
+  /* Springen nur zu ausgefüllten Schritten und zum ersten offenen – so füllt niemand versehentlich den falschen */
+  function ersteOffene(){ var s = schritte(); for (var i = 0; i < s.length; i++) if (!String(akt.daten.antworten[s[i].k] || '').trim()) return i; return s.length; }
+  function erlaubt(k){ var i = schrittIndex(k); return i >= 0 && (i <= Math.max(ersteOffene(), schrittNr) || !!antw(k)); }
+  function zustand(k){ return schrittIndex(k) === schrittNr ? 'ist' : (antw(k) ? 'voll' : (erlaubt(k) ? 'leer' : 'leer zu')); }
   function frageZu(k){ var i = schrittIndex(k); return i < 0 ? '' : schritte()[i].f; }
 
   function station(k, nr){
@@ -1048,10 +1056,11 @@
       return;
     }
     var a = antw(k);
-    el.innerHTML = '<b>' + esc(frageZu(k)) + '</b> ' + (a ? esc(kuerze(a, 220)) : '<em>noch offen</em>');
+    el.innerHTML = '<b>' + esc(frageZu(k)) + '</b> ' + (a ? esc(kuerze(a, 220)) : (erlaubt(k) ? '<em>noch offen</em>' : '<em>kommt später</em>'));
   }
   function springe(k){
     var i = schrittIndex(k); if (i < 0 || !akt) return;
+    if (!erlaubt(k)) { $('d-karte-info').innerHTML = '<b>' + esc(KURZNAME[k]) + '</b> kommt später – geh die Schritte der Reihe nach durch.'; return; }
     uebernehmeText(); schrittNr = i; zeigeSchritt(); speichern();
     setTimeout(function(){ $('d-text').focus({preventScroll:true}); }, 30);
   }
@@ -1122,6 +1131,7 @@
   $('s-zurueck').addEventListener('click', zeigeUebersicht);
   $('u-anleitung').addEventListener('click', function(){ zeige('v-anleitung'); });
   $('an-zurueck').addEventListener('click', zeigeUebersicht);
+  $('d-anleitung').addEventListener('click', function(){ uebernehmeText(); speichern().then(function(){ akt = null; zeigeUebersicht(); zeige('v-anleitung'); }); });
   Array.prototype.forEach.call(document.querySelectorAll('[data-anl]'), function(b){
     b.addEventListener('click', function(){
       Array.prototype.forEach.call(document.querySelectorAll('[data-anl]'), function(x){ x.classList.toggle('an', x === b); });
