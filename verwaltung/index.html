@@ -201,6 +201,7 @@
       <button data-tab="kunden">Kunden</button>
       <button data-tab="rechnungen">Rechnungen</button>
       <button data-tab="pakete">Gebuchte Pakete</button>
+      <button data-tab="mitglieder">Mitglieder</button>
       <button data-tab="einst">Einstellungen</button>
       <button data-tab="aufgaben">Aufgaben</button>
     </div>
@@ -380,6 +381,62 @@
       </div>
     </section>
 
+    <!-- Mitglieder -->
+    <section id="t-mitglieder" hidden>
+      <div class="karte">
+        <h2>Zugang freischalten</h2>
+        <p class="hinweis" style="margin-top:-4px">Der Mitgliederbereich gehört zum Paket „Prozess: Muster lösen". Der Kunde braucht eine E-Mail-Adresse.
+          Den Code siehst du nur einmal – gib ihn gleich weiter.</p>
+        <div class="m-suche" style="max-width:520px;margin-top:10px"><input id="mg-suche" placeholder="– Kunden suchen (Name, Telefon, E-Mail) –" autocomplete="off">
+          <div class="m-treffer" id="mg-treffer" hidden></div></div>
+        <p class="fehler" id="mg-fehler"></p>
+        <div id="mg-code-box" hidden style="margin-top:14px;background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:16px 18px">
+          <p class="hinweis" style="margin:0 0 6px">Zugangscode für <b id="mg-code-name"></b> – nur jetzt sichtbar:</p>
+          <p id="mg-code" style="font-family:ui-monospace,Menlo,monospace;font-size:22px;letter-spacing:.06em;margin:0;user-select:all"></p>
+          <p class="hinweis" style="margin:12px 0 6px">Nachricht zum Weitergeben:</p>
+          <textarea id="mg-nachricht" rows="7" readonly style="width:100%;font-size:14px"></textarea>
+          <div class="reihe" style="margin-top:8px"><button type="button" class="btn btn-2 btn-klein" id="mg-kopieren">Nachricht kopieren</button>
+            <button type="button" class="btn btn-2 btn-klein" id="mg-code-zu">Fertig</button></div>
+        </div>
+      </div>
+
+      <div class="karte">
+        <h2>Mitglieder</h2>
+        <table><thead><tr><th>Kunde</th><th>Status</th><th>Durchgänge</th><th>Freigaben</th><th>Zuletzt da</th><th></th></tr></thead><tbody id="mg-liste"></tbody></table>
+      </div>
+
+      <div class="karte">
+        <h2>Freigegebene Durchgänge</h2>
+        <p class="hinweis" style="margin-top:-4px">Hier liest du nur, was Kunden ausdrücklich für dich freigegeben haben. Alles andere kann niemand lesen – auch die Technik nicht.</p>
+
+        <form id="mg-einrichten" class="formular" hidden>
+          <p class="breit">Um Freigaben lesen zu können, brauchst du einen eigenen Schlüssel. Er wird mit einer <b>Passphrase</b> geschützt,
+            die nur du kennst. Wer die Verwaltung sonst öffnen kann, kann Freigaben ohne sie nicht lesen.</p>
+          <p class="breit hinweis">Vergisst du sie, lässt sich ein neuer Schlüssel erzeugen – dann müssen die Kunden ihre Durchgänge neu freigeben.</p>
+          <label>Passphrase (mind. 12 Zeichen)<input type="password" id="mg-p1" autocomplete="new-password"></label>
+          <label>Noch einmal<input type="password" id="mg-p2" autocomplete="new-password"></label>
+          <div class="breit reihe"><button class="btn">Schlüssel einrichten</button></div>
+          <p class="breit fehler" id="mg-e-fehler"></p>
+        </form>
+
+        <form id="mg-entsperren" class="formular" hidden>
+          <label>Deine Passphrase für Freigaben<input type="password" id="mg-pass" autocomplete="current-password"></label>
+          <div class="reihe" style="align-self:end"><button class="btn">Öffnen</button></div>
+          <p class="breit fehler" id="mg-u-fehler"></p>
+        </form>
+
+        <div id="mg-freigaben" hidden>
+          <div class="reihe" style="justify-content:space-between;margin-bottom:6px">
+            <span class="hinweis" id="mg-f-anzahl"></span>
+            <button type="button" class="btn btn-2 btn-klein" id="mg-sperren">Wieder sperren</button>
+          </div>
+          <div id="mg-f-liste"></div>
+        </div>
+        <p style="margin-top:18px"><button type="button" class="btn btn-loesch btn-klein" id="mg-neu-schluessel" hidden>Passphrase vergessen – neuen Schlüssel erzeugen</button></p>
+        <p class="fehler" id="mg-n-fehler"></p>
+      </div>
+    </section>
+
     <!-- Aufgaben -->
     <section id="t-aufgaben" hidden>
       <div class="karte">
@@ -530,8 +587,8 @@
   document.querySelectorAll('.tabs button').forEach(function(b){
     b.addEventListener('click', function(){
       document.querySelectorAll('.tabs button').forEach(function(x){ x.classList.toggle('an', x===b); });
-      ['kalender','zeiten','angebote','kunden','rechnungen','pakete','einst','aufgaben'].forEach(function(t){ $('t-'+t).hidden = t !== b.dataset.tab; });
-      ({kalender:ladeWoche, zeiten:ladeZeiten, angebote:ladeAngebote, kunden:ladeKunden, rechnungen:ladeRechnungen, pakete:ladePakete, einst:function(){ ladeEinst(); ladeRechnungsdaten(); ladeVorlage(); }, aufgaben:ladeAufgaben})[b.dataset.tab]();
+      ['kalender','zeiten','angebote','kunden','rechnungen','pakete','mitglieder','einst','aufgaben'].forEach(function(t){ $('t-'+t).hidden = t !== b.dataset.tab; });
+      ({kalender:ladeWoche, zeiten:ladeZeiten, angebote:ladeAngebote, kunden:ladeKunden, rechnungen:ladeRechnungen, pakete:ladePakete, mitglieder:ladeMitglieder, einst:function(){ ladeEinst(); ladeRechnungsdaten(); ladeVorlage(); }, aufgaben:ladeAufgaben})[b.dataset.tab]();
     });
   });
 
@@ -978,6 +1035,159 @@
       $('p-liste').innerHTML = p.length ? p.map(function(x){
         return '<tr><td>'+esc(x.name)+'<br><small>'+esc(x.email)+'</small></td><td>'+esc(x.angebot)+'</td><td><b>'+esc(x.code)+'</b></td><td>'+x.gebucht+' von '+x.gesamt+'</td><td>'+esc(x.status)+'</td></tr>';
       }).join('') : '<tr><td colspan="5" class="hinweis">Noch keine Pakete gebucht.</td></tr>';
+    });
+  }
+
+  /* ================= Mitglieder ================= */
+  /* Die Einträge sind Ende-zu-Ende verschlüsselt. Freigaben liest nur, wer Sandras
+     Passphrase kennt; der private Schlüssel liegt nur entschlüsselt im Arbeitsspeicher. */
+  var MG = (function(){
+    var enc = new TextEncoder(), dec = new TextDecoder(), sub = window.crypto && crypto.subtle;
+    function b64(buf){ var u = new Uint8Array(buf), s = ''; for (var i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); }
+    function unb64(s){ var t = atob(s), u = new Uint8Array(t.length); for (var i = 0; i < t.length; i++) u[i] = t.charCodeAt(i); return u; }
+    function zufall(n){ return crypto.getRandomValues(new Uint8Array(n)); }
+    function kek(pass, salt){
+      return sub.importKey('raw', enc.encode(String(pass).normalize('NFKC')), 'PBKDF2', false, ['deriveKey']).then(function(b){
+        return sub.deriveKey({name:'PBKDF2', salt:salt, iterations:600000, hash:'SHA-256'}, b, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']); });
+    }
+    return {
+      erzeugen: function(pass){
+        var salt = zufall(16), iv = zufall(12), jwk;
+        return sub.generateKey({name:'RSA-OAEP', modulusLength:3072, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256'}, true, ['wrapKey','unwrapKey'])
+          .then(function(p){ return Promise.all([sub.exportKey('jwk', p.publicKey), sub.exportKey('pkcs8', p.privateKey)]); })
+          .then(function(r){ jwk = r[0]; return kek(pass, salt).then(function(k){ return sub.encrypt({name:'AES-GCM', iv:iv}, k, r[1]); }); })
+          .then(function(c){ return {oeffentlich: JSON.stringify(jwk), privat: JSON.stringify({v:1, salt:b64(salt), iv:b64(iv), c:b64(c)})}; });
+      },
+      oeffnen: function(privat, pass){
+        var h = JSON.parse(privat);
+        return kek(pass, unb64(h.salt)).then(function(k){ return sub.decrypt({name:'AES-GCM', iv:unb64(h.iv)}, k, unb64(h.c)); })
+          .then(function(pk){ return sub.importKey('pkcs8', pk, {name:'RSA-OAEP', hash:'SHA-256'}, false, ['unwrapKey']); });
+      },
+      lesen: function(priv, text){
+        var f = JSON.parse(text);
+        return sub.unwrapKey('raw', unb64(f.k), priv, {name:'RSA-OAEP'}, {name:'AES-GCM', length:256}, false, ['decrypt'])
+          .then(function(k){ return sub.decrypt({name:'AES-GCM', iv:unb64(f.iv)}, k, unb64(f.c)); })
+          .then(function(p){ return JSON.parse(dec.decode(p)); });
+      }
+    };
+  })();
+  var MG_FRAGE = {widerfahren:'Was ist dir widerfahren?', bei_mir:'Was davon liegt bei dir?', anerkennen:'Was darf wehtun?',
+    fakt:'Was ist passiert?', satz:'Was sagst du dir (über dich)?', gefuehl:'Was fühlst du dabei?', tun:'Was machst du dann?',
+    ergebnis:'Was kommt dabei heraus?', neuer_satz:'Neuer Satz', brauchen:'Was brauchst du jetzt?'};
+  var MG_REIHE = {B:['widerfahren','bei_mir','anerkennen','satz','gefuehl','tun','ergebnis','neuer_satz','brauchen'], A:['fakt','satz','gefuehl','tun','ergebnis','neuer_satz']};
+  var mgPriv = null, mgSchluessel = null, mgListe = [], mgSuchTimer = null;
+
+  function ladeMitglieder(){
+    rpc('coaching_admin_mitglieder').then(function(l){
+      mgListe = l;
+      $('mg-liste').innerHTML = l.length ? l.map(function(m){
+        var st = !m.aktiv ? '<span class="hinweis">gesperrt</span>' : m.eingerichtet ? 'aktiv' : '<span class="hinweis">wartet auf erste Anmeldung</span>';
+        return '<tr><td><b>'+esc(m.name)+'</b><br><small class="hinweis">'+esc(m.email||'')+'</small></td><td>'+st+'</td><td>'+m.eintraege+'</td><td>'+m.freigaben+'</td>'+
+          '<td>'+(m.letzte_anmeldung ? datumDE(isoTag(new Date(m.letzte_anmeldung))) : '<span class="hinweis">noch nie</span>')+'</td>'+
+          '<td style="white-space:nowrap"><button class="btn btn-2 btn-klein" data-mg-code="'+m.id+'">Neuer Code</button> '+
+          '<button class="btn btn-2 btn-klein" data-mg-aktiv="'+m.id+'" data-wert="'+(!m.aktiv)+'">'+(m.aktiv?'Sperren':'Entsperren')+'</button> '+
+          '<button class="btn btn-loesch btn-klein" data-mg-loeschen="'+m.id+'">Löschen</button></td></tr>';
+      }).join('') : '<tr><td colspan="6" class="hinweis">Noch niemand freigeschaltet.</td></tr>';
+    });
+    rpc('coaching_admin_freigabeschluessel').then(function(s){ mgSchluessel = s; mgZeigeFreigabe(); });
+  }
+  function mgZeigeFreigabe(){
+    var hat = !!mgSchluessel, offen = !!mgPriv;
+    $('mg-einrichten').hidden = hat; $('mg-entsperren').hidden = !hat || offen;
+    $('mg-freigaben').hidden = !offen; $('mg-neu-schluessel').hidden = !hat || offen;
+    if (offen) mgLadeFreigaben();
+  }
+  function mgCodeZeigen(r, name){
+    $('mg-code-name').textContent = name; $('mg-code').textContent = r.code;
+    var url = location.origin + '/mitglieder.html', vn = String(name||'').trim().split(' ')[0];
+    $('mg-nachricht').value = 'Hallo '+vn+',\n\ndein Zugang zum Mitgliederbereich von „Ganz bei dir" ist freigeschaltet.\n\n'+
+      'Adresse: '+url+'\nE-Mail: '+r.email+'\nZugangscode: '+r.code+'\n\n'+
+      'Beim ersten Mal wählst du eine eigene Passphrase. Sie bleibt nur bei dir – ich kann deine Einträge nicht lesen, außer denen, die du mir ausdrücklich freigibst.\n\nSandra';
+    $('mg-code-box').hidden = false;
+  }
+  $('mg-suche').addEventListener('input', function(){
+    var q = this.value.trim(); clearTimeout(mgSuchTimer); $('mg-fehler').textContent = '';
+    if (q.length < 2) { $('mg-treffer').hidden = true; return; }
+    mgSuchTimer = setTimeout(function(){
+      rpc('coaching_admin_kundinnen', {p_suche:q}).then(function(liste){
+        $('mg-treffer').innerHTML = liste.length ? liste.map(function(k,i){
+          return '<button type="button" data-k="'+i+'"><b>'+esc(k.name)+'</b> <small>'+esc(k.email||'keine E-Mail')+'</small></button>'; }).join('')
+          : '<div class="hinweis" style="padding:8px 10px">Kein Kunde gefunden.</div>';
+        $('mg-treffer').hidden = false;
+        $('mg-treffer').querySelectorAll('[data-k]').forEach(function(b){ b.onclick = function(){
+          var k = liste[+b.dataset.k]; $('mg-treffer').hidden = true; $('mg-suche').value = '';
+          rpc('coaching_admin_mitglied_freischalten', {p_kundin_id:k.id})
+            .then(function(r){ mgCodeZeigen(r, k.name); ladeMitglieder(); })
+            .catch(function(err){ $('mg-fehler').textContent = err.message; });
+        }; });
+      });
+    }, 250);
+  });
+  $('mg-kopieren').addEventListener('click', function(){
+    var b = this; (navigator.clipboard ? navigator.clipboard.writeText($('mg-nachricht').value) : Promise.reject())
+      .then(function(){ b.textContent = 'Kopiert'; setTimeout(function(){ b.textContent = 'Nachricht kopieren'; }, 1800); })
+      .catch(function(){ $('mg-nachricht').select(); });
+  });
+  $('mg-code-zu').addEventListener('click', function(){ $('mg-code-box').hidden = true; $('mg-code').textContent = ''; $('mg-nachricht').value = ''; });
+  $('mg-liste').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    var m = mgListe.filter(function(x){ return x.id === (b.dataset.mgCode || b.dataset.mgAktiv || b.dataset.mgLoeschen); })[0]; if (!m) return;
+    if (b.dataset.mgCode) {
+      if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Alter Code wird ungültig – sicher?'; return; }
+      rpc('coaching_admin_mitglied_neuer_code', {p_id:m.id}).then(function(r){ mgCodeZeigen(r, m.name); ladeMitglieder(); window.scrollTo({top:0, behavior:'smooth'}); });
+    } else if (b.dataset.mgAktiv) {
+      rpc('coaching_admin_mitglied_aktiv', {p_id:m.id, p_aktiv: b.dataset.wert === 'true'}).then(ladeMitglieder);
+    } else if (b.dataset.mgLoeschen) {
+      if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Alle '+m.eintraege+' Durchgänge endgültig löschen?'; return; }
+      rpc('coaching_admin_mitglied_loeschen', {p_id:m.id}).then(ladeMitglieder);
+    }
+  });
+  $('mg-einrichten').addEventListener('submit', function(e){
+    e.preventDefault(); var f = $('mg-e-fehler'), btn = this.querySelector('button'); f.textContent = '';
+    var p1 = $('mg-p1').value, p2 = $('mg-p2').value;
+    if (p1.length < 12) { f.textContent = 'Bitte mindestens 12 Zeichen.'; return; }
+    if (p1 !== p2) { f.textContent = 'Die beiden Eingaben stimmen nicht überein.'; return; }
+    btn.disabled = true; btn.textContent = 'Schlüssel wird erzeugt …';
+    var ersetzen = !!mgSchluessel;
+    MG.erzeugen(p1).then(function(k){ return rpc('coaching_admin_freigabeschluessel_setzen', {p_oeffentlich:k.oeffentlich, p_privat:k.privat, p_ersetzen:ersetzen}).then(function(){ return k; }); })
+      .then(function(k){ $('mg-p1').value = $('mg-p2').value = ''; mgSchluessel = {oeffentlich:k.oeffentlich, privat:k.privat}; return MG.oeffnen(k.privat, p1); })
+      .then(function(priv){ mgPriv = priv; mgZeigeFreigabe(); ladeMitglieder(); })
+      .catch(function(err){ f.textContent = err.message || 'Das hat nicht geklappt.'; })
+      .then(function(){ btn.disabled = false; btn.textContent = 'Schlüssel einrichten'; });
+  });
+  $('mg-entsperren').addEventListener('submit', function(e){
+    e.preventDefault(); var f = $('mg-u-fehler'), btn = this.querySelector('button'); f.textContent = '';
+    btn.disabled = true; btn.textContent = 'Wird geöffnet …';
+    MG.oeffnen(mgSchluessel.privat, $('mg-pass').value)
+      .then(function(priv){ mgPriv = priv; $('mg-pass').value = ''; mgZeigeFreigabe(); })
+      .catch(function(){ f.textContent = 'Die Passphrase stimmt nicht.'; })
+      .then(function(){ btn.disabled = false; btn.textContent = 'Öffnen'; });
+  });
+  $('mg-sperren').addEventListener('click', function(){ mgPriv = null; $('mg-f-liste').innerHTML = ''; mgZeigeFreigabe(); });
+  $('mg-neu-schluessel').addEventListener('click', function(){
+    var b = this;
+    if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Alle bisherigen Freigaben werden zurückgesetzt – trotzdem?';
+      $('mg-n-fehler').textContent = 'Die Kunden müssen ihre Durchgänge danach neu freigeben.'; return; }
+    delete b.dataset.sicher; b.textContent = 'Passphrase vergessen – neuen Schlüssel erzeugen'; $('mg-n-fehler').textContent = '';
+    $('mg-entsperren').hidden = true; $('mg-einrichten').hidden = false; b.hidden = true; $('mg-p1').focus();
+  });
+  function mgLadeFreigaben(){
+    rpc('coaching_admin_freigaben').then(function(l){
+      $('mg-f-anzahl').textContent = l.length === 1 ? '1 freigegebener Durchgang' : l.length + ' freigegebene Durchgänge';
+      if (!l.length) { $('mg-f-liste').innerHTML = '<p class="hinweis">Noch nichts freigegeben.</p>'; return; }
+      return Promise.all(l.map(function(x){ return MG.lesen(mgPriv, x.freigabe).then(function(d){ return {x:x, d:d}; }).catch(function(){ return {x:x, d:null}; }); }))
+        .then(function(r){
+          $('mg-f-liste').innerHTML = r.map(function(o){
+            var x = o.x, d = o.d, kopf = '<b>'+esc(x.name)+'</b> · '+datumDE(isoTag(new Date(x.geaendert_am)));
+            if (!d) return '<details class="karte" style="margin-top:10px;padding:14px 18px"><summary>'+kopf+' – <span class="hinweis">nicht lesbar</span></summary></details>';
+            var a = d.antworten || {}, reihe = MG_REIHE[d.variante || x.variante] || [];
+            return '<details class="karte" style="margin-top:10px;padding:14px 18px"><summary>'+kopf+' – '+esc(a.titel || 'Ohne Titel')+
+              ' <span class="hinweis">('+(x.variante === 'A' ? 'kurz' : 'ausführlich')+')</span></summary>'+
+              '<dl style="margin-top:10px">'+reihe.filter(function(k){ return a[k]; }).map(function(k){
+                return '<dt class="hinweis" style="margin-top:10px;font-size:13px">'+esc(MG_FRAGE[k])+'</dt><dd style="white-space:pre-wrap;margin:2px 0 0">'+esc(a[k])+'</dd>';
+              }).join('')+'</dl></details>';
+          }).join('');
+        });
     });
   }
 

@@ -117,7 +117,8 @@
       <li>Kein Tracking, keine Werbe-Cookies, keine Statistik-Dienste.</li>
       <li>Die kleinen Übungen auf der Seite – der Glaubenssatz-Spiegel und der
           Selbstcheck – laufen nur in deinem Browser. Nichts davon wird gesendet.</li>
-      <li>Gespeichert wird nur, was du selbst in die Terminbuchung einträgst.</li>
+      <li>Gespeichert wird nur, was du selbst in die Terminbuchung einträgst – und im Mitgliederbereich deine
+          Durchgänge, die in deinem Browser verschlüsselt werden, bevor sie ihn verlassen.</li>
     </ul>
   </div>
 
@@ -182,15 +183,50 @@
      die Seite schließt, sind sie weg. Der Selbstcheck ist kein psychologischer Test und
      liefert keine Diagnose.</p>
 
-  <h2>5. Das Kurznachrichten-Feld</h2>
+  <h2 id="mitglieder">5. Der Mitgliederbereich</h2>
+  <p>Kundinnen und Kunden mit dem Paket „Prozess: Muster lösen" bekommen Zugang zu einem Mitgliederbereich. Dort
+     schreiben sie eigene Durchgänge: was sie beschäftigt, was sie sich darüber sagen, was sie fühlen. Solche Angaben
+     können Gesundheit, Beziehung und Sexualleben berühren – also <b>besondere Kategorien personenbezogener Daten
+     nach Art. 9 DSGVO</b>. Deshalb gilt hier mehr als für den Rest der Seite.</p>
+
+  <h3>Ende-zu-Ende-Verschlüsselung</h3>
+  <p>Deine Durchgänge werden <b>in deinem Browser verschlüsselt</b> (AES-256-GCM), bevor sie gespeichert werden. Der
+     Schlüssel entsteht aus deiner Passphrase, die dein Gerät nie verlässt. Auf dem Server liegen nur verschlüsselte
+     Daten. Weder Sandra noch die technische Betreuung noch der Datenbankanbieter können sie lesen.</p>
+  <p>Für den Fall, dass du deine Passphrase vergisst, bekommst du beim Einrichten einen Wiederherstellungscode. Verlierst
+     du beides, sind deine Einträge nicht mehr lesbar – auch für niemand anderen.</p>
+
+  <h3>Freigaben an Sandra</h3>
+  <p>Einzelne Durchgänge kannst du für Sandra freigeben. Dann wird eine Kopie mit Sandras eigenem Schlüssel
+     verschlüsselt, den nur sie mit ihrer Passphrase öffnen kann. Du kannst jede Freigabe jederzeit zurücknehmen; die
+     Kopie wird dann gelöscht.</p>
+
+  <table>
+    <tr><th>Was unverschlüsselt gespeichert wird</th><td>Dass du Zugang hast (verknüpft mit deinem Kundendatensatz),
+      wann du eingewilligt und dich zuletzt angemeldet hast, wie viele Durchgänge es gibt, wann sie geändert wurden und
+      ob sie freigegeben sind. Der Zugangscode nur als Prüfwert, aus dem er sich nicht zurückrechnen lässt.</td></tr>
+    <tr><th>Rechtsgrundlage</th><td>Deine ausdrückliche Einwilligung, Art. 9 Abs. 2 lit. a und Art. 6 Abs. 1 lit. a
+      DSGVO. Du gibst sie beim ersten Anmelden.</td></tr>
+    <tr><th>Wo gespeichert</th><td>Bei Supabase im Rechenzentrum Frankfurt am Main, wie die Terminbuchung.</td></tr>
+    <tr><th>Wie lange</th><td>Bis du sie löschst – jederzeit selbst unter „Einstellungen", sofort und endgültig. Das ist
+      zugleich der Widerruf deiner Einwilligung. <span class="platz">[Zu entscheiden: ob Zugänge nach Ende der Begleitung
+      nach einer Frist automatisch gelöscht werden.]</span></td></tr>
+    <tr><th>Herausgabe</th><td>Unter „Einstellungen" lädst du alles als Text oder als JSON-Datei herunter (Art. 20 DSGVO).</td></tr>
+  </table>
+  <p>Während du angemeldet bist, merkt sich dein Browser E-Mail-Adresse und Zugangscode im Sitzungsspeicher, damit
+     du beim Neuladen nicht alles neu eingeben musst. Beides verschwindet, wenn du den Tab schließt. Passphrase und
+     Schlüssel werden nie gespeichert; nach 20 Minuten ohne Aktivität wird der Bereich automatisch gesperrt.</p>
+
+  <h2>6. Das Kurznachrichten-Feld</h2>
   <p><span class="platz">[Derzeit ohne Funktion – der Knopf sendet nichts. Sobald er
      angeschlossen wird, gehören hier hin: welche Daten, wohin, wie lange.]</span></p>
 
-  <h2>6. Cookies</h2>
+  <h2>7. Cookies</h2>
   <p>Diese Seite setzt keine Cookies und speichert nichts dauerhaft in deinem Browser.
-     Deshalb gibt es auch kein Einwilligungsfenster.</p>
+     Deshalb gibt es auch kein Einwilligungsfenster. Einzige Ausnahme ist der Sitzungsspeicher im Mitgliederbereich
+     (siehe Abschnitt 5), der beim Schließen des Tabs gelöscht wird.</p>
 
-  <h2>7. Deine Rechte</h2>
+  <h2>8. Deine Rechte</h2>
   <ul class="liste">
     <li>Auskunft darüber, welche Daten zu dir gespeichert sind (Art. 15 DSGVO)</li>
     <li>Berichtigung falscher Angaben (Art. 16)</li>
@@ -204,7 +240,7 @@
      Bayerische Landesamt für Datenschutzaufsicht, Promenade 18, 91522 Ansbach,
      <a href="https://www.lda.bayern.de" target="_blank" rel="noopener noreferrer">lda.bayern.de</a>.</p>
 
-  <h2>8. Änderungen</h2>
+  <h2>9. Änderungen</h2>
   <p>Wenn sich an der Seite etwas ändert, ändert sich dieser Text mit. Es gilt immer die
      hier veröffentlichte Fassung.</p>
 

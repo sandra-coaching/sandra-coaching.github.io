@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mitgliederbereich – Ganz bei dir · Sandra Denk</title>
+<script>
+/* Seite beim Laden oben halten (siehe Startseite), ein Anker in der Adresse hat Vorrang */
+(function(){
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (location.hash) return;
+  var nutzer = false, bis = Date.now() + 1500;
+  ['wheel','touchstart','keydown','mousedown'].forEach(function(e){ addEventListener(e, function(){ nutzer = true; }, {once:true, passive:true}); });
+  function oben(){ if (nutzer) return; if (window.pageYOffset > 0) window.scrollTo(0,0); if (Date.now() < bis) requestAnimationFrame(oben); }
+  oben(); addEventListener('load', oben);
+})();
+</script>
+<style>
+  :root{
+    --cream:#FBF7F1; --paper:#FFFDFA; --sand:#EFE6DA; --sand-2:#E4D8CC;
+    --rose:#E6CFC4; --clay:#A97B63; --clay-dark:#8B6049; --olive:#A9AE97;
+    --ink:#42392F; --muted:#7C6F63; --line:#E7DCCF; --rot:#9B3B2E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scrollbar-gutter:stable}
+  body{background:var(--cream);color:var(--ink);font-size:17px;line-height:1.65;
+       font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+  a{color:var(--clay-dark)}
+  header{padding:22px 0;border-bottom:1px solid var(--line)}
+  .kopf{display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:15px}
+  .brand b{display:block;font-size:15px;font-weight:600}
+  .brand>span{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-top:1px}
+  .kopf-rechts{display:flex;gap:14px;align-items:center}
+  .kopf a,.link-knopf{color:var(--muted);text-decoration:none;background:none;border:0;font:inherit;font-size:15px;cursor:pointer;padding:0}
+  .kopf a:hover,.link-knopf:hover{color:var(--ink)}
+  main{padding:36px 0 50px;min-height:60vh}
+  h1{font-size:29px;line-height:1.2;letter-spacing:-.02em;margin-bottom:10px}
+  h2{font-size:21px;line-height:1.3;margin-bottom:8px}
+  .leise{color:var(--muted)}
+  .klein{font-size:14px}
+  .karte{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:24px 26px;margin-top:22px}
+  label.feld{display:block;font-size:14.5px;color:var(--muted);margin-top:16px}
+  input[type=text],input[type=email],input[type=password],textarea{display:block;width:100%;margin-top:6px;
+    border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;color:var(--ink);background:var(--cream)}
+  textarea{min-height:130px;resize:vertical;line-height:1.55}
+  input:focus,textarea:focus{outline:2px solid var(--clay);outline-offset:1px;border-color:var(--clay)}
+  .btn{display:inline-block;background:var(--clay);color:#fff;text-decoration:none;padding:13px 26px;border-radius:999px;
+       font:inherit;font-size:15.5px;font-weight:600;border:2px solid var(--clay);cursor:pointer}
+  .btn:hover{background:var(--clay-dark);border-color:var(--clay-dark)}
+  .btn:disabled{opacity:.45;cursor:default}
+  .btn-2{background:transparent;color:var(--clay-dark);border-color:var(--sand-2)}
+  .btn-2:hover{background:var(--sand);border-color:var(--sand-2)}
+  .btn-rot{background:transparent;color:var(--rot);border-color:#E3C6C0}
+  .btn-rot:hover{background:#F6E9E6;border-color:#C98F84}
+  .reihe{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:20px}
+  .fehler{color:var(--rot);font-size:14.5px;margin-top:12px;min-height:1em}
+  .haken{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:15px}
+  .haken input{margin-top:5px;width:18px;height:18px;accent-color:var(--clay);flex:none}
+  .schluesselbox{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:21px;letter-spacing:.06em;
+    background:var(--sand);border-radius:14px;padding:18px 20px;text-align:center;margin-top:14px;word-break:break-all;user-select:all}
+  .hinweisbox{background:var(--sand);border-radius:14px;padding:14px 18px;margin-top:16px;font-size:15px;color:#5E5346}
+  .hinweisbox b{color:var(--ink)}
+  .schloss{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+  .schloss svg{width:13px;height:13px;flex:none}
+  [hidden]{display:none!important}
+
+  /* Übersicht */
+  .neu-wahl{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .neu-karte{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px 20px;text-align:left;
+    font:inherit;color:inherit;cursor:pointer;transition:border-color .2s,background .2s;
+    display:flex;flex-direction:column;justify-content:flex-start;gap:4px}
+  .neu-karte:hover{border-color:var(--clay);background:var(--sand)}
+  .neu-karte b{display:block;font-size:17px}
+  .neu-karte span{font-size:14.5px;color:var(--muted)}
+  .reiter{display:flex;gap:6px;margin-top:30px;border-bottom:1px solid var(--line)}
+  .reiter button{background:none;border:0;font:inherit;font-size:15px;color:var(--muted);padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .reiter button.an{color:var(--ink);border-bottom-color:var(--clay);font-weight:600}
+  .liste{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+  .eintrag{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 18px;text-align:left;
+    font:inherit;color:inherit;cursor:pointer;display:flex;justify-content:space-between;gap:14px;align-items:center;width:100%}
+  .eintrag:hover{border-color:var(--clay)}
+  .eintrag b{display:block;font-size:16px}
+  .eintrag small{color:var(--muted);font-size:13.5px}
+  .marke{font-size:12px;border-radius:999px;padding:3px 10px;white-space:nowrap}
+  .marke-frei{background:#E8EDDC;color:#4F5A36}
+  .marke-var{background:var(--sand);color:var(--clay-dark)}
+  .satz-paar{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 18px}
+  .satz-alt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--rose)}
+  .satz-neu{font-weight:600;margin-top:4px}
+  .leer{color:var(--muted);text-align:center;padding:30px 10px}
+
+  /* Durchgang */
+  .fortschritt{height:6px;background:var(--sand-2);border-radius:999px;overflow:hidden;margin-top:14px}
+  .fortschritt i{display:block;height:100%;background:var(--clay);transition:width .3s}
+  .schritt-nr{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-top:26px}
+  .frage{font-size:24px;line-height:1.3;margin-top:6px}
+  .hilfe{color:var(--muted);margin-top:8px}
+  details.bsp{margin-top:10px;font-size:14.5px;color:var(--muted)}
+  details.bsp summary{cursor:pointer;color:var(--clay-dark)}
+  details.bsp p{margin-top:6px;font-style:italic}
+  .speicherstand{font-size:13px;color:var(--muted);margin-top:10px;min-height:1.3em}
+  .zusammen dt{font-size:13px;color:var(--muted);margin-top:14px}
+  .zusammen dd{white-space:pre-wrap}
+  .schalter{display:flex;gap:12px;align-items:flex-start;background:var(--sand);border-radius:14px;padding:14px 18px;margin-top:20px}
+  .schalter input{width:20px;height:20px;accent-color:var(--clay);margin-top:3px;flex:none}
+
+  .safety{background:var(--sand-2);border-radius:16px;padding:16px 20px;margin-top:40px;font-size:14.5px;color:#5E5346}
+  .safety b{display:block;color:var(--ink);margin-bottom:2px}
+  footer{color:var(--muted);font-size:13.5px;padding:26px 0 50px;border-top:1px solid var(--line)}
+  footer a{color:var(--clay-dark)}
+  @media(max-width:560px){h1{font-size:24px}.frage{font-size:21px}.karte{padding:18px}.neu-wahl{grid-template-columns:1fr}}
+  @media print{ body.drucke-wh *{visibility:hidden} body.drucke-wh #wh-karte, body.drucke-wh #wh-karte *{visibility:visible}
+    body.drucke-wh #wh-karte{position:absolute;left:0;top:0;border:0} }
+</style>
+</head>
+<body>
+
+<header><div class="wrap kopf">
+  <span class="brand"><b>Sandra Denk</b><span>Ganz bei dir</span></span>
+  <span class="kopf-rechts">
+    <button class="link-knopf" id="k-einst" hidden>Einstellungen</button>
+    <button class="link-knopf" id="k-sperren" hidden>Sperren</button>
+    <a href="index.html">Zur Startseite</a>
+  </span>
+</div></header>
+
+<main class="wrap">
+
+  <!-- ============ Anmelden ============ -->
+  <section class="ansicht" id="v-anmelden">
+    <h1>Mitgliederbereich</h1>
+    <p class="leise">Hier arbeitest du an deinen eigenen Durchgängen weiter. Den Zugangscode hast du von Sandra bekommen.</p>
+    <form class="karte" id="f-anmelden" autocomplete="on" novalidate>
+      <label class="feld">Deine E-Mail-Adresse
+        <input type="email" id="a-email" autocomplete="email" required></label>
+      <label class="feld">Zugangscode
+        <input type="text" id="a-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" required></label>
+      <div class="reihe"><button class="btn" type="submit">Weiter</button></div>
+      <p class="fehler" id="a-fehler" role="alert"></p>
+    </form>
+    <p class="leise klein" style="margin-top:16px">Noch keinen Zugang? Er gehört zum Paket „Prozess: Muster lösen".
+      Frag Sandra im nächsten Termin danach oder <a href="index.html#termin">buch ein Erstgespräch</a>.</p>
+  </section>
+
+  <!-- ============ Einrichten: Einwilligung ============ -->
+  <section class="ansicht" id="v-einw" hidden>
+    <h1>Willkommen, <span data-vorname></span></h1>
+    <p class="leise">Bevor du anfängst, zwei Dinge in Ruhe: was mit deinen Einträgen passiert, und wie du sie schützt.</p>
+    <div class="karte">
+      <h2>So sind deine Einträge geschützt</h2>
+      <p>Alles, was du hier schreibst, wird <b>in deinem Browser verschlüsselt</b>, bevor es gespeichert wird.
+         Auf dem Server liegt nur unlesbarer Zeichensalat. Niemand kann ihn lesen – nicht Sandra, nicht die Technik,
+         nicht der Anbieter der Datenbank.</p>
+      <p style="margin-top:10px">Einzelne Durchgänge kannst du <b>für Sandra freigeben</b>, wenn du sie im Termin besprechen möchtest.
+         Nur diese kann sie lesen, und du kannst die Freigabe jederzeit zurücknehmen.</p>
+      <div class="hinweisbox"><b>Wichtig:</b> Den Schlüssel hast nur du. Vergisst du deine Passphrase
+         <i>und</i> verlierst deinen Wiederherstellungscode, kann niemand deine Einträge zurückholen – auch Sandra nicht.</div>
+      <label class="haken"><input type="checkbox" id="e-einw">
+        <span>Ich willige ausdrücklich ein, dass meine Einträge gespeichert werden. Mir ist bewusst, dass sie Angaben zu meinem
+        seelischen Befinden, meiner Beziehung und meinem Privatleben enthalten können (besondere Kategorien nach Art. 9 DSGVO).
+        Ich kann die Einwilligung jederzeit widerrufen, indem ich unter „Einstellungen" alles lösche.
+        Mehr in der <a href="datenschutz.html#mitglieder" target="_blank" rel="noopener">Datenschutzerklärung</a>.</span></label>
+      <div class="reihe"><button class="btn" id="e-weiter" disabled>Weiter</button></div>
+    </div>
+  </section>
+
+  <!-- ============ Einrichten: Passphrase ============ -->
+  <section class="ansicht" id="v-pass" hidden>
+    <h1>Deine Passphrase</h1>
+    <p class="leise">Sie ist der Schlüssel zu deinen Einträgen. Du brauchst sie jedes Mal, wenn du hier weiterarbeitest.</p>
+    <form class="karte" id="f-pass" novalidate>
+      <p class="klein leise">Ein kurzer Satz, den nur du kennst, ist leichter zu merken als ein kompliziertes Wort –
+        zum Beispiel <i>„Mein Garten riecht nach Regen"</i>. Mindestens 10 Zeichen.</p>
+      <label class="feld">Passphrase<input type="password" id="p-1" autocomplete="new-password" minlength="10" required></label>
+      <label class="feld">Noch einmal<input type="password" id="p-2" autocomplete="new-password" minlength="10" required></label>
+      <div class="reihe"><button class="btn" type="submit" id="p-los">Schlüssel erzeugen</button></div>
+      <p class="fehler" id="p-fehler" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- ============ Einrichten: Wiederherstellungscode ============ -->
+  <section class="ansicht" id="v-wh" hidden>
+    <h1>Dein Wiederherstellungscode</h1>
+    <p class="leise">Falls du deine Passphrase einmal vergisst, kommst du mit diesem Code wieder an deine Einträge.
+      Er wird nur jetzt angezeigt.</p>
+    <div class="karte" id="wh-karte">
+      <p class="klein leise">Wiederherstellungscode · Ganz bei dir · Mitgliederbereich</p>
+      <div class="schluesselbox" id="wh-code"></div>
+      <p class="klein leise" style="margin-top:12px">Schreib ihn auf und leg ihn an einen sicheren Ort – nicht in dieselbe Notiz wie deine Passphrase.</p>
+      <div class="reihe">
+        <button class="btn btn-2" id="wh-kopieren" type="button">Kopieren</button>
+        <button class="btn btn-2" id="wh-drucken" type="button">Drucken</button>
+      </div>
+    </div>
+    <div class="karte">
+      <label class="haken" style="margin-top:0"><input type="checkbox" id="wh-ok"> <span>Ich habe den Code aufgeschrieben oder gedruckt.</span></label>
+      <div class="reihe"><button class="btn" id="wh-fertig" disabled>Fertig – los geht's</button></div>
+      <p class="fehler" id="wh-fehler" role="alert"></p>
+    </div>
+  </section>
+
+  <!-- ============ Entsperren ============ -->
+  <section class="ansicht" id="v-entsperren" hidden>
+    <h1>Hallo <span data-vorname></span></h1>
+    <p class="leise">Gib deine Passphrase ein, um deine Einträge zu öffnen.</p>
+    <form class="karte" id="f-entsperren" novalidate>
+      <label class="feld">Passphrase<input type="password" id="u-pass" autocomplete="current-password" required></label>
+      <div class="reihe"><button class="btn" type="submit" id="u-los">Öffnen</button>
+        <button class="link-knopf klein" type="button" id="u-vergessen" style="margin-left:6px">Passphrase vergessen?</button></div>
+      <p class="fehler" id="u-fehler" role="alert"></p>
+    </form>
+    <form class="karte" id="f-wiederher" hidden novalidate>
+      <h2>Mit dem Wiederherstellungscode</h2>
+      <p class="klein leise">Danach wählst du eine neue Passphrase. Deine Einträge bleiben erhalten.</p>
+      <label class="feld">Wiederherstellungscode<input type="text" id="r-code" autocomplete="off" autocapitalize="characters" spellcheck="false" required></label>
+      <label class="feld">Neue Passphrase (mind. 10 Zeichen)<input type="password" id="r-p1" autocomplete="new-password" minlength="10" required></label>
+      <label class="feld">Noch einmal<input type="password" id="r-p2" autocomplete="new-password" minlength="10" required></label>
+      <div class="reihe"><button class="btn" type="submit" id="r-los">Neue Passphrase setzen</button></div>
+      <p class="fehler" id="r-fehler" role="alert"></p>
+    </form>
+    <p class="leise klein" style="margin-top:16px"><button class="link-knopf klein" id="u-anderer" type="button">Anderes Konto verwenden</button></p>
+  </section>
+
+  <!-- ============ Übersicht ============ -->
+  <section class="ansicht" id="v-uebersicht" hidden>
+    <h1>Schön, dass du da bist, <span data-vorname></span></h1>
+    <p class="leise">Nimm dir eine Situation, die dich beschäftigt, und geh sie Schritt für Schritt durch.</p>
+    <div class="neu-wahl">
+      <button class="neu-karte" data-neu="B"><b>Ausführlich</b><span>Erst sortieren, was dir widerfahren ist und was bei dir liegt. Für Kränkungen und alles, was schwer wiegt. Etwa 20 Minuten.</span></button>
+      <button class="neu-karte" data-neu="A"><b>Kurz</b><span>Fünf Fragen für den Alltag – wenn dich etwas ärgert oder nicht loslässt. Etwa 10 Minuten.</span></button>
+    </div>
+    <div class="reiter" role="tablist">
+      <button class="an" data-reiter="durchgaenge" role="tab">Meine Durchgänge</button>
+      <button data-reiter="saetze" role="tab">Meine Sätze</button>
+    </div>
+    <div class="liste" id="liste-durchgaenge"></div>
+    <div class="liste" id="liste-saetze" hidden></div>
+    <p class="schloss" style="margin-top:18px"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Alles verschlüsselt – nur du kannst es lesen</p>
+  </section>
+
+  <!-- ============ Durchgang ============ -->
+  <section class="ansicht" id="v-durchgang" hidden>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <button class="link-knopf" id="d-zurueck-liste">‹ Übersicht</button>
+      <span class="marke marke-var" id="d-variante"></span>
+    </div>
+    <div class="fortschritt"><i id="d-balken"></i></div>
+
+    <div id="d-schritt">
+      <p class="schritt-nr" id="d-nr"></p>
+      <h1 class="frage" id="d-frage"></h1>
+      <p class="hilfe" id="d-hilfe"></p>
+      <details class="bsp" id="d-bsp-wrap"><summary>Beispiel</summary><p id="d-bsp"></p></details>
+      <textarea id="d-text" aria-labelledby="d-frage"></textarea>
+    </div>
+
+    <div id="d-ende" hidden>
+      <p class="schritt-nr">Geschafft</p>
+      <h1 class="frage">Dein Durchgang</h1>
+      <dl class="zusammen" id="d-zusammen"></dl>
+      <label class="schalter" id="d-frei-wrap">
+        <input type="checkbox" id="d-frei">
+        <span><b>Für Sandra freigeben</b><br><span class="klein leise" id="d-frei-text">Dann kann Sandra diesen Durchgang lesen und im Termin mit dir besprechen. Du kannst das jederzeit zurücknehmen.</span></span>
+      </label>
+    </div>
+
+    <p class="speicherstand" id="d-stand" aria-live="polite"></p>
+    <div class="reihe" style="justify-content:space-between">
+      <button class="btn btn-2" id="d-vor">Zurück</button>
+      <button class="btn" id="d-weiter">Weiter</button>
+    </div>
+    <div class="reihe" style="margin-top:34px">
+      <button class="btn btn-rot" id="d-loeschen" hidden>Durchgang löschen</button>
+    </div>
+  </section>
+
+  <!-- ============ Einstellungen ============ -->
+  <section class="ansicht" id="v-einst" hidden>
+    <button class="link-knopf" id="s-zurueck">‹ Übersicht</button>
+    <h1 style="margin-top:14px">Einstellungen</h1>
+
+    <form class="karte" id="f-passneu" novalidate>
+      <h2>Passphrase ändern</h2>
+      <p class="klein leise">Deine Einträge bleiben, wie sie sind. Der Wiederherstellungscode gilt weiter.</p>
+      <label class="feld">Neue Passphrase (mind. 10 Zeichen)<input type="password" id="s-p1" autocomplete="new-password" minlength="10" required></label>
+      <label class="feld">Noch einmal<input type="password" id="s-p2" autocomplete="new-password" minlength="10" required></label>
+      <div class="reihe"><button class="btn" type="submit">Ändern</button></div>
+      <p class="fehler" id="s-fehler" role="alert"></p>
+    </form>
+
+    <div class="karte">
+      <h2>Alles herunterladen</h2>
+      <p class="klein leise">Deine Durchgänge unverschlüsselt als Datei – zum Aufheben oder um sie mitzunehmen.</p>
+      <div class="reihe">
+        <button class="btn btn-2" id="s-txt">Als Text</button>
+        <button class="btn btn-2" id="s-json">Als Datei für andere Programme (JSON)</button>
+      </div>
+    </div>
+
+    <div class="karte">
+      <h2>Alles löschen</h2>
+      <p class="klein leise">Löscht alle deine Durchgänge und deinen Zugang, endgültig. Damit widerrufst du auch deine Einwilligung.
+        Möchtest du später neu anfangen, gibt dir Sandra einen neuen Code.</p>
+      <div class="reihe"><button class="btn btn-rot" id="s-alles">Alles löschen</button></div>
+      <p class="fehler" id="s-alles-fehler" role="alert"></p>
+    </div>
+
+    <div class="karte">
+      <h2>Abmelden</h2>
+      <p class="klein leise">Auf einem fremden oder gemeinsam genutzten Gerät solltest du dich immer abmelden.</p>
+      <div class="reihe"><button class="btn btn-2" id="s-ab">Abmelden</button></div>
+    </div>
+  </section>
+
+  <div class="safety">
+    <b>Wenn es dir gerade sehr schlecht geht</b>
+    Dann ist ein Schreibwerkzeug nicht das Richtige. Hol dir bitte Unterstützung bei einem Menschen, dem du vertraust,
+    oder bei einer Fachstelle. [Platzhalter: konkrete Anlaufstellen mit Telefonnummer eintragen – von Sandra.]
+  </div>
+</main>
+
+<footer><div class="wrap">
+  © 2026 Sandra Denk · Ganz bei dir · <a href="index.html">Startseite</a> · <a href="impressum.html">Impressum</a> ·
+  <a href="datenschutz.html">Datenschutz</a>
+</div></footer>
+
+<script>
+(function(){
+  'use strict';
+  var URL_ = 'https://haurbpfkfaaehorirzee.supabase.co/rest/v1/rpc/';
+  var KEY  = 'sb_publishable_fssomLkMP88GLADjt8eaKQ_Gq6SN0-e';
+  var ITER = 600000;                     /* PBKDF2-Durchläufe: bremst Rateversuche an der Passphrase */
+  var SPERRE_MIN = 20;                   /* nach so vielen Minuten ohne Aktivität wird gesperrt */
+  var ALPHA = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  /* ---------------- Die Fragen ---------------- */
+  var SCHRITTE = {
+    B: [
+      {k:'titel', f:'Worum geht es?', h:'Ein paar Worte, damit du den Durchgang später wiederfindest.', b:'Der Streit am Sonntag.', kurz:true},
+      {k:'widerfahren', f:'Was ist dir widerfahren?', h:'Was lag nicht in deiner Hand? Das musst du nicht umdeuten und nicht verstehen – nur benennen.', b:'Er hat mir monatelang etwas verschwiegen.'},
+      {k:'bei_mir', f:'Was davon liegt bei dir?', h:'Nicht die Schuld – sondern das, was du jetzt daraus machst: wie du mit dir umgehst, was du dir erlaubst.', b:'Wie ich seitdem mit mir rede. Dass ich so tue, als wäre nichts.'},
+      {k:'anerkennen', f:'Was darf wehtun?', h:'Ohne dass du es dir schönredest oder kleinmachst.', b:'Dass mein Vertrauen gebrochen wurde. Das war nicht meine Entscheidung.'},
+      {k:'satz', f:'Was sagst du dir über dich?', h:'Der Satz, der dabei in dir auftaucht. Oft ist es ein alter Bekannter.', b:'„Ich habe nicht gereicht."'},
+      {k:'gefuehl', f:'Was fühlst du dabei?', h:'Ein, zwei Wörter reichen.', b:'Scham. Wut. Leere.'},
+      {k:'tun', f:'Was machst du dann?', h:'Was tust du – oder lässt du –, wenn dieser Satz in dir läuft?', b:'Ich strenge mich noch mehr an und sage nichts über meine Wut.'},
+      {k:'ergebnis', f:'Was kommt dabei heraus?', h:'Schau, ob das Ergebnis den Satz vom Anfang bestätigt. So hält sich ein Muster am Leben.', b:'Ich stelle mich hinten an – wie immer.'},
+      {k:'neuer_satz', f:'Welcher Satz wäre freundlicher und trotzdem wahr?', h:'Kein Schönreden. Ein Satz, den du einer guten Freundin sagen würdest.', b:'„Das lag nicht an mir. Ich darf wütend sein."'},
+      {k:'brauchen', f:'Was brauchst du jetzt?', h:'Von dir und von anderen. Klein ist gut.', b:'Zeit, bevor ich etwas entscheide. Ein Gespräch mit meiner Schwester.'}
+    ],
+    A: [
+      {k:'titel', f:'Worum geht es?', h:'Ein paar Worte, damit du den Durchgang später wiederfindest.', b:'Der vergessene Geburtstag.', kurz:true},
+      {k:'fakt', f:'Was ist passiert?', h:'Nur das Beobachtbare – so, wie es eine Kamera aufnehmen würde.', b:'Mein Mann hat meinen Geburtstag vergessen.'},
+      {k:'satz', f:'Was sagst du dir darüber?', h:'Der Satz, der dabei in dir auftaucht.', b:'„Ich bin ihm nicht wichtig."'},
+      {k:'gefuehl', f:'Was fühlst du dabei?', h:'Ein, zwei Wörter reichen.', b:'Gekränkt, leer.'},
+      {k:'tun', f:'Was machst du dann?', h:'Was tust du – oder lässt du –, wenn dieser Satz in dir läuft?', b:'Ich sage nichts, funktioniere weiter, ziehe mich zurück.'},
+      {k:'ergebnis', f:'Was kommt dabei heraus?', h:'Bestätigt das Ergebnis den Satz vom Anfang?', b:'Er merkt nichts – und ich fühle mich bestätigt.'},
+      {k:'neuer_satz', f:'Welchen Satz könntest du dir stattdessen sagen?', h:'Und was würde sich dann ändern?', b:'„Er hat es vergessen – das sagt etwas über seinen Kopf, nicht über meinen Wert."'}
+    ]
+  };
+  var VARIANTE_NAME = {A:'Kurz', B:'Ausführlich'};
+
+  /* ---------------- Zustand ---------------- */
+  var sitzung = null;       /* {email, code} – der Code allein öffnet nichts */
+  var info = null;          /* Antwort von „anmelden" */
+  var dk = null;            /* Datenschlüssel, nur im Arbeitsspeicher */
+  var eintraege = [];       /* entschlüsselt, nur im Arbeitsspeicher */
+  var freigabeSchluessel = null;
+  var neuerDk = null, neuerWh = null;
+  var akt = null;           /* aktueller Durchgang: {id, variante, daten, freigegeben} */
+  var schrittNr = 0, speicherTimer = null, ungespeichert = false, speichertGerade = null;
+
+  try { sitzung = JSON.parse(sessionStorage.getItem('gbd_mitglied')); } catch(e){}
+  function merkSitzung(s){ sitzung = s; try { s ? sessionStorage.setItem('gbd_mitglied', JSON.stringify(s)) : sessionStorage.removeItem('gbd_mitglied'); } catch(e){} }
+
+  /* ---------------- Server ---------------- */
+  function rpc(fn, body){
+    return fetch(URL_ + fn, {method:'POST', headers:{'apikey':KEY,'Content-Type':'application/json'}, body: JSON.stringify(body||{})})
+      .then(function(r){ return r.text().then(function(t){
+        var j = null; try { j = t ? JSON.parse(t) : null; } catch(e){}
+        if (!r.ok) throw new Error((j && j.message) || 'Die Verbindung hat nicht geklappt. Bitte versuch es noch einmal.');
+        return j;
+      }); });
+  }
+  function mit(extra){ var b = {p_email: sitzung.email, p_code: sitzung.code}; for (var k in extra) b[k] = extra[k]; return b; }
+
+  /* ---------------- Verschlüsselung (WebCrypto) ---------------- */
+  var enc = new TextEncoder(), dec = new TextDecoder(), sub = crypto.subtle;
+  function b64(buf){ var u = new Uint8Array(buf), s = ''; for (var i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); }
+  function unb64(s){ var t = atob(s), u = new Uint8Array(t.length); for (var i = 0; i < t.length; i++) u[i] = t.charCodeAt(i); return u; }
+  function zufall(n){ return crypto.getRandomValues(new Uint8Array(n)); }
+  function normPass(p){ return String(p).normalize('NFKC'); }
+  function normCode(c){ return String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,''); }
+
+  function kek(geheimnis, salt){
+    return sub.importKey('raw', enc.encode(geheimnis), 'PBKDF2', false, ['deriveKey']).then(function(basis){
+      return sub.deriveKey({name:'PBKDF2', salt:salt, iterations:ITER, hash:'SHA-256'}, basis, {name:'AES-GCM', length:256}, false, ['wrapKey','unwrapKey']);
+    });
+  }
+  function huelleBauen(schluessel, geheimnis){
+    var salt = zufall(16), iv = zufall(12);
+    return kek(geheimnis, salt).then(function(k){ return sub.wrapKey('raw', schluessel, k, {name:'AES-GCM', iv:iv}); })
+      .then(function(c){ return JSON.stringify({v:1, salt:b64(salt), iv:b64(iv), c:b64(c)}); });
+  }
+  function huelleOeffnen(huelle, geheimnis){
+    var h = JSON.parse(huelle);
+    return kek(geheimnis, unb64(h.salt)).then(function(k){
+      return sub.unwrapKey('raw', unb64(h.c), k, {name:'AES-GCM', iv:unb64(h.iv)}, {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']);
+    });
+  }
+  function verschluesseln(obj){
+    var iv = zufall(12);
+    return sub.encrypt({name:'AES-GCM', iv:iv}, dk, enc.encode(JSON.stringify(obj)))
+      .then(function(c){ return JSON.stringify({v:1, iv:b64(iv), c:b64(c)}); });
+  }
+  function entschluesseln(s){
+    var h = JSON.parse(s);
+    return sub.decrypt({name:'AES-GCM', iv:unb64(h.iv)}, dk, unb64(h.c)).then(function(p){ return JSON.parse(dec.decode(p)); });
+  }
+  /* Kopie für Sandra: neuer Einmalschlüssel, verpackt mit Sandras öffentlichem Schlüssel */
+  function freigabeBauen(obj){
+    var iv = zufall(12), einmal;
+    return sub.importKey('jwk', JSON.parse(freigabeSchluessel), {name:'RSA-OAEP', hash:'SHA-256'}, false, ['wrapKey']).then(function(pub){
+      return sub.generateKey({name:'AES-GCM', length:256}, true, ['encrypt']).then(function(k){
+        einmal = k;
+        return Promise.all([sub.encrypt({name:'AES-GCM', iv:iv}, k, enc.encode(JSON.stringify(obj))), sub.wrapKey('raw', k, pub, {name:'RSA-OAEP'})]);
+      });
+    }).then(function(r){ return JSON.stringify({v:1, k:b64(r[1]), iv:b64(iv), c:b64(r[0])}); });
+  }
+  function neuerWiederherstellungscode(){
+    var r = '', u;
+    while (r.length < 24) { u = zufall(32); for (var i = 0; i < u.length && r.length < 24; i++) if (u[i] < 248) r += ALPHA[u[i] % 31]; }
+    return r.match(/.{4}/g).join('-');   /* 24 Zeichen, rund 119 Bit */
+  }
+
+  /* ---------------- Ansichten ---------------- */
+  function zeige(id){
+    Array.prototype.forEach.call(document.querySelectorAll('.ansicht'), function(s){ s.hidden = s.id !== id; });
+    var drin = !!dk && id !== 'v-entsperren';
+    $('k-sperren').hidden = !drin; $('k-einst').hidden = !drin || id === 'v-einst';
+    window.scrollTo(0, 0);
+  }
+  function setzeVorname(){ Array.prototype.forEach.call(document.querySelectorAll('[data-vorname]'), function(e){ e.textContent = (info && info.vorname) || ''; }); }
+  function laeuft(btn, an, text){ btn.disabled = an; if (an) { btn.dataset.text = btn.textContent; btn.textContent = text || 'Einen Moment …'; } else if (btn.dataset.text) btn.textContent = btn.dataset.text; }
+
+  /* ---------------- Anmelden ---------------- */
+  $('f-anmelden').addEventListener('submit', function(e){
+    e.preventDefault(); var f = $('a-fehler'), btn = this.querySelector('button'); f.textContent = '';
+    var s = {email: $('a-email').value.trim(), code: normCode($('a-code').value)};
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.email)) { f.textContent = 'Bitte deine E-Mail-Adresse eingeben.'; return; }
+    if (s.code.length !== 20) { f.textContent = 'Der Zugangscode hat 20 Zeichen, z. B. ABCDE-FGHJK-MNPQR-STUVW.'; return; }
+    laeuft(btn, true);
+    merkSitzung(s);
+    anmelden().catch(function(err){ merkSitzung(null); f.textContent = err.message; }).then(function(){ laeuft(btn, false); });
+  });
+  function anmelden(){
+    return rpc('coaching_mitglied_anmelden', mit({})).then(function(r){
+      info = r; freigabeSchluessel = null; setzeVorname();
+      if (!r.eingerichtet) zeige('v-einw'); else zeige('v-entsperren');
+      if (r.eingerichtet) setTimeout(function(){ $('u-pass').focus(); }, 50);
+    });
+  }
+
+  /* ---------------- Einrichten ---------------- */
+  $('e-einw').addEventListener('change', function(){ $('e-weiter').disabled = !this.checked; });
+  $('e-weiter').addEventListener('click', function(){ zeige('v-pass'); $('p-1').focus(); });
+
+  $('f-pass').addEventListener('submit', function(e){
+    e.preventDefault(); var f = $('p-fehler'), btn = $('p-los'); f.textContent = '';
+    var p1 = $('p-1').value, p2 = $('p-2').value;
+    if (p1.length < 10) { f.textContent = 'Bitte mindestens 10 Zeichen.'; return; }
+    if (p1 !== p2) { f.textContent = 'Die beiden Eingaben stimmen nicht überein.'; return; }
+    laeuft(btn, true, 'Schlüssel wird erzeugt …');
+    neuerWh = neuerWiederherstellungscode();
+    sub.generateKey({name:'AES-GCM', length:256}, true, ['encrypt','decrypt']).then(function(k){
+      neuerDk = k;
+      return Promise.all([huelleBauen(k, normPass(p1)), huelleBauen(k, normCode(neuerWh))]);
+    }).then(function(h){
+      neuerDk.huellen = h;
+      $('wh-code').textContent = neuerWh;
+      $('p-1').value = $('p-2').value = '';
+      zeige('v-wh');
+    }).catch(function(){ f.textContent = 'Das hat nicht geklappt. Bitte versuch es noch einmal.'; })
+      .then(function(){ laeuft(btn, false); });
+  });
+
+  $('wh-ok').addEventListener('change', function(){ $('wh-fertig').disabled = !this.checked; });
+  $('wh-kopieren').addEventListener('click', function(){
+    var b = this; (navigator.clipboard ? navigator.clipboard.writeText(neuerWh) : Promise.reject()).then(function(){ b.textContent = 'Kopiert'; setTimeout(function(){ b.textContent = 'Kopieren'; }, 1800); })
+      .catch(function(){ b.textContent = 'Bitte abschreiben'; });
+  });
+  $('wh-drucken').addEventListener('click', function(){ document.body.classList.add('drucke-wh'); window.print(); document.body.classList.remove('drucke-wh'); });
+  $('wh-fertig').addEventListener('click', function(){
+    var btn = this, f = $('wh-fehler'); f.textContent = ''; laeuft(btn, true);
+    rpc('coaching_mitglied_einrichten', mit({p_huelle_pass: neuerDk.huellen[0], p_huelle_wh: neuerDk.huellen[1], p_einwilligung: $('e-einw').checked}))
+      .then(function(){ dk = neuerDk; neuerDk = null; neuerWh = null; $('wh-code').textContent = ''; eintraege = []; info.eingerichtet = true; return ladeFreigabeSchluessel(); })
+      .then(function(){ zeigeUebersicht(); })
+      .catch(function(err){ f.textContent = err.message; })
+      .then(function(){ laeuft(btn, false); });
+  });
+
+  /* ---------------- Entsperren ---------------- */
+  $('f-entsperren').addEventListener('submit', function(e){
+    e.preventDefault(); var f = $('u-fehler'), btn = $('u-los'); f.textContent = '';
+    if (!$('u-pass').value) { f.textContent = 'Bitte deine Passphrase eingeben.'; return; }
+    laeuft(btn, true, 'Wird geöffnet …');
+    rpc('coaching_mitglied_anmelden', mit({})).then(function(r){ info = r; return huelleOeffnen(r.huelle_pass, normPass($('u-pass').value)); })
+      .then(function(k){ dk = k; $('u-pass').value = ''; return ladeAlles(); })
+      .then(zeigeUebersicht)
+      .catch(function(err){ f.textContent = err && err.name === 'OperationError' ? 'Die Passphrase stimmt nicht.' : (err.message || 'Das hat nicht geklappt.'); })
+      .then(function(){ laeuft(btn, false); });
+  });
+  $('u-vergessen').addEventListener('click', function(){ $('f-wiederher').hidden = false; $('r-code').focus(); });
+  $('u-anderer').addEventListener('click', abmelden);
+  $('f-wiederher').addEventListener('submit', function(e){
+    e.preventDefault(); var f = $('r-fehler'), btn = $('r-los'); f.textContent = '';
+    var p1 = $('r-p1').value, p2 = $('r-p2').value;
+    if (p1.length < 10) { f.textContent = 'Bitte mindestens 10 Zeichen.'; return; }
+    if (p1 !== p2) { f.textContent = 'Die beiden Eingaben stimmen nicht überein.'; return; }
+    laeuft(btn, true, 'Wird geprüft …');
+    rpc('coaching_mitglied_anmelden', mit({})).then(function(r){ info = r; return huelleOeffnen(r.huelle_wh, normCode($('r-code').value)); })
+      .then(function(k){ dk = k; return huelleBauen(k, normPass(p1)); })
+      .then(function(h){ return rpc('coaching_mitglied_passphrase_ersetzen', mit({p_huelle_pass: h})); })
+      .then(function(){ $('r-code').value = $('r-p1').value = $('r-p2').value = ''; $('f-wiederher').hidden = true; return ladeAlles(); })
+      .then(zeigeUebersicht)
+      .catch(function(err){ dk = null; f.textContent = err && err.name === 'OperationError' ? 'Der Wiederherstellungscode stimmt nicht.' : (err.message || 'Das hat nicht geklappt.'); })
+      .then(function(){ laeuft(btn, false); });
+  });
+
+  function ladeFreigabeSchluessel(){
+    return rpc('coaching_mitglied_freigabeschluessel', {}).then(function(s){ freigabeSchluessel = s || null; }).catch(function(){ freigabeSchluessel = null; });
+  }
+  function ladeAlles(){
+    return Promise.all([rpc('coaching_mitglied_eintraege', mit({})), ladeFreigabeSchluessel()]).then(function(r){
+      return Promise.all(r[0].map(function(e){
+        return entschluesseln(e.inhalt).then(function(d){ return {id:e.id, variante:e.variante, daten:d, freigegeben:e.freigegeben, geaendert:e.geaendert_am}; })
+          .catch(function(){ return {id:e.id, variante:e.variante, daten:null, freigegeben:e.freigegeben, geaendert:e.geaendert_am}; });
+      }));
+    }).then(function(liste){ eintraege = liste; });
+  }
+
+  /* ---------------- Übersicht ---------------- */
+  function datum(iso){ return iso ? new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'long',year:'numeric'}).format(new Date(iso)) : ''; }
+  function zeigeUebersicht(){
+    var ld = $('liste-durchgaenge');
+    ld.innerHTML = eintraege.length ? eintraege.map(function(e, i){
+      if (!e.daten) return '<div class="eintrag" style="cursor:default"><span><b>Eintrag konnte nicht geöffnet werden</b><small>'+datum(e.geaendert)+'</small></span></div>';
+      var t = (e.daten.antworten && e.daten.antworten.titel) || 'Ohne Titel';
+      return '<button class="eintrag" data-i="'+i+'"><span><b>'+esc(t)+'</b><small>'+datum(e.geaendert)+'</small></span>'+
+        '<span>'+(e.freigegeben ? '<span class="marke marke-frei">für Sandra freigegeben</span> ' : '')+
+        '<span class="marke marke-var">'+VARIANTE_NAME[e.variante]+'</span></span></button>';
+    }).join('') : '<p class="leer">Noch keine Durchgänge. Oben kannst du den ersten beginnen.</p>';
+
+    var paare = eintraege.filter(function(e){ return e.daten && e.daten.antworten && (e.daten.antworten.satz || e.daten.antworten.neuer_satz); });
+    $('liste-saetze').innerHTML = paare.length ? paare.map(function(e){
+      var a = e.daten.antworten;
+      return '<div class="satz-paar">'+(a.satz ? '<div class="satz-alt">'+esc(a.satz)+'</div>' : '')+
+        (a.neuer_satz ? '<div class="satz-neu">'+esc(a.neuer_satz)+'</div>' : '<div class="klein leise">Noch kein neuer Satz</div>')+
+        '<small class="leise klein">'+esc(a.titel || '')+' · '+datum(e.geaendert)+'</small></div>';
+    }).join('') : '<p class="leer">Hier sammeln sich die Sätze aus deinen Durchgängen – der alte und der, den du dir stattdessen sagst.</p>';
+    zeige('v-uebersicht');
+  }
+  $('liste-durchgaenge').addEventListener('click', function(e){
+    var b = e.target.closest('[data-i]'); if (!b) return;
+    var x = eintraege[+b.dataset.i];
+    oeffneDurchgang({id:x.id, variante:x.variante, daten:JSON.parse(JSON.stringify(x.daten)), freigegeben:x.freigegeben});
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-neu]'), function(b){
+    b.addEventListener('click', function(){ oeffneDurchgang({id:null, variante:b.dataset.neu, daten:{antworten:{}, schritt:0}, freigegeben:false}); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-reiter]'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('[data-reiter]'), function(x){ x.classList.toggle('an', x === b); });
+      $('liste-durchgaenge').hidden = b.dataset.reiter !== 'durchgaenge';
+      $('liste-saetze').hidden = b.dataset.reiter !== 'saetze';
+    });
+  });
+
+  /* ---------------- Durchgang ---------------- */
+  function schritte(){ return SCHRITTE[akt.variante]; }
+  function oeffneDurchgang(d){
+    akt = d; ungespeichert = false;
+    $('d-variante').textContent = VARIANTE_NAME[d.variante];
+    $('d-loeschen').hidden = !d.id;
+    delete $('d-loeschen').dataset.sicher; $('d-loeschen').textContent = 'Durchgang löschen';
+    $('d-stand').textContent = d.id ? 'Verschlüsselt gespeichert' : '';
+    schrittNr = d.id ? schritte().length : Math.min(d.daten.schritt || 0, schritte().length);
+    zeigeSchritt();
+    zeige('v-durchgang');
+    if (schrittNr < schritte().length) setTimeout(function(){ $('d-text').focus(); }, 60);
+  }
+  function zeigeSchritt(){
+    var s = schritte(), n = s.length, ende = schrittNr >= n;
+    $('d-balken').style.width = Math.round(Math.min(schrittNr, n) / n * 100) + '%';
+    $('d-schritt').hidden = ende; $('d-ende').hidden = !ende;
+    $('d-vor').disabled = schrittNr === 0;
+    if (!ende) {
+      var q = s[schrittNr];
+      $('d-nr').textContent = 'Schritt ' + (schrittNr + 1) + ' von ' + n;
+      $('d-frage').textContent = q.f; $('d-hilfe').textContent = q.h;
+      $('d-bsp').textContent = q.b; $('d-bsp-wrap').open = false;
+      $('d-text').value = akt.daten.antworten[q.k] || '';
+      $('d-text').style.minHeight = q.kurz ? '60px' : '';
+      $('d-text').rows = q.kurz ? 2 : 5;
+      $('d-weiter').textContent = schrittNr === n - 1 ? 'Abschließen' : 'Weiter';
+    } else {
+      $('d-zusammen').innerHTML = s.map(function(q){
+        var a = akt.daten.antworten[q.k];
+        return a ? '<dt>'+esc(q.f)+'</dt><dd>'+esc(a)+'</dd>' : '';
+      }).join('') || '<p class="leise">Noch nichts eingetragen.</p>';
+      var moeglich = !!freigabeSchluessel;
+      $('d-frei').checked = !!akt.freigegeben; $('d-frei').disabled = !moeglich;
+      $('d-frei-text').textContent = moeglich
+        ? 'Dann kann Sandra diesen Durchgang lesen und im Termin mit dir besprechen. Du kannst das jederzeit zurücknehmen.'
+        : 'Sandra hat Freigaben noch nicht eingerichtet. Bis dahin bleibt alles nur bei dir.';
+      $('d-weiter').textContent = 'Fertig';
+    }
+  }
+  function uebernehmeText(){
+    if (schrittNr >= schritte().length) return;
+    var k = schritte()[schrittNr].k, v = $('d-text').value;
+    if ((akt.daten.antworten[k] || '') !== v) { akt.daten.antworten[k] = v; ungespeichert = true; }
+  }
+  $('d-text').addEventListener('input', function(){
+    uebernehmeText(); $('d-stand').textContent = 'Ungespeichert …';
+    clearTimeout(speicherTimer); speicherTimer = setTimeout(speichern, 1500);
+  });
+  $('d-weiter').addEventListener('click', function(){
+    uebernehmeText();
+    if (schrittNr >= schritte().length) { speichern().then(function(ok){ if (ok) { akt = null; zeigeUebersicht(); } }); return; }
+    schrittNr++; akt.daten.schritt = schrittNr; ungespeichert = true;
+    speichern(); zeigeSchritt(); if (schrittNr < schritte().length) $('d-text').focus();
+  });
+  $('d-vor').addEventListener('click', function(){ uebernehmeText(); if (schrittNr > 0) { schrittNr--; zeigeSchritt(); speichern(); } });
+  $('d-zurueck-liste').addEventListener('click', function(){ uebernehmeText(); speichern().then(function(){ akt = null; zeigeUebersicht(); }); });
+  $('d-frei').addEventListener('change', function(){ akt.freigegeben = this.checked; ungespeichert = true; speichern(); });
+
+  function speichern(){
+    if (!akt || !dk) return Promise.resolve(true);
+    clearTimeout(speicherTimer);
+    if (!ungespeichert && akt.id) return Promise.resolve(true);
+    if (speichertGerade) return speichertGerade.then(speichern);
+    ungespeichert = false;
+    var d = akt, daten = {antworten:d.daten.antworten, schritt:d.daten.schritt || 0, variante:d.variante};
+    $('d-stand').textContent = 'Wird verschlüsselt gespeichert …';
+    speichertGerade = Promise.all([verschluesseln(daten), d.freigegeben && freigabeSchluessel ? freigabeBauen(daten) : Promise.resolve(null)])
+      .then(function(r){ return rpc('coaching_mitglied_eintrag_speichern', mit({p_id:d.id, p_variante:d.variante, p_inhalt:r[0], p_freigabe:r[1]})); })
+      .then(function(id){
+        d.id = id; $('d-loeschen').hidden = false;
+        var x = eintraege.filter(function(e){ return e.id === id; })[0];
+        if (!x) { x = {id:id, variante:d.variante}; eintraege.unshift(x); }
+        x.daten = JSON.parse(JSON.stringify(daten)); x.freigegeben = !!d.freigegeben; x.geaendert = new Date().toISOString();
+        if (akt === d) $('d-stand').textContent = 'Verschlüsselt gespeichert' + (d.freigegeben ? ' · für Sandra freigegeben' : '');
+        return true;
+      })
+      .catch(function(err){ ungespeichert = true; if (akt === d) $('d-stand').textContent = 'Nicht gespeichert: ' + err.message; return false; })
+      .then(function(ok){ speichertGerade = null; return ok; });
+    return speichertGerade;
+  }
+  $('d-loeschen').addEventListener('click', function(){
+    var b = this;
+    if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Wirklich endgültig löschen?'; return; }
+    b.disabled = true;
+    rpc('coaching_mitglied_eintrag_loeschen', mit({p_id: akt.id})).then(function(){
+      var id = akt.id; eintraege = eintraege.filter(function(e){ return e.id !== id; }); akt = null; zeigeUebersicht();
+    }).catch(function(err){ $('d-stand').textContent = err.message; }).then(function(){ b.disabled = false; });
+  });
+
+  /* ---------------- Einstellungen ---------------- */
+  $('k-einst').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(function(){ akt = null; zeige('v-einst'); }); });
+  $('s-zurueck').addEventListener('click', zeigeUebersicht);
+  function uebernehmeTextSicher(){ if (akt) uebernehmeText(); }
+
+  $('f-passneu').addEventListener('submit', function(e){
+    e.preventDefault(); var f = $('s-fehler'), btn = this.querySelector('button'); f.textContent = ''; f.style.color = '';
+    var p1 = $('s-p1').value, p2 = $('s-p2').value;
+    if (p1.length < 10) { f.textContent = 'Bitte mindestens 10 Zeichen.'; return; }
+    if (p1 !== p2) { f.textContent = 'Die beiden Eingaben stimmen nicht überein.'; return; }
+    laeuft(btn, true);
+    huelleBauen(dk, normPass(p1)).then(function(h){ return rpc('coaching_mitglied_passphrase_ersetzen', mit({p_huelle_pass:h})); })
+      .then(function(){ $('s-p1').value = $('s-p2').value = ''; f.style.color = 'var(--olive)'; f.textContent = 'Deine Passphrase ist geändert.'; })
+      .catch(function(err){ f.textContent = err.message; })
+      .then(function(){ laeuft(btn, false); });
+  });
+
+  function herunterladen(name, inhalt, typ){
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([inhalt], {type:typ})); a.download = name;
+    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+  $('s-txt').addEventListener('click', function(){
+    var t = 'Ganz bei dir · Meine Durchgänge\nHeruntergeladen am ' + datum(new Date().toISOString()) + '\n\n';
+    eintraege.forEach(function(e){
+      if (!e.daten) return;
+      t += '========================================\n' + ((e.daten.antworten.titel) || 'Ohne Titel') + '\n' + VARIANTE_NAME[e.variante] + ' · ' + datum(e.geaendert) + '\n\n';
+      SCHRITTE[e.variante].forEach(function(q){ var a = e.daten.antworten[q.k]; if (a && q.k !== 'titel') t += q.f + '\n' + a + '\n\n'; });
+    });
+    herunterladen('ganz-bei-dir-durchgaenge.txt', t, 'text/plain;charset=utf-8');
+  });
+  $('s-json').addEventListener('click', function(){
+    var d = {export:'Ganz bei dir – Mitgliederbereich', stand:new Date().toISOString(), durchgaenge: eintraege.filter(function(e){ return e.daten; }).map(function(e){
+      return {variante:VARIANTE_NAME[e.variante], geaendert:e.geaendert, fuer_sandra_freigegeben:!!e.freigegeben, antworten:e.daten.antworten}; })};
+    herunterladen('ganz-bei-dir-durchgaenge.json', JSON.stringify(d, null, 2), 'application/json');
+  });
+  $('s-alles').addEventListener('click', function(){
+    var b = this, f = $('s-alles-fehler');
+    if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Ja, alles endgültig löschen'; f.textContent = 'Das lässt sich nicht rückgängig machen.'; return; }
+    b.disabled = true;
+    rpc('coaching_mitglied_alles_loeschen', mit({})).then(function(){ abmelden(); $('a-fehler').textContent = 'Alles ist gelöscht. Danke, dass du hier warst.'; })
+      .catch(function(err){ f.textContent = err.message; b.disabled = false; });
+  });
+  $('s-ab').addEventListener('click', abmelden);
+  $('k-sperren').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(sperren); });
+
+  function sperren(){ dk = null; eintraege = []; akt = null; if (info) { setzeVorname(); zeige('v-entsperren'); } else zeige('v-anmelden'); }
+  function abmelden(){ dk = null; eintraege = []; akt = null; info = null; merkSitzung(null); $('a-code').value = ''; zeige('v-anmelden'); }
+
+  /* Nach längerer Pause automatisch sperren (gemeinsam genutzte Geräte) */
+  var letzteAktivitaet = Date.now();
+  ['mousemove','keydown','touchstart','scroll'].forEach(function(e){ addEventListener(e, function(){ letzteAktivitaet = Date.now(); }, {passive:true}); });
+  setInterval(function(){
+    if (dk && Date.now() - letzteAktivitaet > SPERRE_MIN * 60000) { uebernehmeTextSicher(); speichern().then(sperren); }
+  }, 30000);
+  addEventListener('beforeunload', function(e){ if (dk && (ungespeichert || speichertGerade)) { e.preventDefault(); e.returnValue = ''; } });
+
+  /* ---------------- Start ---------------- */
+  if (!window.crypto || !crypto.subtle) {
+    $('a-fehler').textContent = 'Dein Browser unterstützt die nötige Verschlüsselung nicht. Bitte nutze einen aktuellen Browser.';
+    $('f-anmelden').querySelector('button').disabled = true;
+  } else if (sitzung && sitzung.email && sitzung.code) {
+    $('a-email').value = sitzung.email;
+    anmelden().catch(function(){ merkSitzung(null); zeige('v-anmelden'); });
+  }
+})();
+</script>
+</body>
+</html>
