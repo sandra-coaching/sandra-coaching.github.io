@@ -204,7 +204,7 @@
   <table>
     <tr><th>Was unverschlüsselt gespeichert wird</th><td>Dass du Zugang hast (verknüpft mit deinem Kundendatensatz),
       wann du eingewilligt und dich zuletzt angemeldet hast, wie viele Durchgänge es gibt, wann sie geändert wurden und
-      ob sie freigegeben sind. Der Zugangscode nur als Prüfwert, aus dem er sich nicht zurückrechnen lässt.</td></tr>
+      ob sie freigegeben sind. Der Zugangscode und deine Anmeldung per Passphrase nur als Prüfwerte, aus denen sich weder Code noch Passphrase zurückrechnen lassen. Deine Passphrase selbst verlässt nie deinen Browser.</td></tr>
     <tr><th>Rechtsgrundlage</th><td>Deine ausdrückliche Einwilligung, Art. 9 Abs. 2 lit. a und Art. 6 Abs. 1 lit. a
       DSGVO. Du gibst sie beim ersten Anmelden.</td></tr>
     <tr><th>Wo gespeichert</th><td>Bei Supabase im Rechenzentrum Frankfurt am Main, wie die Terminbuchung.</td></tr>
@@ -213,9 +213,10 @@
       nach einer Frist automatisch gelöscht werden.]</span></td></tr>
     <tr><th>Herausgabe</th><td>Unter „Einstellungen" lädst du alles als Text oder als JSON-Datei herunter (Art. 20 DSGVO).</td></tr>
   </table>
-  <p>Während du angemeldet bist, merkt sich dein Browser E-Mail-Adresse und Zugangscode im Sitzungsspeicher, damit
-     du beim Neuladen nicht alles neu eingeben musst. Beides verschwindet, wenn du den Tab schließt. Passphrase und
-     Schlüssel werden nie gespeichert; nach 20 Minuten ohne Aktivität wird der Bereich automatisch gesperrt.</p>
+  <p>Während du angemeldet bist, merkt sich dein Browser E-Mail-Adresse und einen Anmelde-Prüfwert im Sitzungsspeicher, damit
+     du beim Neuladen nicht alles neu eingeben musst. Beides verschwindet, wenn du den Tab schließt oder dich abmeldest.
+     Außerdem merkt sich dein Browser nur, dass dein Zugang schon eingerichtet ist – damit er dir gleich die Anmeldung
+     mit Passphrase anbietet. Passphrase und Schlüssel werden nie gespeichert; nach 20 Minuten ohne Aktivität wird der Bereich automatisch gesperrt.</p>
 
   <h2>6. Das Kurznachrichten-Feld</h2>
   <p><span class="platz">[Derzeit ohne Funktion – der Knopf sendet nichts. Sobald er

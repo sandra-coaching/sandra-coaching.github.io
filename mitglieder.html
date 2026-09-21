@@ -32,7 +32,7 @@
   .kopf{display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:15px}
   .brand b{display:block;font-size:15px;font-weight:600}
   .brand>span{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-top:1px}
-  .kopf-rechts{display:flex;gap:14px;align-items:center}
+  .kopf-rechts{display:flex;gap:4px 14px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
   .kopf a,.link-knopf{color:var(--muted);text-decoration:none;background:none;border:0;font:inherit;font-size:15px;cursor:pointer;padding:0}
   .kopf a:hover,.link-knopf:hover{color:var(--ink)}
   main{padding:36px 0 50px;min-height:60vh}
@@ -228,14 +228,17 @@
   <!-- ============ Anmelden ============ -->
   <section class="ansicht" id="v-anmelden">
     <h1>Mitgliederbereich</h1>
-    <p class="leise">Hier arbeitest du an deinen eigenen Durchgängen weiter. Den Zugangscode hast du von Sandra bekommen.</p>
+    <p class="leise" id="a-intro">Hier arbeitest du an deinen eigenen Durchgängen weiter.</p>
     <form class="karte" id="f-anmelden" autocomplete="on" novalidate>
       <label class="feld">Deine E-Mail-Adresse
-        <input type="email" id="a-email" autocomplete="email" required></label>
-      <label class="feld">Zugangscode
-        <input type="text" id="a-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" required></label>
-      <div class="reihe"><button class="btn" type="submit">Weiter</button></div>
+        <input type="email" id="a-email" autocomplete="username" required></label>
+      <label class="feld" id="a-pass-feld">Passphrase
+        <input type="password" id="a-pass" autocomplete="current-password"></label>
+      <label class="feld" id="a-code-feld" hidden>Zugangscode von Sandra
+        <input type="text" id="a-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXXX-XXXXX-XXXXX-XXXXX"></label>
+      <div class="reihe"><button class="btn" type="submit" id="a-los">Öffnen</button></div>
       <p class="fehler" id="a-fehler" role="alert"></p>
+      <p class="klein leise" style="margin-top:14px" id="a-wechsel-text"></p>
     </form>
     <p class="leise klein" style="margin-top:16px">Noch keinen Zugang? Er gehört zum Paket „Prozess: Muster lösen".
       Frag Sandra im nächsten Termin danach oder <a href="index.html#termin">buch ein Erstgespräch</a>.</p>
@@ -557,15 +560,68 @@
   function setzeVorname(){ Array.prototype.forEach.call(document.querySelectorAll('[data-vorname]'), function(e){ e.textContent = (info && info.vorname) || ''; }); }
   function laeuft(btn, an, text){ btn.disabled = an; if (an) { btn.dataset.text = btn.textContent; btn.textContent = text || 'Einen Moment …'; } else if (btn.dataset.text) btn.textContent = btn.dataset.text; }
 
-  /* ---------------- Anmelden ---------------- */
+  /* ---------------- Anmelden ----------------
+     Normal: E-Mail + Passphrase. Der Zugangscode wird nur beim ersten Mal gebraucht
+     (oder wenn Sandra einen neuen ausgegeben hat bzw. die Passphrase vergessen wurde). */
+  var modus = 'pass';
+  function setzeModus(m){
+    modus = m; var code = m === 'code';
+    $('a-pass-feld').hidden = code; $('a-code-feld').hidden = !code; $('a-fehler').textContent = '';
+    $('a-los').textContent = code ? 'Weiter' : 'Öffnen';
+    $('a-intro').textContent = code ? 'Beim ersten Mal meldest du dich mit dem Zugangscode an, den du von Sandra bekommen hast. Danach reicht deine Passphrase.'
+                                    : 'Hier arbeitest du an deinen eigenen Durchgängen weiter.';
+    $('a-wechsel-text').innerHTML = code
+      ? 'Schon eingerichtet? <button type="button" class="link-knopf klein" id="a-wechsel" style="color:var(--clay-dark);text-decoration:underline">Mit Passphrase anmelden</button>'
+      : 'Zum ersten Mal hier, neuer Code von Sandra oder Passphrase vergessen? <button type="button" class="link-knopf klein" id="a-wechsel" style="color:var(--clay-dark);text-decoration:underline">Mit Zugangscode anmelden</button>';
+    $('a-wechsel').addEventListener('click', function(){ setzeModus(code ? 'pass' : 'code'); (code ? $('a-pass') : $('a-code')).focus(); });
+  }
+  (function(){ var schon = false; try { schon = localStorage.getItem('gbd_eingerichtet') === '1'; } catch(e){} setzeModus(schon ? 'pass' : 'code'); })();
+  function merkEingerichtet(){ try { localStorage.setItem('gbd_eingerichtet', '1'); } catch(e){} }
+
+  /* Prüfwert für die Anmeldung: eigene Ableitung mit eigenem Salz, unabhängig vom Schlüssel der Einträge */
+  function anmeldePruefwert(email, pass){
+    return sub.importKey('raw', enc.encode(normPass(pass)), 'PBKDF2', false, ['deriveBits']).then(function(basis){
+      return sub.deriveBits({name:'PBKDF2', salt:enc.encode('ganz-bei-dir|anmeldung|' + email.trim().toLowerCase()), iterations:ITER, hash:'SHA-256'}, basis, 256);
+    }).then(function(bits){ return Array.prototype.map.call(new Uint8Array(bits), function(b){ return ('0' + b.toString(16)).slice(-2); }).join(''); });
+  }
+  /* Nach jedem Öffnen mit Passphrase: Prüfwert beim Server hinterlegen und Sitzung darauf umstellen */
+  function passAnmeldungSetzen(pass){
+    return anmeldePruefwert(sitzung.email, pass).then(function(v){
+      return rpc('coaching_mitglied_login_setzen', mit({p_verifier: v})).then(function(){ merkSitzung({email: sitzung.email, code: v}); merkEingerichtet(); });
+    }).catch(function(){ /* nicht schlimm: dann beim nächsten Mal noch einmal mit Code */ });
+  }
+
   $('f-anmelden').addEventListener('submit', function(e){
-    e.preventDefault(); var f = $('a-fehler'), btn = this.querySelector('button'); f.textContent = '';
-    var s = {email: $('a-email').value.trim(), code: normCode($('a-code').value)};
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.email)) { f.textContent = 'Bitte deine E-Mail-Adresse eingeben.'; return; }
-    if (s.code.length !== 20) { f.textContent = 'Der Zugangscode hat 20 Zeichen, z. B. ABCDE-FGHJK-MNPQR-STUVW.'; return; }
-    laeuft(btn, true);
-    merkSitzung(s);
-    anmelden().catch(function(err){ merkSitzung(null); f.textContent = err.message; }).then(function(){ laeuft(btn, false); });
+    e.preventDefault(); var f = $('a-fehler'), btn = $('a-los'); f.textContent = '';
+    var email = $('a-email').value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { f.textContent = 'Bitte deine E-Mail-Adresse eingeben.'; return; }
+    if (modus === 'code') {
+      var s = {email: email, code: normCode($('a-code').value)};
+      if (s.code.length !== 20) { f.textContent = 'Der Zugangscode hat 20 Zeichen, z. B. ABCDE-FGHJK-MNPQR-STUVW.'; return; }
+      laeuft(btn, true);
+      merkSitzung(s);
+      anmelden().catch(function(err){ merkSitzung(null); f.textContent = /Zugangsdaten/.test(err.message) ? 'E-Mail oder Zugangscode stimmt nicht.' : err.message; })
+        .then(function(){ laeuft(btn, false); });
+      return;
+    }
+    var pass = $('a-pass').value;
+    if (!pass) { f.textContent = 'Bitte deine Passphrase eingeben.'; return; }
+    laeuft(btn, true, 'Wird geöffnet …');
+    anmeldePruefwert(email, pass).then(function(v){
+      merkSitzung({email: email, code: v});
+      return rpc('coaching_mitglied_anmelden', mit({}));
+    }).then(function(r){
+      info = r; freigabeSchluessel = null; setzeVorname();
+      return huelleOeffnen(r.huelle_pass, normPass(pass));
+    }).then(function(k){ dk = k; $('a-pass').value = ''; merkEingerichtet(); return ladeAlles(); })
+      .then(zeigeUebersicht)
+      .catch(function(err){
+        merkSitzung(null); info = null; dk = null;
+        f.textContent = /Zugangsdaten/.test(err && err.message || '') || (err && err.name === 'OperationError')
+          ? 'E-Mail oder Passphrase stimmt nicht. Falls du dich zum ersten Mal anmeldest: unten „Mit Zugangscode anmelden“.'
+          : (err.message || 'Das hat nicht geklappt.');
+      })
+      .then(function(){ laeuft(btn, false); });
   });
   function anmelden(){
     return rpc('coaching_mitglied_anmelden', mit({})).then(function(r){
@@ -590,7 +646,7 @@
       neuerDk = k;
       return Promise.all([huelleBauen(k, normPass(p1)), huelleBauen(k, normCode(neuerWh))]);
     }).then(function(h){
-      neuerDk.huellen = h;
+      neuerDk.huellen = h; neuerDk.pass = normPass(p1);
       $('wh-code').textContent = neuerWh;
       $('p-1').value = $('p-2').value = '';
       zeige('v-wh');
@@ -607,7 +663,8 @@
   $('wh-fertig').addEventListener('click', function(){
     var btn = this, f = $('wh-fehler'); f.textContent = ''; laeuft(btn, true);
     rpc('coaching_mitglied_einrichten', mit({p_huelle_pass: neuerDk.huellen[0], p_huelle_wh: neuerDk.huellen[1], p_einwilligung: $('e-einw').checked}))
-      .then(function(){ dk = neuerDk; neuerDk = null; neuerWh = null; $('wh-code').textContent = ''; eintraege = []; info.eingerichtet = true; return ladeFreigabeSchluessel(); })
+      .then(function(){ var pw = neuerDk.pass; delete neuerDk.pass; dk = neuerDk; neuerDk = null; neuerWh = null; $('wh-code').textContent = ''; eintraege = []; info.eingerichtet = true;
+        return Promise.all([ladeFreigabeSchluessel(), passAnmeldungSetzen(pw)]); })
       .then(function(){ zeigeUebersicht(); })
       .catch(function(err){ f.textContent = err.message; })
       .then(function(){ laeuft(btn, false); });
@@ -618,8 +675,9 @@
     e.preventDefault(); var f = $('u-fehler'), btn = $('u-los'); f.textContent = '';
     if (!$('u-pass').value) { f.textContent = 'Bitte deine Passphrase eingeben.'; return; }
     laeuft(btn, true, 'Wird geöffnet …');
-    rpc('coaching_mitglied_anmelden', mit({})).then(function(r){ info = r; return huelleOeffnen(r.huelle_pass, normPass($('u-pass').value)); })
-      .then(function(k){ dk = k; $('u-pass').value = ''; return ladeAlles(); })
+    var pw = $('u-pass').value;
+    rpc('coaching_mitglied_anmelden', mit({})).then(function(r){ info = r; return huelleOeffnen(r.huelle_pass, normPass(pw)); })
+      .then(function(k){ dk = k; $('u-pass').value = ''; return Promise.all([ladeAlles(), passAnmeldungSetzen(pw)]); })
       .then(zeigeUebersicht)
       .catch(function(err){ f.textContent = err && err.name === 'OperationError' ? 'Die Passphrase stimmt nicht.' : (err.message || 'Das hat nicht geklappt.'); })
       .then(function(){ laeuft(btn, false); });
@@ -635,7 +693,7 @@
     rpc('coaching_mitglied_anmelden', mit({})).then(function(r){ info = r; return huelleOeffnen(r.huelle_wh, normCode($('r-code').value)); })
       .then(function(k){ dk = k; return huelleBauen(k, normPass(p1)); })
       .then(function(h){ return rpc('coaching_mitglied_passphrase_ersetzen', mit({p_huelle_pass: h})); })
-      .then(function(){ $('r-code').value = $('r-p1').value = $('r-p2').value = ''; $('f-wiederher').hidden = true; return ladeAlles(); })
+      .then(function(){ $('r-code').value = $('r-p1').value = $('r-p2').value = ''; $('f-wiederher').hidden = true; return Promise.all([ladeAlles(), passAnmeldungSetzen(p1)]); })
       .then(zeigeUebersicht)
       .catch(function(err){ dk = null; f.textContent = err && err.name === 'OperationError' ? 'Der Wiederherstellungscode stimmt nicht.' : (err.message || 'Das hat nicht geklappt.'); })
       .then(function(){ laeuft(btn, false); });
@@ -969,6 +1027,7 @@
     if (p1 !== p2) { f.textContent = 'Die beiden Eingaben stimmen nicht überein.'; return; }
     laeuft(btn, true);
     huelleBauen(dk, normPass(p1)).then(function(h){ return rpc('coaching_mitglied_passphrase_ersetzen', mit({p_huelle_pass:h})); })
+      .then(function(){ return passAnmeldungSetzen(p1); })
       .then(function(){ $('s-p1').value = $('s-p2').value = ''; f.style.color = 'var(--olive)'; f.textContent = 'Deine Passphrase ist geändert.'; })
       .catch(function(err){ f.textContent = err.message; })
       .then(function(){ laeuft(btn, false); });
@@ -1004,7 +1063,7 @@
   $('k-sperren').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(sperren); });
 
   function sperren(){ dk = null; eintraege = []; akt = null; if (info) { setzeVorname(); zeige('v-entsperren'); } else zeige('v-anmelden'); }
-  function abmelden(){ dk = null; eintraege = []; akt = null; info = null; merkSitzung(null); $('a-code').value = ''; zeige('v-anmelden'); }
+  function abmelden(){ dk = null; eintraege = []; akt = null; info = null; merkSitzung(null); $('a-code').value = ''; $('a-pass').value = ''; var schon = false; try { schon = localStorage.getItem('gbd_eingerichtet') === '1'; } catch(e){} setzeModus(schon ? 'pass' : 'code'); zeige('v-anmelden'); }
 
   /* Nach längerer Pause automatisch sperren (gemeinsam genutzte Geräte) */
   var letzteAktivitaet = Date.now();
