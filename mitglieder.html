@@ -232,6 +232,42 @@
   .var-tab button{font:inherit;font-size:14.5px;border:1.5px solid var(--sand-2);background:var(--paper);color:var(--ink);border-radius:999px;padding:7px 16px;cursor:pointer}
   .var-tab button.an{background:var(--clay);border-color:var(--clay);color:#fff}
 
+  /* Lebensziele */
+  .ziel-einstieg{display:block;width:100%;text-align:left;margin-top:12px;background:var(--ink);color:#F4ECE3;border:0;border-radius:18px;
+    padding:18px 22px;font:inherit;cursor:pointer;transition:background .2s}
+  .ziel-einstieg:hover{background:#342C24}
+  .ziel-einstieg small{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#D9B9A6;margin-bottom:4px}
+  .ziel-einstieg b{display:block;font-size:17px;color:#fff}
+  .ziel-einstieg span{display:block;font-size:14.5px;color:#D6C8BA;margin-top:3px}
+  details.z-anl{margin-top:18px}
+  details.z-anl>summary{cursor:pointer;font-weight:600;font-size:16px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  details.z-anl>summary::-webkit-details-marker{display:none}
+  details.z-anl>summary::after{content:'+';font-size:22px;color:var(--clay);font-weight:400}
+  details.z-anl[open]>summary::after{content:'–'}
+  .z-schritte{margin:12px 0 0 20px}
+  .z-schritte li{margin-bottom:10px}
+  .z-bsp{background:var(--cream);border:1px dashed var(--sand-2);border-radius:14px;padding:14px 18px;margin-top:14px;font-size:15px}
+  .z-bsp b{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-bottom:6px}
+  .z-bsp ol{margin:6px 0 0 20px}
+  .z-bsp .zweck{font-style:italic;font-size:16px}
+  .fragen-hilfe{margin:8px 0 0 20px;color:var(--muted);font-size:15px}
+  .ziel-block{border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-top:12px;background:var(--cream)}
+  .ziel-kopf{display:flex;gap:12px;align-items:center}
+  .ziel-kopf .nr{width:30px;height:30px;border-radius:50%;background:var(--sand);color:var(--clay-dark);font-weight:600;font-size:14px;
+    display:flex;align-items:center;justify-content:center;flex:none}
+  .ziel-kopf input{margin-top:0;background:var(--paper)}
+  .ziel-block.erreicht .nr{background:var(--olive);color:#fff}
+  .ziel-block.unterwegs .nr{background:var(--clay);color:#fff}
+  .ziel-mehr{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:10px}
+  .ziel-mehr label{font-size:13.5px;color:var(--muted)}
+  .ziel-mehr input,.ziel-mehr select{margin-top:4px;font-size:15px;padding:9px 12px;background:var(--paper)}
+  .ziel-mehr .breit{grid-column:1/-1}
+  select{display:block;width:100%;border:1px solid var(--line);border-radius:12px;font:inherit;color:var(--ink)}
+  .regler{display:flex;gap:14px;align-items:center;margin-top:14px}
+  .regler input{flex:1;accent-color:var(--clay)}
+  .regler output{font-weight:600;font-size:20px;min-width:62px;text-align:right}
+  @media(max-width:560px){.ziel-mehr{grid-template-columns:1fr}}
+
   .safety{background:var(--sand-2);border-radius:16px;padding:16px 20px;margin-top:40px;font-size:14.5px;color:#5E5346}
   .safety b{display:block;color:var(--ink);margin-bottom:2px}
   footer{color:var(--muted);font-size:13.5px;padding:26px 0 50px;border-top:1px solid var(--line)}
@@ -362,6 +398,9 @@
       <button class="neu-karte" data-neu="B"><b>Ausführlich</b><span>Erst sortieren, was dir widerfahren ist und was bei dir liegt. Für Kränkungen und alles, was schwer wiegt. Etwa 20 Minuten.</span></button>
       <button class="neu-karte" data-neu="A"><b>Kurz</b><span>Fünf Fragen für den Alltag – wenn dich etwas ärgert oder nicht loslässt. Etwa 10 Minuten.</span></button>
     </div>
+    <button class="ziel-einstieg" id="u-ziele" type="button"><small>Neu ausrichten</small>
+      <b>Wofür du da bist – und deine fünf großen Ziele</b>
+      <span id="u-ziele-text">Der Blick nach vorn: Was willst du in deinem Leben unbedingt erleben? Mit Anleitung und Beispiel.</span></button>
     <div class="reiter" role="tablist">
       <button class="an" data-reiter="durchgaenge" role="tab">Meine Durchgänge</button>
       <button data-reiter="saetze" role="tab">Meine Sätze</button>
@@ -418,6 +457,120 @@
     <div class="reihe" style="margin-top:34px">
       <button class="btn btn-rot" id="d-loeschen" hidden>Durchgang löschen</button>
     </div>
+  </section>
+
+  <!-- ============ Lebensziele ============ -->
+  <section class="ansicht" id="v-ziele" hidden>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <button class="link-knopf" id="z-zurueck">‹ Übersicht</button>
+      <span class="marke marke-var">Neu ausrichten</span>
+    </div>
+    <h1 style="margin-top:14px">Wofür du da bist</h1>
+    <p class="leise">In den Durchgängen schaust du auf das, was dich festhält. Hier schaust du nach vorn: Wofür möchtest du da sein –
+       und was willst du in deinem Leben unbedingt erleben?</p>
+
+    <details class="karte z-anl" id="z-anl">
+      <summary>So geht's – mit Beispiel</summary>
+      <ol class="z-schritte">
+        <li><b>Dein Zweck:</b> Nicht, was du tun <i>solltest</i> – sondern wofür du da sein willst. Ein Satz reicht. Er darf holpern und sich später ändern.</li>
+        <li><b>Deine fünf großen Ziele:</b> Dinge, die du in deinem Leben unbedingt erleben, sehen oder tun willst. Groß oder klein – Hauptsache deine,
+            nicht die, die andere von dir erwarten. Tipp: Schreib erst frei zehn auf einen Zettel und streich dann auf fünf zusammen.</li>
+        <li><b>Pro Ziel ein erster Schritt,</b> den du diese Woche gehen kannst. Klein ist gut: eine Nachricht schreiben, etwas nachschauen, einen Termin eintragen.</li>
+        <li><b>Dein Alltag:</b> Schätz ehrlich, wie viel deiner Woche schon zu deinem Zweck passt. Kein Urteil – nur ein Blick, der sich verändern darf.</li>
+        <li><b>Wiederkommen:</b> Schau alle paar Wochen drauf. Setz „Unterwegs" oder „Erreicht" – und tausch Ziele aus, wenn sie nicht mehr deine sind.</li>
+      </ol>
+      <p class="klein leise">Taucht beim Schreiben ein Satz auf wie „Das steht mir nicht zu" oder „Dafür bin ich zu alt"? Dann ist das kein Hindernis,
+         sondern ein guter Anlass für einen Durchgang.</p>
+      <div class="z-bsp">
+        <b>Beispiel (erfunden)</b>
+        <p class="zweck">„Ich bin da, damit sich Menschen bei mir willkommen fühlen – und ich mich selbst auch."</p>
+        <ol>
+          <li>Eine Woche mit meiner Tochter nach Schweden, nur wir zwei. <span class="leise">– Erster Schritt: sie nach den Ferien fragen.</span></li>
+          <li>Einmal das Nordlicht sehen. <span class="leise">– Stand: noch ein Traum.</span></li>
+          <li>Wieder im Chor singen. <span class="leise">– Erster Schritt: Probezeiten raussuchen.</span></li>
+          <li>Einen kleinen Garten, in dem ich morgens meinen Kaffee trinke. <span class="leise">– Stand: unterwegs.</span></li>
+          <li>Ein Leben, in dem ich nicht mehr nur funktioniere.</li>
+        </ol>
+        <p class="leise klein" style="margin-top:6px">Alltag: etwa 30 % meiner Woche passen dazu.</p>
+      </div>
+    </details>
+
+    <div class="karte">
+      <p class="schritt-nr" style="margin-top:0">1 · Dein Zweck</p>
+      <h2>Wofür bist du da?</h2>
+      <p class="leise klein">Fragen, die dabei helfen:</p>
+      <ul class="fragen-hilfe">
+        <li>Wobei vergisst du die Zeit?</li>
+        <li>Wofür kommen andere Menschen gern zu dir?</li>
+        <li>Was würdest du tun, wenn Geld und die Meinung anderer keine Rolle spielten?</li>
+      </ul>
+      <textarea data-z="zweck" rows="3" style="min-height:90px" aria-label="Dein Zweck" placeholder="Ich bin da, um …"></textarea>
+    </div>
+
+    <div class="karte">
+      <p class="schritt-nr" style="margin-top:0">2 · Deine fünf großen Ziele</p>
+      <h2>Was willst du in deinem Leben unbedingt erleben, sehen oder tun?</h2>
+      <p class="leise klein">Die Stichworte in den Feldern sind nur Anregungen – du kannst sie ganz anders füllen.</p>
+
+        <div class="ziel-block" data-block="1">
+          <div class="ziel-kopf"><span class="nr">1</span>
+            <input type="text" data-z="z1" aria-label="Ziel 1" placeholder="Etwas, das du unbedingt erleben willst …"></div>
+          <div class="ziel-mehr">
+            <label class="breit">Warum ist es dir wichtig?<input type="text" data-z="z1_warum"></label>
+            <label>Erster kleiner Schritt<input type="text" data-z="z1_schritt" placeholder="diese Woche machbar"></label>
+            <label>Stand<select data-z="z1_stand"><option value="">–</option><option>Noch ein Traum</option><option>Unterwegs</option><option>Erreicht</option></select></label>
+          </div>
+        </div>
+        <div class="ziel-block" data-block="2">
+          <div class="ziel-kopf"><span class="nr">2</span>
+            <input type="text" data-z="z2" aria-label="Ziel 2" placeholder="Etwas, das du sehen willst …"></div>
+          <div class="ziel-mehr">
+            <label class="breit">Warum ist es dir wichtig?<input type="text" data-z="z2_warum"></label>
+            <label>Erster kleiner Schritt<input type="text" data-z="z2_schritt" placeholder="diese Woche machbar"></label>
+            <label>Stand<select data-z="z2_stand"><option value="">–</option><option>Noch ein Traum</option><option>Unterwegs</option><option>Erreicht</option></select></label>
+          </div>
+        </div>
+        <div class="ziel-block" data-block="3">
+          <div class="ziel-kopf"><span class="nr">3</span>
+            <input type="text" data-z="z3" aria-label="Ziel 3" placeholder="Etwas, das du tun oder können willst …"></div>
+          <div class="ziel-mehr">
+            <label class="breit">Warum ist es dir wichtig?<input type="text" data-z="z3_warum"></label>
+            <label>Erster kleiner Schritt<input type="text" data-z="z3_schritt" placeholder="diese Woche machbar"></label>
+            <label>Stand<select data-z="z3_stand"><option value="">–</option><option>Noch ein Traum</option><option>Unterwegs</option><option>Erreicht</option></select></label>
+          </div>
+        </div>
+        <div class="ziel-block" data-block="4">
+          <div class="ziel-kopf"><span class="nr">4</span>
+            <input type="text" data-z="z4" aria-label="Ziel 4" placeholder="Etwas, das du anderen geben willst …"></div>
+          <div class="ziel-mehr">
+            <label class="breit">Warum ist es dir wichtig?<input type="text" data-z="z4_warum"></label>
+            <label>Erster kleiner Schritt<input type="text" data-z="z4_schritt" placeholder="diese Woche machbar"></label>
+            <label>Stand<select data-z="z4_stand"><option value="">–</option><option>Noch ein Traum</option><option>Unterwegs</option><option>Erreicht</option></select></label>
+          </div>
+        </div>
+        <div class="ziel-block" data-block="5">
+          <div class="ziel-kopf"><span class="nr">5</span>
+            <input type="text" data-z="z5" aria-label="Ziel 5" placeholder="Wie dein Leben sich anfühlen soll …"></div>
+          <div class="ziel-mehr">
+            <label class="breit">Warum ist es dir wichtig?<input type="text" data-z="z5_warum"></label>
+            <label>Erster kleiner Schritt<input type="text" data-z="z5_schritt" placeholder="diese Woche machbar"></label>
+            <label>Stand<select data-z="z5_stand"><option value="">–</option><option>Noch ein Traum</option><option>Unterwegs</option><option>Erreicht</option></select></label>
+          </div>
+        </div>
+    </div>
+
+    <div class="karte">
+      <p class="schritt-nr" style="margin-top:0">3 · Dein Alltag</p>
+      <h2>Wie viel deiner Woche passt schon zu deinem Zweck?</h2>
+      <div class="regler"><input type="range" min="0" max="100" step="10" value="0" data-z="alltag" id="z-alltag" aria-label="Anteil deiner Woche in Prozent"><output id="z-alltag-wert">–</output></div>
+      <p class="leise klein" style="margin-top:6px">Schieb den Regler. Schau in ein paar Wochen wieder drauf – ob sich etwas bewegt hat.</p>
+    </div>
+
+    <label class="schalter">
+      <input type="checkbox" id="z-frei">
+      <span><b>Für Sandra freigeben</b><br><span class="klein leise" id="z-frei-text"></span></span>
+    </label>
+    <p class="speicherstand" id="z-stand" aria-live="polite"></p>
   </section>
 
   <!-- ============ Anleitung ============ -->
@@ -581,7 +734,11 @@
   /* Überschrift fehlt? Dann die ersten Worte der ersten Antwort zeigen */
   function titelVon(a){ a = a || {}; var t = String(a.titel || '').trim(); if (t) return t;
     var f = String(a.widerfahren || a.fakt || '').replace(/\s+/g, ' ').trim(); return f ? (f.length > 40 ? f.slice(0, 39).trim() + '…' : f) : 'Ohne Titel'; }
-  var VARIANTE_NAME = {A:'Kurz', B:'Ausführlich'};
+  SCHRITTE.Z = [{k:'titel', f:'Überschrift'}, {k:'zweck', f:'Wofür bist du da?'}]
+    .concat([1,2,3,4,5].reduce(function(l, i){ return l.concat([{k:'z'+i, f:'Ziel '+i}, {k:'z'+i+'_warum', f:'Ziel '+i+' – warum es dir wichtig ist'},
+      {k:'z'+i+'_schritt', f:'Ziel '+i+' – erster Schritt'}, {k:'z'+i+'_stand', f:'Ziel '+i+' – Stand'}]); }, []))
+    .concat([{k:'alltag', f:'Wie viel deiner Woche passt schon dazu? (in Prozent)'}]);
+  var VARIANTE_NAME = {A:'Kurz', B:'Ausführlich', Z:'Lebensziele'};
 
   /* ---------------- Zustand ---------------- */
   var sitzung = null;       /* {email, code} – der Code allein öffnet nichts */
@@ -822,7 +979,10 @@
   function datum(iso){ return iso ? new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'long',year:'numeric'}).format(new Date(iso)) : ''; }
   function zeigeUebersicht(){
     var ld = $('liste-durchgaenge');
-    ld.innerHTML = eintraege.length ? eintraege.map(function(e, i){
+    var nurDg = eintraege.filter(function(e){ return e.variante !== 'Z'; }).length;
+    var zz = zielEintrag(); $('u-ziele-text').textContent = zz && zz.daten && zz.daten.antworten.zweck ? '„' + kuerze(zz.daten.antworten.zweck, 90) + '“' + zielStandText(zz.daten.antworten) : 'Der Blick nach vorn: Was willst du in deinem Leben unbedingt erleben? Mit Anleitung und Beispiel.';
+    ld.innerHTML = nurDg ? eintraege.map(function(e, i){
+      if (e.variante === 'Z') return '';
       if (!e.daten) return '<div class="eintrag" style="cursor:default"><span><b>Eintrag konnte nicht geöffnet werden</b><small>'+datum(e.geaendert)+'</small></span></div>';
       var t = titelVon(e.daten.antworten);
       return '<button class="eintrag" data-i="'+i+'"><span><b>'+esc(t)+'</b><small>'+datum(e.geaendert)+'</small></span>'+
@@ -905,6 +1065,7 @@
     zeichneKarte(); zeichneTabelle();
   }
   function uebernehmeText(){
+    if (!akt || akt.variante === 'Z') return;
     if (schrittNr >= schritte().length) return;
     var k = schritte()[schrittNr].k, v = $('d-text').value;
     if ((akt.daten.antworten[k] || '') !== v) { akt.daten.antworten[k] = v; ungespeichert = true; }
@@ -931,18 +1092,19 @@
     if (speichertGerade) return speichertGerade.then(speichern);
     ungespeichert = false;
     var d = akt, daten = {antworten:d.daten.antworten, schritt:d.daten.schritt || 0, variante:d.variante};
-    $('d-stand').textContent = 'Wird verschlüsselt gespeichert …';
+    var standEl = $(d.variante === 'Z' ? 'z-stand' : 'd-stand');
+    standEl.textContent = 'Wird verschlüsselt gespeichert …';
     speichertGerade = Promise.all([verschluesseln(daten), d.freigegeben && freigabeSchluessel ? freigabeBauen(daten) : Promise.resolve(null)])
       .then(function(r){ return rpc('coaching_mitglied_eintrag_speichern', mit({p_id:d.id, p_variante:d.variante, p_inhalt:r[0], p_freigabe:r[1]})); })
       .then(function(id){
-        d.id = id; $('d-loeschen').hidden = false;
+        d.id = id; if (d.variante !== 'Z') $('d-loeschen').hidden = false;
         var x = eintraege.filter(function(e){ return e.id === id; })[0];
         if (!x) { x = {id:id, variante:d.variante}; eintraege.unshift(x); }
         x.daten = JSON.parse(JSON.stringify(daten)); x.freigegeben = !!d.freigegeben; x.geaendert = new Date().toISOString();
-        if (akt === d) { $('d-stand').textContent = 'Verschlüsselt gespeichert' + (d.freigegeben ? ' · für Sandra freigegeben' : ''); zeichneTabelle(); }
+        if (akt === d) { standEl.textContent = 'Verschlüsselt gespeichert' + (d.freigegeben ? ' · für Sandra freigegeben' : ''); zeichneTabelle(); }
         return true;
       })
-      .catch(function(err){ ungespeichert = true; if (akt === d) $('d-stand').textContent = 'Nicht gespeichert: ' + err.message; return false; })
+      .catch(function(err){ ungespeichert = true; if (akt === d) standEl.textContent = 'Nicht gespeichert: ' + err.message; return false; })
       .then(function(ok){ speichertGerade = null; return ok; });
     return speichertGerade;
   }
@@ -1043,7 +1205,7 @@
   }
   var LEGENDE = '<div class="wk-legende"><span><i class="l-ist"></i>hier bist du</span><span><i class="l-voll"></i>ausgefüllt</span><span><i></i>noch offen</span></div>';
   function zeichneKarte(){
-    if (!akt) return;
+    if (!akt || akt.variante === 'Z') return;
     var box = $('d-karte');
     box.innerHTML = (akt.variante === 'B' ? karteB(box.clientWidth || 700) : karteA()) + LEGENDE;
     zeigeInfo(null);
@@ -1111,7 +1273,7 @@
       }).join('') + '</tbody></table></div>';
   }
   function zeichneTabelle(){
-    if (!akt) return;
+    if (!akt || akt.variante === 'Z') return;
     var t = tabelleHTML(akt.variante, akt), andere = eintraege.filter(function(e){ return e.daten && e.variante === akt.variante && e.id !== akt.id; }).length;
     $('d-tabelle').innerHTML = t ? '<h2 class="tab-titel">Alle deine Themen · ' + VARIANTE_NAME[akt.variante] + '</h2>' + t +
       '<p class="tab-hinweis">' + (andere ? 'Tippe auf eine Zeile, um den Durchgang zu öffnen. ' : '') + 'Die markierte Zeile ist der, an dem du gerade arbeitest.</p>' : '';
@@ -1125,6 +1287,51 @@
   }
   $('d-tabelle').addEventListener('click', tabellenKlick);
   $('d-tabelle').addEventListener('keydown', function(e){ if (e.key === 'Enter') tabellenKlick(e); });
+
+
+  /* ---------------- Lebenszweck und fünf Ziele ---------------- */
+  function zielEintrag(){ return eintraege.filter(function(e){ return e.variante === 'Z'; })[0] || null; }
+  function zielStandText(a){
+    var n = 0, er = 0; [1,2,3,4,5].forEach(function(i){ if (String(a['z'+i] || '').trim()) { n++; if (a['z'+i+'_stand'] === 'Erreicht') er++; } });
+    return n ? ' · ' + n + ' von 5 Zielen' + (er ? ', ' + er + ' erreicht' : '') : '';
+  }
+  function zielFelder(){ return document.querySelectorAll('#v-ziele [data-z]'); }
+  function zeigeAlltag(){ var a = akt && akt.daten.antworten.alltag; $('z-alltag-wert').textContent = (a === undefined || a === '') ? '–' : a + ' %'; }
+  function zielBloecke(){
+    Array.prototype.forEach.call(document.querySelectorAll('#v-ziele [data-block]'), function(b){
+      var st = akt.daten.antworten['z' + b.dataset.block + '_stand'] || '';
+      b.classList.toggle('erreicht', st === 'Erreicht'); b.classList.toggle('unterwegs', st === 'Unterwegs');
+    });
+  }
+  function oeffneZiele(){
+    var x = zielEintrag();
+    akt = x && x.daten ? {id:x.id, variante:'Z', daten:JSON.parse(JSON.stringify(x.daten)), freigegeben:x.freigegeben}
+                       : {id:null, variante:'Z', daten:{antworten:{titel:'Meine Lebensziele'}, schritt:0}, freigegeben:false};
+    ungespeichert = false;
+    var a = akt.daten.antworten;
+    Array.prototype.forEach.call(zielFelder(), function(el){ var v = a[el.dataset.z]; el.value = v === undefined ? (el.type === 'range' ? 0 : '') : v; });
+    zeigeAlltag(); zielBloecke();
+    var moeglich = !!freigabeSchluessel;
+    $('z-frei').checked = !!akt.freigegeben; $('z-frei').disabled = !moeglich;
+    $('z-frei-text').textContent = moeglich ? 'Dann kann Sandra Zweck und Ziele lesen und im Termin mit dir besprechen. Jederzeit zurücknehmbar.'
+                                            : 'Sandra hat Freigaben noch nicht eingerichtet. Bis dahin bleibt alles nur bei dir.';
+    $('z-stand').textContent = akt.id ? 'Verschlüsselt gespeichert' : '';
+    $('z-anl').open = !akt.id;
+    zeige('v-ziele');
+  }
+  $('u-ziele').addEventListener('click', oeffneZiele);
+  Array.prototype.forEach.call(zielFelder(), function(el){
+    el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function(){
+      if (!akt || akt.variante !== 'Z') return;
+      akt.daten.antworten[el.dataset.z] = el.value; ungespeichert = true;
+      if (el.dataset.z === 'alltag') zeigeAlltag();
+      zielBloecke();
+      $('z-stand').textContent = 'Ungespeichert …';
+      clearTimeout(speicherTimer); speicherTimer = setTimeout(speichern, 1500);
+    });
+  });
+  $('z-frei').addEventListener('change', function(){ if (akt && akt.variante === 'Z') { akt.freigegeben = this.checked; ungespeichert = true; speichern(); } });
+  $('z-zurueck').addEventListener('click', function(){ speichern().then(function(){ akt = null; zeigeUebersicht(); }); });
 
   /* ---------------- Einstellungen ---------------- */
   $('k-einst').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(function(){ akt = null; zeige('v-einst'); }); });
