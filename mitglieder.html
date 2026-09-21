@@ -453,27 +453,30 @@
   /* ---------------- Die Fragen ---------------- */
   var SCHRITTE = {
     B: [
-      {k:'titel', f:'Worum geht es?', h:'Ein paar Worte, damit du den Durchgang später wiederfindest.', b:'Der Streit am Sonntag.', kurz:true},
-      {k:'widerfahren', f:'Was ist dir widerfahren?', h:'Was lag nicht in deiner Hand? Das musst du nicht umdeuten und nicht verstehen – nur benennen.', b:'Er hat mir monatelang etwas verschwiegen.'},
-      {k:'bei_mir', f:'Was davon liegt bei dir?', h:'Nicht die Schuld – sondern das, was du jetzt daraus machst: wie du mit dir umgehst, was du dir erlaubst.', b:'Wie ich seitdem mit mir rede. Dass ich so tue, als wäre nichts.'},
-      {k:'anerkennen', f:'Was darf wehtun?', h:'Ohne dass du es dir schönredest oder kleinmachst.', b:'Dass mein Vertrauen gebrochen wurde. Das war nicht meine Entscheidung.'},
-      {k:'satz', f:'Was sagst du dir über dich?', h:'Der Satz, der dabei in dir auftaucht. Oft ist es ein alter Bekannter.', b:'„Ich habe nicht gereicht."'},
+      {k:'titel', f:'Worum geht es?', h:'Eine kurze Überschrift, damit du den Durchgang später wiederfindest.', b:'Der Streit am Sonntag.', kurz:true},
+      {k:'widerfahren', f:'Was ist passiert?', h:'Beschreib nur, was geschehen ist: was die anderen gesagt oder getan haben. Noch ohne Bewertung.', b:'Er hat mir monatelang etwas verschwiegen.'},
+      {k:'bei_mir', f:'Was davon hattest du in der Hand?', h:'Das Verhalten der anderen liegt bei ihnen. Bei dir liegt nur, was du selbst gesagt, getan oder gelassen hast – und wie du jetzt mit dir umgehst. Um Schuld geht es hier nicht.', b:'Sein Schweigen lag nicht bei mir. Bei mir liegt, dass ich seitdem so tue, als wäre nichts.'},
+      {k:'anerkennen', f:'Was hat dich daran am meisten getroffen?', h:'Nicht das Gefühl – das kommt gleich –, sondern der wunde Punkt. Er darf wehtun, ohne dass du ihn kleinredest.', b:'Dass mein Vertrauen gebrochen wurde, ohne dass ich gefragt wurde.'},
+      {k:'satz', f:'Welchen Satz sagst du dir dabei über dich?', h:'Oft ein alter Bekannter. Er beginnt häufig mit „Ich bin …", „Ich muss …" oder „Ich darf nicht …".', b:'„Ich habe nicht gereicht."'},
       {k:'gefuehl', f:'Was fühlst du dabei?', h:'Ein, zwei Wörter reichen.', b:'Scham. Wut. Leere.'},
       {k:'tun', f:'Was machst du dann?', h:'Was tust du – oder lässt du –, wenn dieser Satz in dir läuft?', b:'Ich strenge mich noch mehr an und sage nichts über meine Wut.'},
-      {k:'ergebnis', f:'Was kommt dabei heraus?', h:'Schau, ob das Ergebnis den Satz vom Anfang bestätigt. So hält sich ein Muster am Leben.', b:'Ich stelle mich hinten an – wie immer.'},
-      {k:'neuer_satz', f:'Welcher Satz wäre freundlicher und trotzdem wahr?', h:'Kein Schönreden. Ein Satz, den du einer guten Freundin sagen würdest.', b:'„Das lag nicht an mir. Ich darf wütend sein."'},
+      {k:'ergebnis', f:'Und was passiert danach?', h:'Was folgt aus deinem Verhalten – für dich und für die anderen? Schau, ob genau das den Satz von vorhin wieder bestätigt. So hält sich ein Muster am Leben.', b:'Ich bin erschöpft, er merkt nichts – und ich denke wieder: Ich reiche nicht.'},
+      {k:'neuer_satz', f:'Welcher Satz wäre freundlicher und trotzdem wahr?', h:'In der Ich-Form. Kein Schönreden – ein Satz, den du einer guten Freundin sagen würdest und den du selbst glauben kannst.', b:'„Sein Schweigen sagt nichts über meinen Wert. Ich darf wütend sein."'},
       {k:'brauchen', f:'Was brauchst du jetzt?', h:'Von dir und von anderen. Klein ist gut.', b:'Zeit, bevor ich etwas entscheide. Ein Gespräch mit meiner Schwester.'}
     ],
     A: [
-      {k:'titel', f:'Worum geht es?', h:'Ein paar Worte, damit du den Durchgang später wiederfindest.', b:'Der vergessene Geburtstag.', kurz:true},
+      {k:'titel', f:'Worum geht es?', h:'Eine kurze Überschrift, damit du den Durchgang später wiederfindest.', b:'Der vergessene Geburtstag.', kurz:true},
       {k:'fakt', f:'Was ist passiert?', h:'Nur das Beobachtbare – so, wie es eine Kamera aufnehmen würde.', b:'Mein Mann hat meinen Geburtstag vergessen.'},
-      {k:'satz', f:'Was sagst du dir darüber?', h:'Der Satz, der dabei in dir auftaucht.', b:'„Ich bin ihm nicht wichtig."'},
+      {k:'satz', f:'Was sagst du dir darüber?', h:'Der Satz, der dabei in dir auftaucht. Er beginnt oft mit „Ich bin …" oder „Ich muss …".', b:'„Ich bin ihm nicht wichtig."'},
       {k:'gefuehl', f:'Was fühlst du dabei?', h:'Ein, zwei Wörter reichen.', b:'Gekränkt, leer.'},
       {k:'tun', f:'Was machst du dann?', h:'Was tust du – oder lässt du –, wenn dieser Satz in dir läuft?', b:'Ich sage nichts, funktioniere weiter, ziehe mich zurück.'},
-      {k:'ergebnis', f:'Was kommt dabei heraus?', h:'Bestätigt das Ergebnis den Satz vom Anfang?', b:'Er merkt nichts – und ich fühle mich bestätigt.'},
-      {k:'neuer_satz', f:'Welchen Satz könntest du dir stattdessen sagen?', h:'Und was würde sich dann ändern?', b:'„Er hat es vergessen – das sagt etwas über seinen Kopf, nicht über meinen Wert."'}
+      {k:'ergebnis', f:'Und was passiert danach?', h:'Was folgt aus deinem Verhalten – für dich und für die anderen? Bestätigt es den Satz von vorhin?', b:'Er merkt nichts – und ich fühle mich bestätigt: Ich bin ihm nicht wichtig.'},
+      {k:'neuer_satz', f:'Welchen Satz könntest du dir stattdessen sagen?', h:'In der Ich-Form, so, dass du ihn selbst glauben kannst.', b:'„Er hat es vergessen – das sagt etwas über seinen Kopf, nicht über meinen Wert."'}
     ]
   };
+  /* Überschrift fehlt? Dann die ersten Worte der ersten Antwort zeigen */
+  function titelVon(a){ a = a || {}; var t = String(a.titel || '').trim(); if (t) return t;
+    var f = String(a.widerfahren || a.fakt || '').replace(/\s+/g, ' ').trim(); return f ? (f.length > 40 ? f.slice(0, 39).trim() + '…' : f) : 'Ohne Titel'; }
   var VARIANTE_NAME = {A:'Kurz', B:'Ausführlich'};
 
   /* ---------------- Zustand ---------------- */
@@ -717,7 +720,7 @@
     var ld = $('liste-durchgaenge');
     ld.innerHTML = eintraege.length ? eintraege.map(function(e, i){
       if (!e.daten) return '<div class="eintrag" style="cursor:default"><span><b>Eintrag konnte nicht geöffnet werden</b><small>'+datum(e.geaendert)+'</small></span></div>';
-      var t = (e.daten.antworten && e.daten.antworten.titel) || 'Ohne Titel';
+      var t = titelVon(e.daten.antworten);
       return '<button class="eintrag" data-i="'+i+'"><span><b>'+esc(t)+'</b><small>'+datum(e.geaendert)+'</small></span>'+
         '<span>'+(e.freigegeben ? '<span class="marke marke-frei">für Sandra freigegeben</span> ' : '')+
         '<span class="marke marke-var">'+VARIANTE_NAME[e.variante]+'</span></span></button>';
@@ -728,7 +731,7 @@
       var a = e.daten.antworten;
       return '<div class="satz-paar">'+(a.satz ? '<div class="satz-alt">'+esc(a.satz)+'</div>' : '')+
         (a.neuer_satz ? '<div class="satz-neu">'+esc(a.neuer_satz)+'</div>' : '<div class="klein leise">Noch kein neuer Satz</div>')+
-        '<small class="leise klein">'+esc(a.titel || '')+' · '+datum(e.geaendert)+'</small></div>';
+        '<small class="leise klein">'+esc(titelVon(a))+' · '+datum(e.geaendert)+'</small></div>';
     }).join('') : '<p class="leer">Hier sammeln sich die Sätze aus deinen Durchgängen – der alte und der, den du dir stattdessen sagst.</p>';
     var tA = tabelleHTML('A', null), tB = tabelleHTML('B', null);
     $('liste-tabelle').innerHTML = (tA || tB)
@@ -778,7 +781,7 @@
       var q = s[schrittNr];
       $('d-nr').textContent = 'Schritt ' + (schrittNr + 1) + ' von ' + n;
       $('d-frage').textContent = q.f; $('d-hilfe').textContent = q.h;
-      $('d-bsp').textContent = q.b; $('d-bsp-wrap').open = false;
+      $('d-bsp').textContent = q.b; $('d-bsp-wrap').open = true;
       $('d-text').value = akt.daten.antworten[q.k] || '';
       $('d-text').style.minHeight = q.kurz ? '60px' : '';
       $('d-text').rows = q.kurz ? 2 : 5;
@@ -850,7 +853,7 @@
 
 
   /* ---------------- Wegkarte und Themen-Tabelle ---------------- */
-  var KURZNAME = {titel:'Thema', fakt:'Passiert', widerfahren:'Widerfahren', bei_mir:'Bei mir', anerkennen:'Darf wehtun',
+  var KURZNAME = {titel:'Thema', fakt:'Passiert', widerfahren:'Passiert', bei_mir:'Bei mir', anerkennen:'Wunder Punkt',
     satz:'Satz', gefuehl:'Gefühl', tun:'Tun', ergebnis:'Ergebnis', neuer_satz:'Neuer Satz', brauchen:'Brauchen'};
   var zeichneTimer = null, karteLayout = '';
   function kuerze(t, n){ t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).trim() + '…' : t; }
@@ -918,7 +921,7 @@
     });
     h += '<text class="notiz" x="' + L.bestText[0] + '" y="' + L.bestText[1] + '" text-anchor="' + L.bestText[3] + '">' + L.bestText[2] + '</text>';
     /* Mitte: Thema */
-    var zt = zustand('titel'), t = antw('titel');
+    var zt = zustand('titel'), t = antw('titel') || (titelVon(akt.daten.antworten) !== 'Ohne Titel' ? titelVon(akt.daten.antworten) : '');
     h += '<g class="mitte ' + zt + '" data-k="titel" tabindex="0" role="button" aria-label="' + esc('Thema' + (t ? ': ' + kuerze(t, 90) : ' – noch offen')) + '">' +
       '<circle cx="' + cx + '" cy="' + cy + '" r="' + Math.min(r - 34, 72) + '"/>' +
       '<text class="u" x="' + cx + '" y="' + (cy - 20) + '">DEIN MUSTER</text>';
@@ -992,7 +995,7 @@
       spalten.map(function(q){ return '<th scope="col">' + KURZNAME[q.k] + '</th>'; }).join('') + '</tr></thead><tbody>' +
       zeilen.map(function(z){
         return '<tr data-id="' + esc(z.id) + '" tabindex="0"' + (z.ist ? ' class="ist" aria-current="true"' : '') + '><th scope="row">' +
-          esc(kuerze(z.a.titel, 60) || 'Ohne Titel') + '<small>' + (z.neu ? 'neu' : datum(z.g)) + (z.frei ? ' · freigegeben' : '') + '</small></th>' +
+          esc(kuerze(titelVon(z.a), 60)) + '<small>' + (z.neu ? 'neu' : datum(z.g)) + (z.frei ? ' · freigegeben' : '') + '</small></th>' +
           spalten.map(function(q){
             var a = String(z.a[q.k] || '').trim(), c = q.k === 'satz' ? ' class="c-satz"' : (q.k === 'neuer_satz' ? ' class="c-neu"' : '');
             return '<td' + c + (a.length > 110 ? ' title="' + esc(a) + '"' : '') + '>' + (a ? esc(kuerze(a, 110)) : '<span class="offen">–</span>') + '</td>';
@@ -1041,7 +1044,7 @@
     var t = 'Ganz bei dir · Meine Durchgänge\nHeruntergeladen am ' + datum(new Date().toISOString()) + '\n\n';
     eintraege.forEach(function(e){
       if (!e.daten) return;
-      t += '========================================\n' + ((e.daten.antworten.titel) || 'Ohne Titel') + '\n' + VARIANTE_NAME[e.variante] + ' · ' + datum(e.geaendert) + '\n\n';
+      t += '========================================\n' + titelVon(e.daten.antworten) + '\n' + VARIANTE_NAME[e.variante] + ' · ' + datum(e.geaendert) + '\n\n';
       SCHRITTE[e.variante].forEach(function(q){ var a = e.daten.antworten[q.k]; if (a && q.k !== 'titel') t += q.f + '\n' + a + '\n\n'; });
     });
     herunterladen('ganz-bei-dir-durchgaenge.txt', t, 'text/plain;charset=utf-8');
