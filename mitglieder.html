@@ -106,6 +106,102 @@
   .schalter{display:flex;gap:12px;align-items:flex-start;background:var(--sand);border-radius:14px;padding:14px 18px;margin-top:20px}
   .schalter input{width:20px;height:20px;accent-color:var(--clay);margin-top:3px;flex:none}
 
+  /* Wegkarte */
+  .karte-kopf{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px}
+  .karte-kopf .leise{font-size:13px}
+  #d-karte-knopf{white-space:nowrap}
+  .wegkarte{margin-top:8px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px}
+  .wk-legende{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:12px}
+  .wk-legende i{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:6px;vertical-align:-1px;border:1.5px solid var(--sand-2);background:var(--cream)}
+  .wk-legende i.l-ist{background:var(--clay);border-color:var(--clay)}
+  .wk-legende i.l-voll{background:#F6EAE4;border-color:var(--rose)}
+  .karte-info{font-size:14px;color:var(--muted);margin-top:8px;min-height:1.5em;line-height:1.5}
+  .karte-info b{color:var(--ink);font-weight:600}
+  .wk-thema{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px dashed var(--sand-2);
+    font:inherit;font-size:15px;color:var(--ink);padding:0 0 10px;cursor:pointer}
+  .wk-thema span{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-right:8px}
+  .wk-thema.ist{color:var(--clay-dark);font-weight:600}
+  .wk-thema:hover{color:var(--clay-dark)}
+  .wk-reihe{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;margin-top:16px}
+  .wk-st{position:relative;background:var(--cream);border:1.5px solid var(--sand-2);border-radius:14px;padding:10px 10px 12px;
+    text-align:left;font:inherit;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:3px;min-height:100px;
+    transition:background .2s,border-color .2s}
+  .wk-st:hover{border-color:var(--clay)}
+  .wk-st:focus-visible,.wk-thema:focus-visible{outline:2px solid var(--clay);outline-offset:2px}
+  .wk-st i{font-style:normal;font-size:11.5px;width:20px;height:20px;border-radius:50%;background:var(--sand-2);color:var(--clay-dark);
+    display:flex;align-items:center;justify-content:center;flex:none}
+  .wk-st b{font-size:14.5px;line-height:1.3}
+  .wk-st small{font-size:12.5px;color:var(--muted);line-height:1.35;overflow-wrap:anywhere}
+  .wk-st.voll{background:#F6EAE4;border-color:var(--rose)}
+  .wk-st.voll i{background:var(--rose)}
+  .wk-st.ist{background:var(--clay);border-color:var(--clay);color:#fff}
+  .wk-st.ist small{color:#F5E9E1}
+  .wk-st.ist i{background:#fff;color:var(--clay-dark)}
+  .wk-reihe .wk-st:not(:last-child)::after{content:'→';position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--clay);font-size:14px}
+  .wk-rueck{position:relative;height:18px;margin:4px 10% 0 30%;border:2px dashed var(--clay);border-top:0;border-radius:0 0 16px 16px;opacity:.65}
+  .wk-rueck::before{content:'';position:absolute;left:-7px;top:-6px;border:6px solid transparent;border-bottom:8px solid var(--clay);border-top:0}
+  .wk-rueck-text{margin:6px 10% 0 30%;text-align:center;font-size:13px;color:var(--muted);font-style:italic}
+  .wk-aus{display:flex;align-items:stretch;gap:14px;margin-top:14px}
+  .wk-aus-pfeil{display:flex;align-items:center;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);white-space:nowrap}
+  .wk-aus-pfeil::after{content:'→';margin-left:8px;font-size:15px;letter-spacing:0}
+  .wk-aus .wk-st{flex:1;min-height:0}
+  .wk-svg{display:block;width:100%;height:auto;overflow:visible}
+  .wk-svg .kn{cursor:pointer}
+  .wk-svg .kn:focus{outline:none}
+  .wk-svg .kn rect{fill:var(--cream);stroke:var(--sand-2);stroke-width:1.5;transition:fill .2s,stroke .2s}
+  .wk-svg .kn text{fill:var(--ink);font-size:14px;font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+  .wk-svg.schmal .kn text{font-size:13px}
+  .wk-svg .kn.voll rect{fill:#F6EAE4;stroke:var(--rose)}
+  .wk-svg .kn.ist rect{fill:var(--clay);stroke:var(--clay)}
+  .wk-svg .kn.ist text{fill:#fff}
+  .wk-svg .kn:hover rect,.wk-svg .kn:focus-visible rect{stroke:var(--clay-dark);stroke-width:2}
+  .wk-svg .ring{fill:none;stroke:var(--rose);stroke-width:3}
+  .wk-svg .spitze{fill:var(--clay)}
+  .wk-svg .linie{fill:none;stroke:var(--clay);stroke-width:1.6;opacity:.8}
+  .wk-svg .strich{stroke-dasharray:5 5}
+  .wk-svg .ueber{font-size:11px;letter-spacing:.14em;fill:var(--clay);text-anchor:middle}
+  .wk-svg .notiz{font-size:12.5px;fill:var(--muted);font-style:italic}
+  .wk-svg .mitte{cursor:pointer}
+  .wk-svg .mitte:focus{outline:none}
+  .wk-svg .mitte circle{fill:transparent;stroke:transparent;stroke-width:2}
+  .wk-svg .mitte:hover circle,.wk-svg .mitte:focus-visible circle{stroke:var(--sand-2)}
+  .wk-svg .mitte.ist circle{fill:#F6EAE4;stroke:var(--rose)}
+  .wk-svg .mitte text{text-anchor:middle;pointer-events:none}
+  .wk-svg .mitte .t{font-size:14.5px;font-weight:600;fill:var(--ink)}
+  .wk-svg .mitte .u{font-size:10.5px;letter-spacing:.16em;fill:var(--clay)}
+  .wk-svg .mitte .o{font-size:13px;fill:var(--muted);font-style:italic}
+
+  /* Themen-Tabelle */
+  .tab-titel{font-size:17px;margin-top:40px}
+  .tab-wrap{overflow-x:auto;margin-top:10px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+  table.themen{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
+  .themen th,.themen td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line);line-height:1.45}
+  .themen thead th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay-dark);font-weight:600;background:var(--sand);white-space:nowrap}
+  .themen thead th:first-child,.themen tbody th{position:sticky;left:0;z-index:1}
+  .themen tbody th{font-weight:600;background:var(--paper);min-width:140px;max-width:190px;border-right:1px solid var(--line)}
+  .themen tbody th small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px}
+  .themen tbody tr{cursor:pointer}
+  .themen tbody tr:hover td,.themen tbody tr:hover th{background:var(--cream)}
+  .themen tbody tr:focus-visible{outline:2px solid var(--clay);outline-offset:-2px}
+  .themen tr.ist td,.themen tr.ist th{background:#F6EAE4}
+  .themen td{color:#5E5346;min-width:125px}
+  .themen td.c-satz{color:var(--muted)}
+  .themen td.c-neu{color:var(--ink);font-weight:600}
+  .themen tbody tr:last-child>*{border-bottom:0}
+  .themen .offen{color:var(--sand-2)}
+  .tab-hinweis{font-size:13px;color:var(--muted);margin-top:8px}
+  @media(max-width:600px){
+    .wegkarte{padding:14px 12px}
+    .wk-reihe{gap:10px}
+    .wk-reihe .wk-st{min-height:0;padding:8px 3px;align-items:center;text-align:center}
+    .wk-reihe .wk-st small{display:none}
+    .wk-reihe .wk-st b{font-size:11px}
+    .wk-reihe .wk-st:not(:last-child)::after{right:-10px;font-size:11px}
+    .wk-rueck,.wk-rueck-text{margin-left:30%;margin-right:10%}
+    .wk-rueck-text{font-size:12px}
+    .wk-aus{flex-direction:column;gap:6px}
+  }
+
   .safety{background:var(--sand-2);border-radius:16px;padding:16px 20px;margin-top:40px;font-size:14.5px;color:#5E5346}
   .safety b{display:block;color:var(--ink);margin-bottom:2px}
   footer{color:var(--muted);font-size:13.5px;padding:26px 0 50px;border-top:1px solid var(--line)}
@@ -234,9 +330,11 @@
     <div class="reiter" role="tablist">
       <button class="an" data-reiter="durchgaenge" role="tab">Meine Durchgänge</button>
       <button data-reiter="saetze" role="tab">Meine Sätze</button>
+      <button data-reiter="tabelle" role="tab">Als Tabelle</button>
     </div>
     <div class="liste" id="liste-durchgaenge"></div>
     <div class="liste" id="liste-saetze" hidden></div>
+    <div id="liste-tabelle" hidden></div>
     <p class="schloss" style="margin-top:18px"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Alles verschlüsselt – nur du kannst es lesen</p>
   </section>
 
@@ -247,6 +345,15 @@
       <span class="marke marke-var" id="d-variante"></span>
     </div>
     <div class="fortschritt"><i id="d-balken"></i></div>
+
+    <div class="karte-kopf">
+      <span class="leise" id="d-karte-hinweis">Tippe auf eine Station, um direkt dorthin zu springen.</span>
+      <button class="link-knopf klein" id="d-karte-knopf" aria-expanded="true" aria-controls="d-karte-box">Karte ausblenden</button>
+    </div>
+    <div id="d-karte-box">
+      <div class="wegkarte" id="d-karte"></div>
+      <p class="karte-info" id="d-karte-info" aria-live="polite"></p>
+    </div>
 
     <div id="d-schritt">
       <p class="schritt-nr" id="d-nr"></p>
@@ -271,6 +378,7 @@
       <button class="btn btn-2" id="d-vor">Zurück</button>
       <button class="btn" id="d-weiter">Weiter</button>
     </div>
+    <div id="d-tabelle"></div>
     <div class="reihe" style="margin-top:34px">
       <button class="btn btn-rot" id="d-loeschen" hidden>Durchgang löschen</button>
     </div>
@@ -562,6 +670,10 @@
         (a.neuer_satz ? '<div class="satz-neu">'+esc(a.neuer_satz)+'</div>' : '<div class="klein leise">Noch kein neuer Satz</div>')+
         '<small class="leise klein">'+esc(a.titel || '')+' · '+datum(e.geaendert)+'</small></div>';
     }).join('') : '<p class="leer">Hier sammeln sich die Sätze aus deinen Durchgängen – der alte und der, den du dir stattdessen sagst.</p>';
+    var tA = tabelleHTML('A', null), tB = tabelleHTML('B', null);
+    $('liste-tabelle').innerHTML = (tA || tB)
+      ? (tA ? '<h2 class="tab-titel" style="margin-top:18px">Kurz</h2>' + tA : '') + (tB ? '<h2 class="tab-titel">Ausführlich</h2>' + tB : '')
+      : '<p class="leer">Sobald du einen Durchgang beginnst, erscheint er hier als Zeile.</p>';
     zeige('v-uebersicht');
   }
   $('liste-durchgaenge').addEventListener('click', function(e){
@@ -569,6 +681,8 @@
     var x = eintraege[+b.dataset.i];
     oeffneDurchgang({id:x.id, variante:x.variante, daten:JSON.parse(JSON.stringify(x.daten)), freigegeben:x.freigegeben});
   });
+  $('liste-tabelle').addEventListener('click', tabellenKlick);
+  $('liste-tabelle').addEventListener('keydown', function(e){ if (e.key === 'Enter') tabellenKlick(e); });
   Array.prototype.forEach.call(document.querySelectorAll('[data-neu]'), function(b){
     b.addEventListener('click', function(){ oeffneDurchgang({id:null, variante:b.dataset.neu, daten:{antworten:{}, schritt:0}, freigegeben:false}); });
   });
@@ -577,6 +691,7 @@
       Array.prototype.forEach.call(document.querySelectorAll('[data-reiter]'), function(x){ x.classList.toggle('an', x === b); });
       $('liste-durchgaenge').hidden = b.dataset.reiter !== 'durchgaenge';
       $('liste-saetze').hidden = b.dataset.reiter !== 'saetze';
+      $('liste-tabelle').hidden = b.dataset.reiter !== 'tabelle';
     });
   });
 
@@ -591,6 +706,7 @@
     schrittNr = d.id ? schritte().length : Math.min(d.daten.schritt || 0, schritte().length);
     zeigeSchritt();
     zeige('v-durchgang');
+    zeichneKarte();
     if (schrittNr < schritte().length) setTimeout(function(){ $('d-text').focus(); }, 60);
   }
   function zeigeSchritt(){
@@ -619,6 +735,7 @@
         : 'Sandra hat Freigaben noch nicht eingerichtet. Bis dahin bleibt alles nur bei dir.';
       $('d-weiter').textContent = 'Fertig';
     }
+    zeichneKarte(); zeichneTabelle();
   }
   function uebernehmeText(){
     if (schrittNr >= schritte().length) return;
@@ -627,6 +744,7 @@
   }
   $('d-text').addEventListener('input', function(){
     uebernehmeText(); $('d-stand').textContent = 'Ungespeichert …';
+    clearTimeout(zeichneTimer); zeichneTimer = setTimeout(function(){ zeichneKarte(); zeichneTabelle(); }, 250);
     clearTimeout(speicherTimer); speicherTimer = setTimeout(speichern, 1500);
   });
   $('d-weiter').addEventListener('click', function(){
@@ -654,7 +772,7 @@
         var x = eintraege.filter(function(e){ return e.id === id; })[0];
         if (!x) { x = {id:id, variante:d.variante}; eintraege.unshift(x); }
         x.daten = JSON.parse(JSON.stringify(daten)); x.freigegeben = !!d.freigegeben; x.geaendert = new Date().toISOString();
-        if (akt === d) $('d-stand').textContent = 'Verschlüsselt gespeichert' + (d.freigegeben ? ' · für Sandra freigegeben' : '');
+        if (akt === d) { $('d-stand').textContent = 'Verschlüsselt gespeichert' + (d.freigegeben ? ' · für Sandra freigegeben' : ''); zeichneTabelle(); }
         return true;
       })
       .catch(function(err){ ungespeichert = true; if (akt === d) $('d-stand').textContent = 'Nicht gespeichert: ' + err.message; return false; })
@@ -669,6 +787,173 @@
       var id = akt.id; eintraege = eintraege.filter(function(e){ return e.id !== id; }); akt = null; zeigeUebersicht();
     }).catch(function(err){ $('d-stand').textContent = err.message; }).then(function(){ b.disabled = false; });
   });
+
+
+  /* ---------------- Wegkarte und Themen-Tabelle ---------------- */
+  var KURZNAME = {titel:'Thema', fakt:'Passiert', widerfahren:'Widerfahren', bei_mir:'Bei mir', anerkennen:'Darf wehtun',
+    satz:'Satz', gefuehl:'Gefühl', tun:'Tun', ergebnis:'Ergebnis', neuer_satz:'Neuer Satz', brauchen:'Brauchen'};
+  var zeichneTimer = null, karteLayout = '';
+  function kuerze(t, n){ t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).trim() + '…' : t; }
+  function schrittIndex(k){ var s = schritte(); for (var i = 0; i < s.length; i++) if (s[i].k === k) return i; return -1; }
+  function antw(k){ return String(akt.daten.antworten[k] || '').trim(); }
+  function zustand(k){ return schrittIndex(k) === schrittNr ? 'ist' : (antw(k) ? 'voll' : 'leer'); }
+  function frageZu(k){ var i = schrittIndex(k); return i < 0 ? '' : schritte()[i].f; }
+
+  function station(k, nr){
+    var a = antw(k), z = zustand(k);
+    return '<button type="button" class="wk-st ' + z + '" data-k="' + k + '"' + (z === 'ist' ? ' aria-current="step"' : '') +
+      ' aria-label="' + esc(KURZNAME[k] + (a ? ': ' + kuerze(a, 90) : ' – noch offen')) + '">' +
+      '<i>' + nr + '</i><b>' + KURZNAME[k] + '</b><small>' + (a ? esc(kuerze(a, 80)) : 'noch offen') + '</small></button>';
+  }
+  function karteA(){
+    var h = '<button type="button" class="wk-thema ' + zustand('titel') + '" data-k="titel"><span>Thema</span>' +
+      (antw('titel') ? esc(kuerze(antw('titel'), 80)) : '<em class="leise">noch offen</em>') + '</button>';
+    h += '<div class="wk-reihe">' + ['fakt','satz','gefuehl','tun','ergebnis'].map(function(k, j){ return station(k, j + 1); }).join('') + '</div>';
+    h += '<div class="wk-rueck" aria-hidden="true"></div><p class="wk-rueck-text">Das Ergebnis bestätigt den Satz – so hält sich ein Muster am Leben.</p>';
+    h += '<div class="wk-aus"><span class="wk-aus-pfeil">Der Ausweg</span>' + station('neuer_satz', '✦') + '</div>';
+    return h;
+  }
+
+  /* Kreislauf für „Ausführlich“: zwei Aufteilungen, je nach verfügbarer Breite */
+  var LAYOUT_B = {
+    breit: {w:720, h:350, nw:112, nh:42, c:[360,175], r:132,
+      links:{widerfahren:[80,97], bei_mir:[80,175], anerkennen:[80,253]}, rechts:{neuer_satz:[640,128], brauchen:[640,208]},
+      ueber:[[80,56,'SORTIEREN'],[640,88,'NEU WÄHLEN']],
+      klammer:'M136 97 H152 M136 175 H152 M136 253 H152 M152 97 V253', ein:'M152 175 H168',
+      aus:'M484 130 L582 128', ausText:[532,120,'Ausweg','middle'], bestText:[258,290,'bestätigt den Satz','end'], zeichen:14},
+    schmal: {w:360, h:508, nw:100, nh:38, c:[180,252], r:100,
+      links:{widerfahren:[62,46], bei_mir:[180,46], anerkennen:[298,46]}, rechts:{neuer_satz:[110,452], brauchen:[250,452]},
+      ueber:[[180,14,'SORTIEREN'],[180,500,'NEU WÄHLEN']],
+      klammer:'M62 65 V78 M180 65 V78 M298 65 V78 M62 78 H298', ein:'M120 78 C 72 118, 76 180, 80 228',
+      aus:'M180 371 V398 M180 398 L118 430 M180 398 L242 430', ausText:[190,392,'Ausweg','start'], bestText:[96,340,'bestätigt','end'], zeichen:15}
+  };
+  function textZeilen(t, max){
+    var w = kuerze(t, max * 2).split(' '), z = [''];
+    w.forEach(function(x){ var l = z[z.length - 1]; if ((l + ' ' + x).trim().length > max && l) z.push(x); else z[z.length - 1] = (l + ' ' + x).trim(); });
+    return z.slice(0, 2);
+  }
+  function knoten(k, x, y, L){
+    var z = zustand(k), a = antw(k);
+    return '<g class="kn ' + z + '" data-k="' + k + '" tabindex="0" role="button"' + (z === 'ist' ? ' aria-current="step"' : '') +
+      ' aria-label="' + esc(KURZNAME[k] + (a ? ': ' + kuerze(a, 90) : ' – noch offen')) + '">' +
+      '<rect x="' + (x - L.nw / 2) + '" y="' + (y - L.nh / 2) + '" width="' + L.nw + '" height="' + L.nh + '" rx="' + (L.nh / 2) + '"/>' +
+      '<text x="' + x + '" y="' + y + '">' + KURZNAME[k] + (z === 'voll' ? ' ✓' : '') + '</text></g>';
+  }
+  function karteB(breite){
+    var art = breite < 600 ? 'schmal' : 'breit', L = LAYOUT_B[art], cx = L.c[0], cy = L.c[1], r = L.r;
+    karteLayout = art;
+    var h = '<svg class="wk-svg ' + art + '" viewBox="0 0 ' + L.w + ' ' + L.h + '" role="group" aria-label="Dein Durchgang als Kreislauf">' +
+      '<defs><marker id="wk-spitze" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+      '<path d="M0 0 L10 5 L0 10 z" fill="#A97B63"/></marker></defs>';
+    L.ueber.forEach(function(u){ h += '<text class="ueber" x="' + u[0] + '" y="' + u[1] + '">' + u[2] + '</text>'; });
+    h += '<path class="linie" d="' + L.klammer + '"/><path class="linie" d="' + L.ein + '" marker-end="url(#wk-spitze)"/>';
+    h += '<path class="linie strich" d="' + L.aus + '" marker-end="url(#wk-spitze)"/>';
+    h += '<text class="notiz" x="' + L.ausText[0] + '" y="' + L.ausText[1] + '" text-anchor="' + L.ausText[3] + '">' + L.ausText[2] + '</text>';
+    /* Ring mit Pfeilspitzen im Uhrzeigersinn: Satz (links) → Gefühl (oben) → Tun (rechts) → Ergebnis (unten) → Satz */
+    h += '<circle class="ring" cx="' + cx + '" cy="' + cy + '" r="' + r + '"/>';
+    [225, 315, 45, 135].forEach(function(g){
+      var a = g * Math.PI / 180, px = cx + r * Math.cos(a), py = cy + r * Math.sin(a), tx = -Math.sin(a), ty = Math.cos(a), nx = Math.cos(a), ny = Math.sin(a);
+      var p1 = [px + tx * 8, py + ty * 8], p2 = [px - tx * 6 + nx * 7, py - ty * 6 + ny * 7], p3 = [px - tx * 6 - nx * 7, py - ty * 6 - ny * 7];
+      h += '<path class="spitze" d="M' + p1.join(' ') + ' L' + p2.join(' ') + ' L' + p3.join(' ') + ' z"/>';
+    });
+    h += '<text class="notiz" x="' + L.bestText[0] + '" y="' + L.bestText[1] + '" text-anchor="' + L.bestText[3] + '">' + L.bestText[2] + '</text>';
+    /* Mitte: Thema */
+    var zt = zustand('titel'), t = antw('titel');
+    h += '<g class="mitte ' + zt + '" data-k="titel" tabindex="0" role="button" aria-label="' + esc('Thema' + (t ? ': ' + kuerze(t, 90) : ' – noch offen')) + '">' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + Math.min(r - 34, 72) + '"/>' +
+      '<text class="u" x="' + cx + '" y="' + (cy - 20) + '">DEIN MUSTER</text>';
+    if (t) textZeilen(t, L.zeichen).forEach(function(z, i){ h += '<text class="t" x="' + cx + '" y="' + (cy + 4 + i * 19) + '">' + esc(z) + '</text>'; });
+    else h += '<text class="o" x="' + cx + '" y="' + (cy + 6) + '">Thema offen</text>';
+    h += '</g>';
+    var ring = {satz:180, gefuehl:270, tun:0, ergebnis:90};
+    Object.keys(ring).forEach(function(k){ var a = ring[k] * Math.PI / 180; h += knoten(k, Math.round(cx + r * Math.cos(a)), Math.round(cy + r * Math.sin(a)), L); });
+    Object.keys(L.links).forEach(function(k){ h += knoten(k, L.links[k][0], L.links[k][1], L); });
+    Object.keys(L.rechts).forEach(function(k){ h += knoten(k, L.rechts[k][0], L.rechts[k][1], L); });
+    return h + '</svg>';
+  }
+  var LEGENDE = '<div class="wk-legende"><span><i class="l-ist"></i>hier bist du</span><span><i class="l-voll"></i>ausgefüllt</span><span><i></i>noch offen</span></div>';
+  function zeichneKarte(){
+    if (!akt) return;
+    var box = $('d-karte');
+    box.innerHTML = (akt.variante === 'B' ? karteB(box.clientWidth || 700) : karteA()) + LEGENDE;
+    zeigeInfo(null);
+  }
+  function zeigeInfo(k){
+    var el = $('d-karte-info');
+    if (!k) {
+      var n = schritte().length;
+      el.innerHTML = schrittNr >= n ? 'Alles auf einen Blick. Tippe auf eine Station, um etwas zu ändern.' : '';
+      return;
+    }
+    var a = antw(k);
+    el.innerHTML = '<b>' + esc(frageZu(k)) + '</b> ' + (a ? esc(kuerze(a, 220)) : '<em>noch offen</em>');
+  }
+  function springe(k){
+    var i = schrittIndex(k); if (i < 0 || !akt) return;
+    uebernehmeText(); schrittNr = i; zeigeSchritt(); speichern();
+    setTimeout(function(){ $('d-text').focus({preventScroll:true}); }, 30);
+  }
+  $('d-karte').addEventListener('click', function(e){ var n = e.target.closest('[data-k]'); if (n) springe(n.dataset.k); });
+  $('d-karte').addEventListener('keydown', function(e){
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var n = e.target.closest('g[data-k]'); if (n) { e.preventDefault(); springe(n.dataset.k); }
+  });
+  ['mouseover','focusin'].forEach(function(ev){
+    $('d-karte').addEventListener(ev, function(e){ var n = e.target.closest('[data-k]'); if (n && akt) zeigeInfo(n.dataset.k); });
+  });
+  $('d-karte').addEventListener('mouseleave', function(){ if (akt) zeigeInfo(null); });
+  window.addEventListener('resize', function(){
+    if (!akt || akt.variante !== 'B' || $('v-durchgang').hidden) return;
+    var art = ($('d-karte').clientWidth || 700) < 600 ? 'schmal' : 'breit';
+    if (art !== karteLayout) zeichneKarte();
+  });
+  function setzeKarteSichtbar(an){
+    $('d-karte-box').hidden = !an; $('d-karte-hinweis').style.visibility = an ? '' : 'hidden';
+    $('d-karte-knopf').textContent = an ? 'Karte ausblenden' : 'Karte einblenden';
+    $('d-karte-knopf').setAttribute('aria-expanded', an ? 'true' : 'false');
+  }
+  (function(){ var an = true; try { an = localStorage.getItem('gbd_karte') !== 'aus'; } catch(e){} setzeKarteSichtbar(an); })();
+  $('d-karte-knopf').addEventListener('click', function(){
+    var an = $('d-karte-box').hidden; setzeKarteSichtbar(an);
+    try { localStorage.setItem('gbd_karte', an ? 'an' : 'aus'); } catch(e){}
+    if (an) zeichneKarte();
+  });
+
+  /* Tabelle aller Themen einer Variante; die Zeile des offenen Durchgangs zeigt den Live-Stand */
+  function tabelleHTML(v, aktuell){
+    var spalten = SCHRITTE[v].filter(function(q){ return q.k !== 'titel'; });
+    var zeilen = eintraege.filter(function(e){ return e.daten && e.variante === v; }).map(function(e){
+      var live = aktuell && aktuell.id === e.id;
+      return {id:e.id, a:(live ? aktuell.daten.antworten : e.daten.antworten) || {}, g:e.geaendert, ist:live, frei:live ? aktuell.freigegeben : e.freigegeben};
+    });
+    if (aktuell && !aktuell.id && aktuell.variante === v) zeilen.unshift({id:'', a:aktuell.daten.antworten, g:null, ist:true, neu:true});
+    if (!zeilen.length) return '';
+    return '<div class="tab-wrap"><table class="themen" style="min-width:' + (170 + spalten.length * 135) + 'px"><thead><tr><th scope="col">Thema</th>' +
+      spalten.map(function(q){ return '<th scope="col">' + KURZNAME[q.k] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      zeilen.map(function(z){
+        return '<tr data-id="' + esc(z.id) + '" tabindex="0"' + (z.ist ? ' class="ist" aria-current="true"' : '') + '><th scope="row">' +
+          esc(kuerze(z.a.titel, 60) || 'Ohne Titel') + '<small>' + (z.neu ? 'neu' : datum(z.g)) + (z.frei ? ' · freigegeben' : '') + '</small></th>' +
+          spalten.map(function(q){
+            var a = String(z.a[q.k] || '').trim(), c = q.k === 'satz' ? ' class="c-satz"' : (q.k === 'neuer_satz' ? ' class="c-neu"' : '');
+            return '<td' + c + (a.length > 110 ? ' title="' + esc(a) + '"' : '') + '>' + (a ? esc(kuerze(a, 110)) : '<span class="offen">–</span>') + '</td>';
+          }).join('') + '</tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  function zeichneTabelle(){
+    if (!akt) return;
+    var t = tabelleHTML(akt.variante, akt), andere = eintraege.filter(function(e){ return e.daten && e.variante === akt.variante && e.id !== akt.id; }).length;
+    $('d-tabelle').innerHTML = t ? '<h2 class="tab-titel">Alle deine Themen · ' + VARIANTE_NAME[akt.variante] + '</h2>' + t +
+      '<p class="tab-hinweis">' + (andere ? 'Tippe auf eine Zeile, um den Durchgang zu öffnen. ' : '') + 'Die markierte Zeile ist der, an dem du gerade arbeitest.</p>' : '';
+  }
+  function tabellenKlick(e){
+    var tr = e.target.closest('tr[data-id]'); if (!tr) return;
+    var id = tr.dataset.id; if (!id || (akt && akt.id === id)) return;
+    var x = eintraege.filter(function(y){ return y.id === id; })[0]; if (!x || !x.daten) return;
+    var weiter = function(){ akt = null; oeffneDurchgang({id:x.id, variante:x.variante, daten:JSON.parse(JSON.stringify(x.daten)), freigegeben:x.freigegeben}); window.scrollTo(0, 0); };
+    if (akt) { uebernehmeText(); speichern().then(weiter); } else weiter();
+  }
+  $('d-tabelle').addEventListener('click', tabellenKlick);
+  $('d-tabelle').addEventListener('keydown', function(e){ if (e.key === 'Enter') tabellenKlick(e); });
 
   /* ---------------- Einstellungen ---------------- */
   $('k-einst').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(function(){ akt = null; zeige('v-einst'); }); });
