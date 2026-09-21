@@ -217,7 +217,8 @@
   <span class="brand"><b>Sandra Denk</b><span>Ganz bei dir</span></span>
   <span class="kopf-rechts">
     <button class="link-knopf" id="k-einst" hidden>Einstellungen</button>
-    <button class="link-knopf" id="k-sperren" hidden>Sperren</button>
+    <button class="link-knopf" id="k-sperren" hidden title="Bleibt angemeldet, fragt aber wieder nach deiner Passphrase">Sperren</button>
+    <button class="link-knopf" id="k-ab" hidden>Abmelden</button>
     <a href="index.html">Zur Startseite</a>
   </span>
 </div></header>
@@ -550,6 +551,7 @@
     Array.prototype.forEach.call(document.querySelectorAll('.ansicht'), function(s){ s.hidden = s.id !== id; });
     var drin = !!dk && id !== 'v-entsperren';
     $('k-sperren').hidden = !drin; $('k-einst').hidden = !drin || id === 'v-einst';
+    $('k-ab').hidden = !info || id === 'v-anmelden';
     window.scrollTo(0, 0);
   }
   function setzeVorname(){ Array.prototype.forEach.call(document.querySelectorAll('[data-vorname]'), function(e){ e.textContent = (info && info.vorname) || ''; }); }
@@ -998,6 +1000,7 @@
       .catch(function(err){ f.textContent = err.message; b.disabled = false; });
   });
   $('s-ab').addEventListener('click', abmelden);
+  $('k-ab').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(abmelden, abmelden); });
   $('k-sperren').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(sperren); });
 
   function sperren(){ dk = null; eintraege = []; akt = null; if (info) { setzeVorname(); zeige('v-entsperren'); } else zeige('v-anmelden'); }

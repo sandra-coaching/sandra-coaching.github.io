@@ -23,9 +23,6 @@
   .btn-2{background:var(--paper);color:var(--clay-dark);border:1px solid var(--line)}
   .btn-2:hover{background:var(--sand)}
   .btn-klein{padding:6px 12px;font-size:13.5px}
-  .btn-loesch{background:var(--paper);color:#9B3B2E;border:1px solid #E3C6C0}
-  .btn-loesch:hover{background:#F6E9E6;border-color:#C98F84}
-  .btn-loesch:disabled{opacity:.5;cursor:default}
   input,select,textarea{border:1px solid var(--line);border-radius:10px;padding:9px 12px;
        font:inherit;background:var(--paper);color:var(--ink)}
   .karte{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:18px}
@@ -118,7 +115,6 @@
   .m-zu{background:none;border:0;font-size:26px;line-height:1;color:var(--muted);cursor:pointer}
   .modal-inhalt{padding:18px 22px 20px}
   .modal-fuss{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px;margin-top:4px}
-  .fuss-links{margin-right:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .m-art{margin-bottom:14px}
   .m-lbl{font-size:14px;color:var(--muted);display:block;margin-bottom:4px}
   .m-suche{position:relative;flex:1}
@@ -201,7 +197,6 @@
       <button data-tab="kunden">Kunden</button>
       <button data-tab="rechnungen">Rechnungen</button>
       <button data-tab="pakete">Gebuchte Pakete</button>
-      <button data-tab="mitglieder">Mitglieder</button>
       <button data-tab="einst">Einstellungen</button>
       <button data-tab="aufgaben">Aufgaben</button>
     </div>
@@ -266,17 +261,7 @@
           <label>Titel<input id="an-titel" maxlength="120" required placeholder="z. B. Einzelsitzung"></label>
           <label class="breit">Beschreibung (erscheint auf der Seite)<textarea id="an-beschr" rows="2" maxlength="400"></textarea></label>
           <label>Dauer pro Sitzung (Minuten)<input id="an-dauer" type="number" min="15" max="240" step="5" required></label>
-          <label>Preis
-            <span class="reihe" style="flex-wrap:nowrap">
-              <select id="an-preisart" style="flex:none;width:auto">
-                <option value="fest">Festpreis</option>
-                <option value="ab">ab</option>
-                <option value="aufwand">nach Aufwand</option>
-              </select>
-              <input id="an-preis" inputmode="decimal" placeholder="z. B. 90 oder 89,50">
-            </span>
-            <small class="hinweis" id="an-preis-hilfe">Leer = kein Preis anzeigen, 0 = kostenlos</small>
-          </label>
+          <label>Preis in € (leer = kein Preis anzeigen, 0 = kostenlos)<input id="an-preis" inputmode="decimal" placeholder="z. B. 90 oder 89,50"></label>
           <label class="haken"><input type="checkbox" id="an-paket"> Das ist ein Paket (mehrere Sitzungen)</label>
           <label id="an-anz-wrap">Anzahl Sitzungen im Paket<input id="an-anz" type="number" min="2" max="50"></label>
           <label class="haken"><input type="checkbox" id="an-aktiv" checked> Eingeschaltet (Sichtbarkeit für Kundinnen steuert die Kategorie)</label>
@@ -378,62 +363,6 @@
       <div class="karte">
         <h2>Pakete</h2>
         <table><thead><tr><th>Kundin</th><th>Paket</th><th>Code</th><th>Gebucht</th><th>Status</th></tr></thead><tbody id="p-liste"></tbody></table>
-      </div>
-    </section>
-
-    <!-- Mitglieder -->
-    <section id="t-mitglieder" hidden>
-      <div class="karte">
-        <h2>Zugang freischalten</h2>
-        <p class="hinweis" style="margin-top:-4px">Der Mitgliederbereich gehört zum Paket „Prozess: Muster lösen". Der Kunde braucht eine E-Mail-Adresse.
-          Den Code siehst du nur einmal – gib ihn gleich weiter.</p>
-        <div class="m-suche" style="max-width:520px;margin-top:10px"><input id="mg-suche" placeholder="– Kunden suchen (Name, Telefon, E-Mail) –" autocomplete="off">
-          <div class="m-treffer" id="mg-treffer" hidden></div></div>
-        <p class="fehler" id="mg-fehler"></p>
-        <div id="mg-code-box" hidden style="margin-top:14px;background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:16px 18px">
-          <p class="hinweis" style="margin:0 0 6px">Zugangscode für <b id="mg-code-name"></b> – nur jetzt sichtbar:</p>
-          <p id="mg-code" style="font-family:ui-monospace,Menlo,monospace;font-size:22px;letter-spacing:.06em;margin:0;user-select:all"></p>
-          <p class="hinweis" style="margin:12px 0 6px">Nachricht zum Weitergeben:</p>
-          <textarea id="mg-nachricht" rows="7" readonly style="width:100%;font-size:14px"></textarea>
-          <div class="reihe" style="margin-top:8px"><button type="button" class="btn btn-2 btn-klein" id="mg-kopieren">Nachricht kopieren</button>
-            <button type="button" class="btn btn-2 btn-klein" id="mg-code-zu">Fertig</button></div>
-        </div>
-      </div>
-
-      <div class="karte">
-        <h2>Mitglieder</h2>
-        <table><thead><tr><th>Kunde</th><th>Status</th><th>Durchgänge</th><th>Freigaben</th><th>Zuletzt da</th><th></th></tr></thead><tbody id="mg-liste"></tbody></table>
-      </div>
-
-      <div class="karte">
-        <h2>Freigegebene Durchgänge</h2>
-        <p class="hinweis" style="margin-top:-4px">Hier liest du nur, was Kunden ausdrücklich für dich freigegeben haben. Alles andere kann niemand lesen – auch die Technik nicht.</p>
-
-        <form id="mg-einrichten" class="formular" hidden>
-          <p class="breit">Um Freigaben lesen zu können, brauchst du einen eigenen Schlüssel. Er wird mit einer <b>Passphrase</b> geschützt,
-            die nur du kennst. Wer die Verwaltung sonst öffnen kann, kann Freigaben ohne sie nicht lesen.</p>
-          <p class="breit hinweis">Vergisst du sie, lässt sich ein neuer Schlüssel erzeugen – dann müssen die Kunden ihre Durchgänge neu freigeben.</p>
-          <label>Passphrase (mind. 12 Zeichen)<input type="password" id="mg-p1" autocomplete="new-password"></label>
-          <label>Noch einmal<input type="password" id="mg-p2" autocomplete="new-password"></label>
-          <div class="breit reihe"><button class="btn">Schlüssel einrichten</button></div>
-          <p class="breit fehler" id="mg-e-fehler"></p>
-        </form>
-
-        <form id="mg-entsperren" class="formular" hidden>
-          <label>Deine Passphrase für Freigaben<input type="password" id="mg-pass" autocomplete="current-password"></label>
-          <div class="reihe" style="align-self:end"><button class="btn">Öffnen</button></div>
-          <p class="breit fehler" id="mg-u-fehler"></p>
-        </form>
-
-        <div id="mg-freigaben" hidden>
-          <div class="reihe" style="justify-content:space-between;margin-bottom:6px">
-            <span class="hinweis" id="mg-f-anzahl"></span>
-            <button type="button" class="btn btn-2 btn-klein" id="mg-sperren">Wieder sperren</button>
-          </div>
-          <div id="mg-f-liste"></div>
-        </div>
-        <p style="margin-top:18px"><button type="button" class="btn btn-loesch btn-klein" id="mg-neu-schluessel" hidden>Passphrase vergessen – neuen Schlüssel erzeugen</button></p>
-        <p class="fehler" id="mg-n-fehler"></p>
       </div>
     </section>
 
@@ -574,7 +503,14 @@
       .then(function(j){ merk(j); return start(); })
       .catch(function(err){ $('l-fehler').textContent = err.message; });
   });
-  $('b-logout').addEventListener('click', function(){ merk(null); location.reload(); });
+  $('b-logout').addEventListener('click', function(){
+    var t = sitzung && sitzung.access_token;
+    merk(null); try{ sessionStorage.clear(); }catch(e){}
+    $('v-app').hidden = true; $('v-login').hidden = false; $('l-pw').value = '';
+    var neu = function(){ location.replace(location.pathname); };
+    if (!t) return neu();
+    fetch(BASE + '/auth/v1/logout', {method:'POST', headers:{'apikey':KEY, 'Authorization':'Bearer ' + t}}).then(neu, neu);
+  });
 
   function start(){
     return rpc('coaching_ist_admin').then(function(ok){
@@ -587,8 +523,8 @@
   document.querySelectorAll('.tabs button').forEach(function(b){
     b.addEventListener('click', function(){
       document.querySelectorAll('.tabs button').forEach(function(x){ x.classList.toggle('an', x===b); });
-      ['kalender','zeiten','angebote','kunden','rechnungen','pakete','mitglieder','einst','aufgaben'].forEach(function(t){ $('t-'+t).hidden = t !== b.dataset.tab; });
-      ({kalender:ladeWoche, zeiten:ladeZeiten, angebote:ladeAngebote, kunden:ladeKunden, rechnungen:ladeRechnungen, pakete:ladePakete, mitglieder:ladeMitglieder, einst:function(){ ladeEinst(); ladeRechnungsdaten(); ladeVorlage(); }, aufgaben:ladeAufgaben})[b.dataset.tab]();
+      ['kalender','zeiten','angebote','kunden','rechnungen','pakete','einst','aufgaben'].forEach(function(t){ $('t-'+t).hidden = t !== b.dataset.tab; });
+      ({kalender:ladeWoche, zeiten:ladeZeiten, angebote:ladeAngebote, kunden:ladeKunden, rechnungen:ladeRechnungen, pakete:ladePakete, einst:function(){ ladeEinst(); ladeRechnungsdaten(); ladeVorlage(); }, aufgaben:ladeAufgaben})[b.dataset.tab]();
     });
   });
 
@@ -696,7 +632,7 @@
         inhalt += '<button class="kal-ev st-'+t.status+'" data-id="'+t.id+'" style="top:'+((x.a-vonStd*60)*PX)+'px;height:'+h+'px;'+
           'left:calc('+(w*x.bahn)+'% + 2px);width:calc('+w+'% - 4px);background:'+terminFarbe(t)+';color:'+textFarbe(terminFarbe(t))+'" title="'+esc(t.name+' – '+t.angebot)+'">'+
           '<b>'+uhr(new Date(t.beginn))+' – '+uhr(new Date(t.ende))+'</b><span>'+esc(t.name)+'</span><span class="klein">'+esc(t.angebot)+
-          (preisText(t.preis_cent,t.preis_art)?' – '+preisText(t.preis_cent,t.preis_art):'')+'</span>'+(t.status!=='abgesagt'?'<span class="kal-griff" title="Ziehen, um die Dauer zu ändern"></span>':'')+'</button>';
+          (t.preis_cent!=null?' – '+euro(t.preis_cent):'')+'</span>'+(t.status!=='abgesagt'?'<span class="kal-griff" title="Ziehen, um die Dauer zu ändern"></span>':'')+'</button>';
       });
       if (k === heute) { var jetzt = minuten(new Date()); if (jetzt >= vonStd*60 && jetzt <= bisStd*60) inhalt += '<div class="kal-jetzt" style="top:'+((jetzt-vonStd*60)*PX)+'px"></div>'; }
       spalten += '<div class="kal-spalte'+(k===heute?' heute':'')+'" data-tag="'+k+'" style="height:'+hoehe+'px">'+inhalt+'</div>';
@@ -815,8 +751,7 @@
     alleAngs.forEach(function(a,i){ if (!a.aktiv) return;
       var k = (a.kategorie || 'Ohne Kategorie') + (a.fuer_kundinnen ? '' : ' – nur intern');
       if (k !== letzte) { html += (letzte!==null?'</optgroup>':'') + '<optgroup label="'+esc(k)+'">'; letzte = k; }
-      var pt = preisText(a.preis_cent, a.preis_art);
-      html += '<option value="'+i+'">'+esc(a.titel)+' · '+dauerText(a.dauer_min)+(pt?' · '+pt:'')+'</option>';
+      html += '<option value="'+i+'">'+esc(a.titel)+' · '+dauerText(a.dauer_min)+(a.preis_cent!=null?' · '+euro(a.preis_cent):'')+'</option>';
     });
     return html + (letzte!==null?'</optgroup>':'');
   }
@@ -845,14 +780,10 @@
         '<label class="breit">Interne Notiz<textarea id="m-notiz" rows="2">'+esc(t&&t.notiz||'')+'</textarea></label>'+
         '<div class="breit"><span class="m-lbl">Farbe</span>'+farbAuswahl('m-farbe', t ? t.farbe : '', true)+'</div>'+
         '<div class="breit modal-fuss">'+
-          (t ? '<span class="fuss-links">'+
-                 (t.rechnung_id ? '<span class="hinweis">abgerechnet</span>'
-                                : t.status!=='abgesagt' ? '<button type="button" class="btn btn-2 btn-klein" id="m-rechnung">Rechnung</button>' : '')+
-                 (t.rechnung_id ? '' : '<button type="button" class="btn btn-loesch btn-klein" id="m-loeschen">Termin löschen</button>')+
-               '</span>'+
-               (t.status==='gebucht'?'<button type="button" class="btn btn-2 btn-klein" data-st="bestaetigt">Bestätigen</button>':'')+
+          (t ? (t.status==='gebucht'?'<button type="button" class="btn btn-2 btn-klein" data-st="bestaetigt">Bestätigen</button>':'')+
                '<button type="button" class="btn btn-2 btn-klein" data-st="stattgefunden">Hat stattgefunden</button>'+
-               (t.status!=='abgesagt'?'<button type="button" class="btn btn-2 btn-klein" data-st="abgesagt">Absagen</button>':'') : '')+
+               (t.status!=='abgesagt'?'<button type="button" class="btn btn-2 btn-klein" data-st="abgesagt">Absagen</button>':'')+
+               (t.rechnung_id ? '<span class="hinweis" style="margin-right:auto;align-self:center">abgerechnet</span>' : t.status!=='abgesagt' ? '<button type="button" class="btn btn-2 btn-klein" id="m-rechnung" style="margin-right:auto">Rechnung</button>' : '<span style="margin-right:auto"></span>') : '')+
           '<button class="btn">Speichern</button><button type="button" class="btn btn-2" data-zu>Schließen</button></div>'+
         '<p class="breit fehler" id="m-fehler"></p></form>'+
       '<form id="m-sperre" class="formular" hidden>'+
@@ -882,22 +813,6 @@
         if (b.dataset.st === 'abgesagt' && !b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Wirklich absagen?'; return; }
         rpc('coaching_admin_termin_aendern', {p_id:t.id, p_status:b.dataset.st}).then(function(){ schliesseFenster(); ladeWoche(); });
       }; });
-      /* Löschen entfernt den Termin endgültig. Absagen ist der Normalfall – deshalb
-         fragt der Knopf beim ersten Klick nach. */
-      if ($('m-loeschen')) $('m-loeschen').onclick = function(){
-        var b = $('m-loeschen'), f = $('m-fehler');
-        if (!b.dataset.sicher) {
-          b.dataset.sicher = '1'; b.textContent = 'Wirklich endgültig löschen?';
-          f.className = 'breit hinweis';
-          f.textContent = 'Der Termin ist danach weg. Soll er nur nicht mehr stattfinden, nimm „Absagen" – dann bleibt er in der Übersicht.';
-          return;
-        }
-        b.disabled = true;
-        rpc('coaching_admin_termin_loeschen', {p_id:t.id})
-          .then(function(){ schliesseFenster(); ladeWoche(); })
-          .catch(function(err){ b.disabled = false; b.dataset.sicher = ''; b.textContent = 'Termin löschen';
-                                f.className = 'breit fehler'; f.textContent = err.message; });
-      };
     }
     $('m-inhalt').querySelectorAll('[data-zu]').forEach(function(b){ b.onclick = schliesseFenster; });
     $('m-inhalt').querySelectorAll('[data-typ]').forEach(function(b){ b.onclick = function(){
@@ -975,7 +890,7 @@
   function zeigeDetail(t){
     oeffne(t.name,
       '<dl class="m-dl"><dt>Wann</dt><dd>'+langDatum(new Date(t.beginn))+', '+uhr(new Date(t.beginn))+'–'+uhr(new Date(t.ende))+' Uhr</dd>'+
-      '<dt>Dienstleistung</dt><dd>'+esc(t.angebot)+(preisText(t.preis_cent,t.preis_art)?' · '+preisText(t.preis_cent,t.preis_art):'')+(t.paket_stand?'<br><small>Paket '+esc(t.paketcode)+': '+esc(t.paket_stand)+'</small>':'')+'</dd>'+
+      '<dt>Dienstleistung</dt><dd>'+esc(t.angebot)+(t.preis_cent!=null?' · '+euro(t.preis_cent):'')+(t.paket_stand?'<br><small>Paket '+esc(t.paketcode)+': '+esc(t.paket_stand)+'</small>':'')+'</dd>'+
       '<dt>Art</dt><dd>'+(t.art==='online'?'Online (Zoom)':'Vor Ort')+'</dd>'+
       '<dt>E-Mail</dt><dd>'+(t.email?'<a href="mailto:'+esc(t.email)+'">'+esc(t.email)+'</a>':'–')+'</dd>'+
       (t.telefon?'<dt>Telefon</dt><dd>'+esc(t.telefon)+'</dd>':'')+
@@ -1038,159 +953,6 @@
     });
   }
 
-  /* ================= Mitglieder ================= */
-  /* Die Einträge sind Ende-zu-Ende verschlüsselt. Freigaben liest nur, wer Sandras
-     Passphrase kennt; der private Schlüssel liegt nur entschlüsselt im Arbeitsspeicher. */
-  var MG = (function(){
-    var enc = new TextEncoder(), dec = new TextDecoder(), sub = window.crypto && crypto.subtle;
-    function b64(buf){ var u = new Uint8Array(buf), s = ''; for (var i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); }
-    function unb64(s){ var t = atob(s), u = new Uint8Array(t.length); for (var i = 0; i < t.length; i++) u[i] = t.charCodeAt(i); return u; }
-    function zufall(n){ return crypto.getRandomValues(new Uint8Array(n)); }
-    function kek(pass, salt){
-      return sub.importKey('raw', enc.encode(String(pass).normalize('NFKC')), 'PBKDF2', false, ['deriveKey']).then(function(b){
-        return sub.deriveKey({name:'PBKDF2', salt:salt, iterations:600000, hash:'SHA-256'}, b, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']); });
-    }
-    return {
-      erzeugen: function(pass){
-        var salt = zufall(16), iv = zufall(12), jwk;
-        return sub.generateKey({name:'RSA-OAEP', modulusLength:3072, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256'}, true, ['wrapKey','unwrapKey'])
-          .then(function(p){ return Promise.all([sub.exportKey('jwk', p.publicKey), sub.exportKey('pkcs8', p.privateKey)]); })
-          .then(function(r){ jwk = r[0]; return kek(pass, salt).then(function(k){ return sub.encrypt({name:'AES-GCM', iv:iv}, k, r[1]); }); })
-          .then(function(c){ return {oeffentlich: JSON.stringify(jwk), privat: JSON.stringify({v:1, salt:b64(salt), iv:b64(iv), c:b64(c)})}; });
-      },
-      oeffnen: function(privat, pass){
-        var h = JSON.parse(privat);
-        return kek(pass, unb64(h.salt)).then(function(k){ return sub.decrypt({name:'AES-GCM', iv:unb64(h.iv)}, k, unb64(h.c)); })
-          .then(function(pk){ return sub.importKey('pkcs8', pk, {name:'RSA-OAEP', hash:'SHA-256'}, false, ['unwrapKey']); });
-      },
-      lesen: function(priv, text){
-        var f = JSON.parse(text);
-        return sub.unwrapKey('raw', unb64(f.k), priv, {name:'RSA-OAEP'}, {name:'AES-GCM', length:256}, false, ['decrypt'])
-          .then(function(k){ return sub.decrypt({name:'AES-GCM', iv:unb64(f.iv)}, k, unb64(f.c)); })
-          .then(function(p){ return JSON.parse(dec.decode(p)); });
-      }
-    };
-  })();
-  var MG_FRAGE = {widerfahren:'Was ist dir widerfahren?', bei_mir:'Was davon liegt bei dir?', anerkennen:'Was darf wehtun?',
-    fakt:'Was ist passiert?', satz:'Was sagst du dir (über dich)?', gefuehl:'Was fühlst du dabei?', tun:'Was machst du dann?',
-    ergebnis:'Was kommt dabei heraus?', neuer_satz:'Neuer Satz', brauchen:'Was brauchst du jetzt?'};
-  var MG_REIHE = {B:['widerfahren','bei_mir','anerkennen','satz','gefuehl','tun','ergebnis','neuer_satz','brauchen'], A:['fakt','satz','gefuehl','tun','ergebnis','neuer_satz']};
-  var mgPriv = null, mgSchluessel = null, mgListe = [], mgSuchTimer = null;
-
-  function ladeMitglieder(){
-    rpc('coaching_admin_mitglieder').then(function(l){
-      mgListe = l;
-      $('mg-liste').innerHTML = l.length ? l.map(function(m){
-        var st = !m.aktiv ? '<span class="hinweis">gesperrt</span>' : m.eingerichtet ? 'aktiv' : '<span class="hinweis">wartet auf erste Anmeldung</span>';
-        return '<tr><td><b>'+esc(m.name)+'</b><br><small class="hinweis">'+esc(m.email||'')+'</small></td><td>'+st+'</td><td>'+m.eintraege+'</td><td>'+m.freigaben+'</td>'+
-          '<td>'+(m.letzte_anmeldung ? datumDE(isoTag(new Date(m.letzte_anmeldung))) : '<span class="hinweis">noch nie</span>')+'</td>'+
-          '<td style="white-space:nowrap"><button class="btn btn-2 btn-klein" data-mg-code="'+m.id+'">Neuer Code</button> '+
-          '<button class="btn btn-2 btn-klein" data-mg-aktiv="'+m.id+'" data-wert="'+(!m.aktiv)+'">'+(m.aktiv?'Sperren':'Entsperren')+'</button> '+
-          '<button class="btn btn-loesch btn-klein" data-mg-loeschen="'+m.id+'">Löschen</button></td></tr>';
-      }).join('') : '<tr><td colspan="6" class="hinweis">Noch niemand freigeschaltet.</td></tr>';
-    });
-    rpc('coaching_admin_freigabeschluessel').then(function(s){ mgSchluessel = s; mgZeigeFreigabe(); });
-  }
-  function mgZeigeFreigabe(){
-    var hat = !!mgSchluessel, offen = !!mgPriv;
-    $('mg-einrichten').hidden = hat; $('mg-entsperren').hidden = !hat || offen;
-    $('mg-freigaben').hidden = !offen; $('mg-neu-schluessel').hidden = !hat || offen;
-    if (offen) mgLadeFreigaben();
-  }
-  function mgCodeZeigen(r, name){
-    $('mg-code-name').textContent = name; $('mg-code').textContent = r.code;
-    var url = location.origin + '/mitglieder.html', vn = String(name||'').trim().split(' ')[0];
-    $('mg-nachricht').value = 'Hallo '+vn+',\n\ndein Zugang zum Mitgliederbereich von „Ganz bei dir" ist freigeschaltet.\n\n'+
-      'Adresse: '+url+'\nE-Mail: '+r.email+'\nZugangscode: '+r.code+'\n\n'+
-      'Beim ersten Mal wählst du eine eigene Passphrase. Sie bleibt nur bei dir – ich kann deine Einträge nicht lesen, außer denen, die du mir ausdrücklich freigibst.\n\nSandra';
-    $('mg-code-box').hidden = false;
-  }
-  $('mg-suche').addEventListener('input', function(){
-    var q = this.value.trim(); clearTimeout(mgSuchTimer); $('mg-fehler').textContent = '';
-    if (q.length < 2) { $('mg-treffer').hidden = true; return; }
-    mgSuchTimer = setTimeout(function(){
-      rpc('coaching_admin_kundinnen', {p_suche:q}).then(function(liste){
-        $('mg-treffer').innerHTML = liste.length ? liste.map(function(k,i){
-          return '<button type="button" data-k="'+i+'"><b>'+esc(k.name)+'</b> <small>'+esc(k.email||'keine E-Mail')+'</small></button>'; }).join('')
-          : '<div class="hinweis" style="padding:8px 10px">Kein Kunde gefunden.</div>';
-        $('mg-treffer').hidden = false;
-        $('mg-treffer').querySelectorAll('[data-k]').forEach(function(b){ b.onclick = function(){
-          var k = liste[+b.dataset.k]; $('mg-treffer').hidden = true; $('mg-suche').value = '';
-          rpc('coaching_admin_mitglied_freischalten', {p_kundin_id:k.id})
-            .then(function(r){ mgCodeZeigen(r, k.name); ladeMitglieder(); })
-            .catch(function(err){ $('mg-fehler').textContent = err.message; });
-        }; });
-      });
-    }, 250);
-  });
-  $('mg-kopieren').addEventListener('click', function(){
-    var b = this; (navigator.clipboard ? navigator.clipboard.writeText($('mg-nachricht').value) : Promise.reject())
-      .then(function(){ b.textContent = 'Kopiert'; setTimeout(function(){ b.textContent = 'Nachricht kopieren'; }, 1800); })
-      .catch(function(){ $('mg-nachricht').select(); });
-  });
-  $('mg-code-zu').addEventListener('click', function(){ $('mg-code-box').hidden = true; $('mg-code').textContent = ''; $('mg-nachricht').value = ''; });
-  $('mg-liste').addEventListener('click', function(e){
-    var b = e.target.closest('button'); if (!b) return;
-    var m = mgListe.filter(function(x){ return x.id === (b.dataset.mgCode || b.dataset.mgAktiv || b.dataset.mgLoeschen); })[0]; if (!m) return;
-    if (b.dataset.mgCode) {
-      if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Alter Code wird ungültig – sicher?'; return; }
-      rpc('coaching_admin_mitglied_neuer_code', {p_id:m.id}).then(function(r){ mgCodeZeigen(r, m.name); ladeMitglieder(); window.scrollTo({top:0, behavior:'smooth'}); });
-    } else if (b.dataset.mgAktiv) {
-      rpc('coaching_admin_mitglied_aktiv', {p_id:m.id, p_aktiv: b.dataset.wert === 'true'}).then(ladeMitglieder);
-    } else if (b.dataset.mgLoeschen) {
-      if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Alle '+m.eintraege+' Durchgänge endgültig löschen?'; return; }
-      rpc('coaching_admin_mitglied_loeschen', {p_id:m.id}).then(ladeMitglieder);
-    }
-  });
-  $('mg-einrichten').addEventListener('submit', function(e){
-    e.preventDefault(); var f = $('mg-e-fehler'), btn = this.querySelector('button'); f.textContent = '';
-    var p1 = $('mg-p1').value, p2 = $('mg-p2').value;
-    if (p1.length < 12) { f.textContent = 'Bitte mindestens 12 Zeichen.'; return; }
-    if (p1 !== p2) { f.textContent = 'Die beiden Eingaben stimmen nicht überein.'; return; }
-    btn.disabled = true; btn.textContent = 'Schlüssel wird erzeugt …';
-    var ersetzen = !!mgSchluessel;
-    MG.erzeugen(p1).then(function(k){ return rpc('coaching_admin_freigabeschluessel_setzen', {p_oeffentlich:k.oeffentlich, p_privat:k.privat, p_ersetzen:ersetzen}).then(function(){ return k; }); })
-      .then(function(k){ $('mg-p1').value = $('mg-p2').value = ''; mgSchluessel = {oeffentlich:k.oeffentlich, privat:k.privat}; return MG.oeffnen(k.privat, p1); })
-      .then(function(priv){ mgPriv = priv; mgZeigeFreigabe(); ladeMitglieder(); })
-      .catch(function(err){ f.textContent = err.message || 'Das hat nicht geklappt.'; })
-      .then(function(){ btn.disabled = false; btn.textContent = 'Schlüssel einrichten'; });
-  });
-  $('mg-entsperren').addEventListener('submit', function(e){
-    e.preventDefault(); var f = $('mg-u-fehler'), btn = this.querySelector('button'); f.textContent = '';
-    btn.disabled = true; btn.textContent = 'Wird geöffnet …';
-    MG.oeffnen(mgSchluessel.privat, $('mg-pass').value)
-      .then(function(priv){ mgPriv = priv; $('mg-pass').value = ''; mgZeigeFreigabe(); })
-      .catch(function(){ f.textContent = 'Die Passphrase stimmt nicht.'; })
-      .then(function(){ btn.disabled = false; btn.textContent = 'Öffnen'; });
-  });
-  $('mg-sperren').addEventListener('click', function(){ mgPriv = null; $('mg-f-liste').innerHTML = ''; mgZeigeFreigabe(); });
-  $('mg-neu-schluessel').addEventListener('click', function(){
-    var b = this;
-    if (!b.dataset.sicher) { b.dataset.sicher = '1'; b.textContent = 'Alle bisherigen Freigaben werden zurückgesetzt – trotzdem?';
-      $('mg-n-fehler').textContent = 'Die Kunden müssen ihre Durchgänge danach neu freigeben.'; return; }
-    delete b.dataset.sicher; b.textContent = 'Passphrase vergessen – neuen Schlüssel erzeugen'; $('mg-n-fehler').textContent = '';
-    $('mg-entsperren').hidden = true; $('mg-einrichten').hidden = false; b.hidden = true; $('mg-p1').focus();
-  });
-  function mgLadeFreigaben(){
-    rpc('coaching_admin_freigaben').then(function(l){
-      $('mg-f-anzahl').textContent = l.length === 1 ? '1 freigegebener Durchgang' : l.length + ' freigegebene Durchgänge';
-      if (!l.length) { $('mg-f-liste').innerHTML = '<p class="hinweis">Noch nichts freigegeben.</p>'; return; }
-      return Promise.all(l.map(function(x){ return MG.lesen(mgPriv, x.freigabe).then(function(d){ return {x:x, d:d}; }).catch(function(){ return {x:x, d:null}; }); }))
-        .then(function(r){
-          $('mg-f-liste').innerHTML = r.map(function(o){
-            var x = o.x, d = o.d, kopf = '<b>'+esc(x.name)+'</b> · '+datumDE(isoTag(new Date(x.geaendert_am)));
-            if (!d) return '<details class="karte" style="margin-top:10px;padding:14px 18px"><summary>'+kopf+' – <span class="hinweis">nicht lesbar</span></summary></details>';
-            var a = d.antworten || {}, reihe = MG_REIHE[d.variante || x.variante] || [];
-            return '<details class="karte" style="margin-top:10px;padding:14px 18px"><summary>'+kopf+' – '+esc(a.titel || 'Ohne Titel')+
-              ' <span class="hinweis">('+(x.variante === 'A' ? 'kurz' : 'ausführlich')+')</span></summary>'+
-              '<dl style="margin-top:10px">'+reihe.filter(function(k){ return a[k]; }).map(function(k){
-                return '<dt class="hinweis" style="margin-top:10px;font-size:13px">'+esc(MG_FRAGE[k])+'</dt><dd style="white-space:pre-wrap;margin:2px 0 0">'+esc(a[k])+'</dd>';
-              }).join('')+'</dl></details>';
-          }).join('');
-        });
-    });
-  }
-
   /* Einstellungen */
   function ladeEinst(){
     rpc('coaching_admin_einstellungen').then(function(e){
@@ -1209,12 +971,6 @@
   /* Angebote & Preise */
   var kats = [], angs = [], anEdit = null;
   function euro(c){ return c == null ? '' : c === 0 ? 'kostenlos' : (c/100).toLocaleString('de-DE',{style:'currency',currency:'EUR'}); }
-  /* Preis so, wie er angezeigt wird: fest, „ab …" oder „nach Aufwand" */
-  function preisText(c, art){
-    if (art === 'aufwand') return 'nach Aufwand';
-    if (art === 'ab') return c ? 'ab ' + euro(c) : '';
-    return euro(c);
-  }
   function dauerText(min){ var h = Math.floor(min/60), m = min%60; return h ? h+' Std.'+(m?' '+m+' Min.':'') : m+' Min.'; }
   function angDauer(a){ return a.ist_paket ? a.anzahl_sitzungen+' × '+a.dauer_min+' Min. (gesamt '+dauerText(a.anzahl_sitzungen*a.dauer_min)+')' : a.dauer_min+' Min.'; }
   function ladeAngebote(){
@@ -1229,10 +985,10 @@
       return '<h3 style="font-size:14px;color:var(--muted);margin:16px 0 4px">'+esc(g)+'</h3>'+
         '<table><thead><tr><th>Angebot</th><th>Dauer</th><th>Preis</th><th>Status</th><th></th></tr></thead><tbody>'+
         gruppen[g].map(function(a){
-          var pps = a.ist_paket && a.preis_cent && a.preis_art === 'fest' ? '<br><small class="hinweis">'+euro(Math.round(a.preis_cent/a.anzahl_sitzungen))+' pro Sitzung</small>' : '';
+          var pps = a.ist_paket && a.preis_cent ? '<br><small class="hinweis">'+euro(Math.round(a.preis_cent/a.anzahl_sitzungen))+' pro Sitzung</small>' : '';
           return '<tr><td><b>'+esc(a.titel)+'</b>'+(a.ist_paket?' <span class="wer">Paket</span>':'')+
             (a.beschreibung?'<br><small class="hinweis">'+esc(a.beschreibung)+'</small>':'')+'</td>'+
-            '<td>'+angDauer(a)+'</td><td>'+(a.preis_cent==null&&a.preis_art!=='aufwand'?'<span class="hinweis">kein Preis</span>':preisText(a.preis_cent,a.preis_art))+pps+'</td>'+
+            '<td>'+angDauer(a)+'</td><td>'+(a.preis_cent==null?'<span class="hinweis">kein Preis</span>':euro(a.preis_cent))+pps+'</td>'+
             '<td>'+(!a.aktiv?'<span class="hinweis">ausgeschaltet</span>':a.fuer_kundinnen?'Kundinnen buchen selbst':'<span class="wer wer-Sandra" style="margin:0">nur intern</span>')+(a.termine?'<br><small class="hinweis">'+a.termine+' Termine</small>':'')+'</td>'+
             '<td><button class="btn btn-2 btn-klein" data-bearb="'+a.id+'">Bearbeiten</button></td></tr>';
         }).join('')+'</tbody></table>';
@@ -1248,7 +1004,6 @@
     $('an-kat').innerHTML = katOptionen(a ? a.kategorie_id : (kats[0]&&kats[0].id));
     $('an-titel').value = a ? a.titel : ''; $('an-beschr').value = a && a.beschreibung || '';
     $('an-dauer').value = a ? a.dauer_min : 60;
-    $('an-preisart').value = a && a.preis_art || 'fest';
     $('an-preis').value = a && a.preis_cent != null ? String(a.preis_cent/100).replace('.',',') : '';
     $('an-paket').checked = !!(a && a.ist_paket); $('an-anz').value = a && a.ist_paket ? a.anzahl_sitzungen : 5;
     $('an-aktiv').checked = a ? a.aktiv : true; $('an-sort').value = a ? a.sortierung : 0;
@@ -1263,18 +1018,12 @@
   }
   function vorschau(){
     var paket = $('an-paket').checked; $('an-anz-wrap').hidden = !paket;
-    var art = $('an-preisart').value, aufwand = art === 'aufwand';
-    $('an-preis').disabled = aufwand;
-    $('an-preis').placeholder = aufwand ? '–' : art === 'ab' ? 'Mindestpreis, z. B. 50' : 'z. B. 90 oder 89,50';
-    $('an-preis-hilfe').textContent = aufwand ? 'Der Betrag wird erst auf der Rechnung festgelegt.'
-      : art === 'ab' ? 'Angezeigt als „ab …". Auf der Rechnung trägst du den tatsächlichen Betrag ein.'
-      : 'Leer = kein Preis anzeigen, 0 = kostenlos';
     var a = {ist_paket:paket, anzahl_sitzungen:+$('an-anz').value||0, dauer_min:+$('an-dauer').value||0};
-    var p = aufwand ? null : preisCent(), txt = aufwand ? 'nach Aufwand' : (p==null||isNaN(p)) ? '' : preisText(p, art);
+    var p = preisCent();
     $('an-vorschau').innerHTML = 'So steht es im Buchungsfeld: <b>'+esc($('an-titel').value||'…')+'</b> · '+angDauer(a)+
-      (txt ? ' · '+txt : '')+(art==='fest'&&paket&&p&&a.anzahl_sitzungen?' ('+euro(Math.round(p/a.anzahl_sitzungen))+' pro Sitzung)':'');
+      (p==null||isNaN(p)?'':' · '+euro(p)+(paket&&p&&a.anzahl_sitzungen?' ('+euro(Math.round(p/a.anzahl_sitzungen))+' pro Sitzung)':''));
   }
-  ['an-titel','an-dauer','an-preis','an-anz','an-paket','an-preisart'].forEach(function(id){ $(id).addEventListener('input', vorschau); $(id).addEventListener('change', vorschau); });
+  ['an-titel','an-dauer','an-preis','an-anz','an-paket'].forEach(function(id){ $(id).addEventListener('input', vorschau); });
   $('an-neu').addEventListener('click', function(){ oeffneAngebot(null); });
   $('an-abbr').addEventListener('click', function(){ $('an-form-karte').hidden = true; });
   $('an-zu').addEventListener('click', function(){ $('an-form-karte').hidden = true; });
@@ -1286,12 +1035,10 @@
   });
   $('an-form').addEventListener('submit', function(e){
     e.preventDefault(); var f = $('an-fehler'); f.textContent = '';
-    var art = $('an-preisart').value, p = art === 'aufwand' ? null : preisCent();
-    if (p !== null && isNaN(p)) { f.textContent = 'Den Preis bitte als Zahl eingeben, z. B. 90 oder 89,50. Für „nach Aufwand" oben die Preisart umstellen.'; return; }
-    if (art === 'ab' && !p) { f.textContent = 'Bei „ab" bitte einen Mindestpreis eintragen.'; return; }
+    var p = preisCent(); if (isNaN(p)) { f.textContent = 'Den Preis bitte als Zahl eingeben, z. B. 90 oder 89,50.'; return; }
     rpc('coaching_admin_angebot_speichern', {p_id: anEdit ? anEdit.id : null, p_titel:$('an-titel').value, p_beschreibung:$('an-beschr').value,
       p_kategorie_id:$('an-kat').value||null, p_dauer_min:+$('an-dauer').value, p_preis_cent:p,
-      p_ist_paket:$('an-paket').checked, p_anzahl_sitzungen:+$('an-anz').value, p_aktiv:$('an-aktiv').checked, p_sortierung:+$('an-sort').value||0, p_preis_art:art})
+      p_ist_paket:$('an-paket').checked, p_anzahl_sitzungen:+$('an-anz').value, p_aktiv:$('an-aktiv').checked, p_sortierung:+$('an-sort').value||0})
       .then(function(){ $('an-form-karte').hidden = true; ladeAngebote(); })
       .catch(function(err){ f.textContent = err.message; });
   });
@@ -1521,8 +1268,7 @@
       var tr = document.createElement('tr'); if (p.termin_id) tr.dataset.termin = p.termin_id;
       tr.innerHTML = '<td><input class="nr-bez" value="'+esc(p.bezeichnung||'')+'" style="width:100%"></td><td><input class="nr-dat" type="date" value="'+(p.leistungsdatum||'')+'"></td>'+
         '<td><input class="nr-menge" type="number" min="0.5" step="0.5" value="'+(p.menge||1)+'" style="width:64px"></td>'+
-        '<td><input class="nr-preis" inputmode="decimal" value="'+(p.einzel_brutto_cent!=null?String(p.einzel_brutto_cent/100).replace('.',','):'')+'"'+
-          (p.hinweis?' placeholder="'+esc(p.hinweis)+'" title="Tatsächlichen Betrag eintragen"':'')+' style="width:100px"></td>'+
+        '<td><input class="nr-preis" inputmode="decimal" value="'+(p.einzel_brutto_cent!=null?String(p.einzel_brutto_cent/100).replace('.',','):'')+'" style="width:100px"></td>'+
         '<td><button type="button" class="btn btn-2 btn-klein nr-weg" aria-label="Position entfernen">✕</button></td>';
       $('nr-pos').appendChild(tr); summe();
     }
@@ -1556,16 +1302,11 @@
       rpc('coaching_admin_offene_termine', {p_kundin_id:k.id}).then(function(ts){
         $('nr-termine').innerHTML = ts.length ? '<span class="m-lbl">Noch nicht abgerechnete Termine</span>'+ts.map(function(t){
           var b = new Date(t.beginn);
-          return '<label class="haken nr-termin"><input type="checkbox" data-t="'+t.id+'"'+(t.id===vorTerminId?' checked':'')+'> '+datumDE(isoTag(b))+', '+uhr(b)+' – '+esc(t.angebot)+(preisText(t.preis_cent,t.preis_art)?' · '+preisText(t.preis_cent,t.preis_art):'')+'</label>';
+          return '<label class="haken nr-termin"><input type="checkbox" data-t="'+t.id+'"'+(t.id===vorTerminId?' checked':'')+'> '+datumDE(isoTag(b))+', '+uhr(b)+' – '+esc(t.angebot)+(t.preis_cent!=null?' · '+euro0(t.preis_cent):'')+'</label>';
         }).join('') : '<p class="hinweis">Keine offenen Termine – freie Position nutzen.</p>';
         $('nr-termine').querySelectorAll('[data-t]').forEach(function(c){
           var t = ts.find(function(x){ return x.id === c.dataset.t; });
-          /* Bei „ab …" und „nach Aufwand" bleibt der Betrag leer: Die Rechnung ist danach
-             nicht mehr änderbar, der tatsächliche Preis muss bewusst eingetragen werden. */
-          function an(){ var fest = !t.preis_art || t.preis_art === 'fest';
-            posZeile({bezeichnung:t.angebot, leistungsdatum:isoTag(new Date(t.beginn)), menge:1,
-                      einzel_brutto_cent: fest ? t.preis_cent : null, termin_id:t.id,
-                      hinweis: t.preis_art === 'ab' ? 'ab '+euro0(t.preis_cent) : t.preis_art === 'aufwand' ? 'nach Aufwand' : ''}); }
+          function an(){ posZeile({bezeichnung:t.angebot, leistungsdatum:isoTag(new Date(t.beginn)), menge:1, einzel_brutto_cent:t.preis_cent, termin_id:t.id}); }
           c.onchange = function(){ if (c.checked) an(); else { var tr = $('nr-pos').querySelector('[data-termin="'+t.id+'"]'); if (tr) tr.remove(); summe(); } };
           if (c.checked) an();
         });
@@ -1713,7 +1454,7 @@
     var t = k && k.termine || [];
     $('ku-termine').innerHTML = k ? '<h3 style="font-size:15px;margin:4px 0 6px">Termine ('+t.length+')</h3>' + (t.length ?
       '<table><tbody>' + t.map(function(x){ var b = new Date(x.beginn);
-        return '<tr><td>'+new Intl.DateTimeFormat('de-DE').format(b)+', '+uhr(b)+'</td><td>'+esc(x.angebot)+'</td><td>'+preisText(x.preis_cent,x.preis_art)+'</td><td>'+STATUS[x.status]+'</td></tr>'; }).join('') +
+        return '<tr><td>'+new Intl.DateTimeFormat('de-DE').format(b)+', '+uhr(b)+'</td><td>'+esc(x.angebot)+'</td><td>'+(x.preis_cent!=null?euro(x.preis_cent):'')+'</td><td>'+STATUS[x.status]+'</td></tr>'; }).join('') +
       '</tbody></table>' : '<p class="hinweis">Noch keine Termine im neuen System.</p>') : '';
     $('ku-loeschen').hidden = !k; delete $('ku-loeschen').dataset.sicher; $('ku-loeschen').textContent = 'Löschen';
     $('ku-fehler').textContent = ''; $('ku-modal').hidden = false; $('ku-name').focus();
