@@ -868,7 +868,7 @@
       a.forEach(function(x,i){
         var k = x.kategorie || 'Weitere Angebote';
         if (k !== letzte) { html += (letzte!==null?'</optgroup>':'') + '<optgroup label="'+esc(k)+'">'; letzte = k; }
-        html += '<option value="'+i+'">'+esc(x.titel)+' · '+dauerText(x)+(x.preis_cent!=null?' · '+euro(x.preis_cent):'')+'</option>';
+        html += '<option value="'+i+'">'+esc(x.titel)+' · '+dauerText(x)+(preisText(x)?' · '+preisText(x):'')+'</option>';
       });
       $('bk-angebot').innerHTML = html + (letzte!==null?'</optgroup>':'');
       angebot = a[0]; zeigeAngebot(); ladeZeiten(); zeigeKarten(); setzeErstgespraechDauer();
@@ -877,6 +877,11 @@
 
   function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
   function euro(c){ return c === 0 ? 'kostenlos' : (c/100).toLocaleString('de-DE',{style:'currency',currency:'EUR'}); }
+  function preisText(x){
+    if (x.preis_art === 'aufwand') return 'nach Aufwand';
+    if (x.preis_cent == null) return '';
+    return (x.preis_art === 'ab' ? 'ab ' : '') + euro(x.preis_cent);
+  }
   function dauerText(x){ return x.ist_paket ? x.anzahl_sitzungen+' × '+x.dauer_min+' Min.' : x.dauer_min+' Min.'; }
   function zeigeAngebot(){
     var x = angebot;
@@ -884,8 +889,8 @@
     $('bk-l-titel').textContent = x.titel;
     $('bk-l-text').textContent = x.beschreibung || '';
     var f = x.ist_paket ? x.anzahl_sitzungen+' Sitzungen à '+x.dauer_min+' Minuten' : x.dauer_min+' Minuten';
-    if (x.preis_cent != null) f += ' · ' + euro(x.preis_cent) +
-      (x.ist_paket && x.preis_cent ? ' (' + euro(Math.round(x.preis_cent/x.anzahl_sitzungen)) + ' pro Sitzung)' : '');
+    if (preisText(x)) f += ' · ' + preisText(x) +
+      (x.ist_paket && x.preis_cent && x.preis_art !== 'ab' && x.preis_art !== 'aufwand' ? ' (' + euro(Math.round(x.preis_cent/x.anzahl_sitzungen)) + ' pro Sitzung)' : '');
     $('bk-l-fakt').textContent = f;
   }
   /* Die Dauer des Erstgesprächs steht an mehreren Stellen im Text. Damit sie nur an
@@ -902,7 +907,7 @@
     var box = $('angebot-karten'); if (!box || !angebote.length) return;
     box.innerHTML = angebote.map(function(x,i){
       var f = x.ist_paket ? x.anzahl_sitzungen+' Sitzungen à '+x.dauer_min+' Min' : x.dauer_min+' Min';
-      if (x.preis_cent != null) f += ' · ' + euro(x.preis_cent);
+      if (preisText(x)) f += ' · ' + preisText(x);
       return '<div class="box">'+(x.kategorie?'<small class="bk-karte-kat">'+esc(x.kategorie)+'</small>':'')+
         '<b>'+esc(x.titel)+'</b><span>'+esc(x.beschreibung||'')+'</span><div class="p">'+f+'</div>'+
         '<a href="#termin" class="bk-karte-link" data-waehle="'+i+'">Termin dafür finden →</a></div>';

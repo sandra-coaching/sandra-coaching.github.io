@@ -265,7 +265,17 @@
           <label>Titel<input id="an-titel" maxlength="120" required placeholder="z. B. Einzelsitzung"></label>
           <label class="breit">Beschreibung (erscheint auf der Seite)<textarea id="an-beschr" rows="2" maxlength="400"></textarea></label>
           <label>Dauer pro Sitzung (Minuten)<input id="an-dauer" type="number" min="15" max="240" step="5" required></label>
-          <label>Preis in € (leer = kein Preis anzeigen, 0 = kostenlos)<input id="an-preis" inputmode="decimal" placeholder="z. B. 90 oder 89,50"></label>
+          <label>Preis
+            <span class="reihe" style="flex-wrap:nowrap">
+              <select id="an-preisart" style="flex:none;width:auto">
+                <option value="fest">Festpreis</option>
+                <option value="ab">ab</option>
+                <option value="aufwand">nach Aufwand</option>
+              </select>
+              <input id="an-preis" inputmode="decimal" placeholder="z. B. 90 oder 89,50">
+            </span>
+            <small class="hinweis" id="an-preis-hilfe">Leer = kein Preis anzeigen, 0 = kostenlos</small>
+          </label>
           <label class="haken"><input type="checkbox" id="an-paket"> Das ist ein Paket (mehrere Sitzungen)</label>
           <label id="an-anz-wrap">Anzahl Sitzungen im Paket<input id="an-anz" type="number" min="2" max="50"></label>
           <label class="haken"><input type="checkbox" id="an-aktiv" checked> Eingeschaltet (Sichtbarkeit für Kundinnen steuert die Kategorie)</label>
@@ -629,7 +639,7 @@
         inhalt += '<button class="kal-ev st-'+t.status+'" data-id="'+t.id+'" style="top:'+((x.a-vonStd*60)*PX)+'px;height:'+h+'px;'+
           'left:calc('+(w*x.bahn)+'% + 2px);width:calc('+w+'% - 4px);background:'+terminFarbe(t)+';color:'+textFarbe(terminFarbe(t))+'" title="'+esc(t.name+' – '+t.angebot)+'">'+
           '<b>'+uhr(new Date(t.beginn))+' – '+uhr(new Date(t.ende))+'</b><span>'+esc(t.name)+'</span><span class="klein">'+esc(t.angebot)+
-          (t.preis_cent!=null?' – '+euro(t.preis_cent):'')+'</span>'+(t.status!=='abgesagt'?'<span class="kal-griff" title="Ziehen, um die Dauer zu ändern"></span>':'')+'</button>';
+          (preisText(t.preis_cent,t.preis_art)?' – '+preisText(t.preis_cent,t.preis_art):'')+'</span>'+(t.status!=='abgesagt'?'<span class="kal-griff" title="Ziehen, um die Dauer zu ändern"></span>':'')+'</button>';
       });
       if (k === heute) { var jetzt = minuten(new Date()); if (jetzt >= vonStd*60 && jetzt <= bisStd*60) inhalt += '<div class="kal-jetzt" style="top:'+((jetzt-vonStd*60)*PX)+'px"></div>'; }
       spalten += '<div class="kal-spalte'+(k===heute?' heute':'')+'" data-tag="'+k+'" style="height:'+hoehe+'px">'+inhalt+'</div>';
@@ -748,7 +758,8 @@
     alleAngs.forEach(function(a,i){ if (!a.aktiv) return;
       var k = (a.kategorie || 'Ohne Kategorie') + (a.fuer_kundinnen ? '' : ' – nur intern');
       if (k !== letzte) { html += (letzte!==null?'</optgroup>':'') + '<optgroup label="'+esc(k)+'">'; letzte = k; }
-      html += '<option value="'+i+'">'+esc(a.titel)+' · '+dauerText(a.dauer_min)+(a.preis_cent!=null?' · '+euro(a.preis_cent):'')+'</option>';
+      var pt = preisText(a.preis_cent, a.preis_art);
+      html += '<option value="'+i+'">'+esc(a.titel)+' · '+dauerText(a.dauer_min)+(pt?' · '+pt:'')+'</option>';
     });
     return html + (letzte!==null?'</optgroup>':'');
   }
@@ -907,7 +918,7 @@
   function zeigeDetail(t){
     oeffne(t.name,
       '<dl class="m-dl"><dt>Wann</dt><dd>'+langDatum(new Date(t.beginn))+', '+uhr(new Date(t.beginn))+'–'+uhr(new Date(t.ende))+' Uhr</dd>'+
-      '<dt>Dienstleistung</dt><dd>'+esc(t.angebot)+(t.preis_cent!=null?' · '+euro(t.preis_cent):'')+(t.paket_stand?'<br><small>Paket '+esc(t.paketcode)+': '+esc(t.paket_stand)+'</small>':'')+'</dd>'+
+      '<dt>Dienstleistung</dt><dd>'+esc(t.angebot)+(preisText(t.preis_cent,t.preis_art)?' · '+preisText(t.preis_cent,t.preis_art):'')+(t.paket_stand?'<br><small>Paket '+esc(t.paketcode)+': '+esc(t.paket_stand)+'</small>':'')+'</dd>'+
       '<dt>Art</dt><dd>'+(t.art==='online'?'Online (Zoom)':'Vor Ort')+'</dd>'+
       '<dt>E-Mail</dt><dd>'+(t.email?'<a href="mailto:'+esc(t.email)+'">'+esc(t.email)+'</a>':'–')+'</dd>'+
       (t.telefon?'<dt>Telefon</dt><dd>'+esc(t.telefon)+'</dd>':'')+
@@ -988,6 +999,12 @@
   /* Angebote & Preise */
   var kats = [], angs = [], anEdit = null;
   function euro(c){ return c == null ? '' : c === 0 ? 'kostenlos' : (c/100).toLocaleString('de-DE',{style:'currency',currency:'EUR'}); }
+  /* Preis so, wie er angezeigt wird: fest, „ab …" oder „nach Aufwand" */
+  function preisText(c, art){
+    if (art === 'aufwand') return 'nach Aufwand';
+    if (art === 'ab') return c ? 'ab ' + euro(c) : '';
+    return euro(c);
+  }
   function dauerText(min){ var h = Math.floor(min/60), m = min%60; return h ? h+' Std.'+(m?' '+m+' Min.':'') : m+' Min.'; }
   function angDauer(a){ return a.ist_paket ? a.anzahl_sitzungen+' × '+a.dauer_min+' Min. (gesamt '+dauerText(a.anzahl_sitzungen*a.dauer_min)+')' : a.dauer_min+' Min.'; }
   function ladeAngebote(){
@@ -1002,10 +1019,10 @@
       return '<h3 style="font-size:14px;color:var(--muted);margin:16px 0 4px">'+esc(g)+'</h3>'+
         '<table><thead><tr><th>Angebot</th><th>Dauer</th><th>Preis</th><th>Status</th><th></th></tr></thead><tbody>'+
         gruppen[g].map(function(a){
-          var pps = a.ist_paket && a.preis_cent ? '<br><small class="hinweis">'+euro(Math.round(a.preis_cent/a.anzahl_sitzungen))+' pro Sitzung</small>' : '';
+          var pps = a.ist_paket && a.preis_cent && a.preis_art === 'fest' ? '<br><small class="hinweis">'+euro(Math.round(a.preis_cent/a.anzahl_sitzungen))+' pro Sitzung</small>' : '';
           return '<tr><td><b>'+esc(a.titel)+'</b>'+(a.ist_paket?' <span class="wer">Paket</span>':'')+
             (a.beschreibung?'<br><small class="hinweis">'+esc(a.beschreibung)+'</small>':'')+'</td>'+
-            '<td>'+angDauer(a)+'</td><td>'+(a.preis_cent==null?'<span class="hinweis">kein Preis</span>':euro(a.preis_cent))+pps+'</td>'+
+            '<td>'+angDauer(a)+'</td><td>'+(a.preis_cent==null&&a.preis_art!=='aufwand'?'<span class="hinweis">kein Preis</span>':preisText(a.preis_cent,a.preis_art))+pps+'</td>'+
             '<td>'+(!a.aktiv?'<span class="hinweis">ausgeschaltet</span>':a.fuer_kundinnen?'Kundinnen buchen selbst':'<span class="wer wer-Sandra" style="margin:0">nur intern</span>')+(a.termine?'<br><small class="hinweis">'+a.termine+' Termine</small>':'')+'</td>'+
             '<td><button class="btn btn-2 btn-klein" data-bearb="'+a.id+'">Bearbeiten</button></td></tr>';
         }).join('')+'</tbody></table>';
@@ -1021,6 +1038,7 @@
     $('an-kat').innerHTML = katOptionen(a ? a.kategorie_id : (kats[0]&&kats[0].id));
     $('an-titel').value = a ? a.titel : ''; $('an-beschr').value = a && a.beschreibung || '';
     $('an-dauer').value = a ? a.dauer_min : 60;
+    $('an-preisart').value = a && a.preis_art || 'fest';
     $('an-preis').value = a && a.preis_cent != null ? String(a.preis_cent/100).replace('.',',') : '';
     $('an-paket').checked = !!(a && a.ist_paket); $('an-anz').value = a && a.ist_paket ? a.anzahl_sitzungen : 5;
     $('an-aktiv').checked = a ? a.aktiv : true; $('an-sort').value = a ? a.sortierung : 0;
@@ -1035,12 +1053,18 @@
   }
   function vorschau(){
     var paket = $('an-paket').checked; $('an-anz-wrap').hidden = !paket;
+    var art = $('an-preisart').value, aufwand = art === 'aufwand';
+    $('an-preis').disabled = aufwand;
+    $('an-preis').placeholder = aufwand ? '–' : art === 'ab' ? 'Mindestpreis, z. B. 50' : 'z. B. 90 oder 89,50';
+    $('an-preis-hilfe').textContent = aufwand ? 'Der Betrag wird erst auf der Rechnung festgelegt.'
+      : art === 'ab' ? 'Angezeigt als „ab …". Auf der Rechnung trägst du den tatsächlichen Betrag ein.'
+      : 'Leer = kein Preis anzeigen, 0 = kostenlos';
     var a = {ist_paket:paket, anzahl_sitzungen:+$('an-anz').value||0, dauer_min:+$('an-dauer').value||0};
-    var p = preisCent();
+    var p = aufwand ? null : preisCent(), txt = aufwand ? 'nach Aufwand' : (p==null||isNaN(p)) ? '' : preisText(p, art);
     $('an-vorschau').innerHTML = 'So steht es im Buchungsfeld: <b>'+esc($('an-titel').value||'…')+'</b> · '+angDauer(a)+
-      (p==null||isNaN(p)?'':' · '+euro(p)+(paket&&p&&a.anzahl_sitzungen?' ('+euro(Math.round(p/a.anzahl_sitzungen))+' pro Sitzung)':''));
+      (txt ? ' · '+txt : '')+(art==='fest'&&paket&&p&&a.anzahl_sitzungen?' ('+euro(Math.round(p/a.anzahl_sitzungen))+' pro Sitzung)':'');
   }
-  ['an-titel','an-dauer','an-preis','an-anz','an-paket'].forEach(function(id){ $(id).addEventListener('input', vorschau); });
+  ['an-titel','an-dauer','an-preis','an-anz','an-paket','an-preisart'].forEach(function(id){ $(id).addEventListener('input', vorschau); $(id).addEventListener('change', vorschau); });
   $('an-neu').addEventListener('click', function(){ oeffneAngebot(null); });
   $('an-abbr').addEventListener('click', function(){ $('an-form-karte').hidden = true; });
   $('an-zu').addEventListener('click', function(){ $('an-form-karte').hidden = true; });
@@ -1052,10 +1076,12 @@
   });
   $('an-form').addEventListener('submit', function(e){
     e.preventDefault(); var f = $('an-fehler'); f.textContent = '';
-    var p = preisCent(); if (isNaN(p)) { f.textContent = 'Den Preis bitte als Zahl eingeben, z. B. 90 oder 89,50.'; return; }
+    var art = $('an-preisart').value, p = art === 'aufwand' ? null : preisCent();
+    if (p !== null && isNaN(p)) { f.textContent = 'Den Preis bitte als Zahl eingeben, z. B. 90 oder 89,50. Für „nach Aufwand" oben die Preisart umstellen.'; return; }
+    if (art === 'ab' && !p) { f.textContent = 'Bei „ab" bitte einen Mindestpreis eintragen.'; return; }
     rpc('coaching_admin_angebot_speichern', {p_id: anEdit ? anEdit.id : null, p_titel:$('an-titel').value, p_beschreibung:$('an-beschr').value,
       p_kategorie_id:$('an-kat').value||null, p_dauer_min:+$('an-dauer').value, p_preis_cent:p,
-      p_ist_paket:$('an-paket').checked, p_anzahl_sitzungen:+$('an-anz').value, p_aktiv:$('an-aktiv').checked, p_sortierung:+$('an-sort').value||0})
+      p_ist_paket:$('an-paket').checked, p_anzahl_sitzungen:+$('an-anz').value, p_aktiv:$('an-aktiv').checked, p_sortierung:+$('an-sort').value||0, p_preis_art:art})
       .then(function(){ $('an-form-karte').hidden = true; ladeAngebote(); })
       .catch(function(err){ f.textContent = err.message; });
   });
@@ -1285,7 +1311,8 @@
       var tr = document.createElement('tr'); if (p.termin_id) tr.dataset.termin = p.termin_id;
       tr.innerHTML = '<td><input class="nr-bez" value="'+esc(p.bezeichnung||'')+'" style="width:100%"></td><td><input class="nr-dat" type="date" value="'+(p.leistungsdatum||'')+'"></td>'+
         '<td><input class="nr-menge" type="number" min="0.5" step="0.5" value="'+(p.menge||1)+'" style="width:64px"></td>'+
-        '<td><input class="nr-preis" inputmode="decimal" value="'+(p.einzel_brutto_cent!=null?String(p.einzel_brutto_cent/100).replace('.',','):'')+'" style="width:100px"></td>'+
+        '<td><input class="nr-preis" inputmode="decimal" value="'+(p.einzel_brutto_cent!=null?String(p.einzel_brutto_cent/100).replace('.',','):'')+'"'+
+          (p.hinweis?' placeholder="'+esc(p.hinweis)+'" title="Tatsächlichen Betrag eintragen"':'')+' style="width:100px"></td>'+
         '<td><button type="button" class="btn btn-2 btn-klein nr-weg" aria-label="Position entfernen">✕</button></td>';
       $('nr-pos').appendChild(tr); summe();
     }
@@ -1319,11 +1346,16 @@
       rpc('coaching_admin_offene_termine', {p_kundin_id:k.id}).then(function(ts){
         $('nr-termine').innerHTML = ts.length ? '<span class="m-lbl">Noch nicht abgerechnete Termine</span>'+ts.map(function(t){
           var b = new Date(t.beginn);
-          return '<label class="haken nr-termin"><input type="checkbox" data-t="'+t.id+'"'+(t.id===vorTerminId?' checked':'')+'> '+datumDE(isoTag(b))+', '+uhr(b)+' – '+esc(t.angebot)+(t.preis_cent!=null?' · '+euro0(t.preis_cent):'')+'</label>';
+          return '<label class="haken nr-termin"><input type="checkbox" data-t="'+t.id+'"'+(t.id===vorTerminId?' checked':'')+'> '+datumDE(isoTag(b))+', '+uhr(b)+' – '+esc(t.angebot)+(preisText(t.preis_cent,t.preis_art)?' · '+preisText(t.preis_cent,t.preis_art):'')+'</label>';
         }).join('') : '<p class="hinweis">Keine offenen Termine – freie Position nutzen.</p>';
         $('nr-termine').querySelectorAll('[data-t]').forEach(function(c){
           var t = ts.find(function(x){ return x.id === c.dataset.t; });
-          function an(){ posZeile({bezeichnung:t.angebot, leistungsdatum:isoTag(new Date(t.beginn)), menge:1, einzel_brutto_cent:t.preis_cent, termin_id:t.id}); }
+          /* Bei „ab …" und „nach Aufwand" bleibt der Betrag leer: Die Rechnung ist danach
+             nicht mehr änderbar, der tatsächliche Preis muss bewusst eingetragen werden. */
+          function an(){ var fest = !t.preis_art || t.preis_art === 'fest';
+            posZeile({bezeichnung:t.angebot, leistungsdatum:isoTag(new Date(t.beginn)), menge:1,
+                      einzel_brutto_cent: fest ? t.preis_cent : null, termin_id:t.id,
+                      hinweis: t.preis_art === 'ab' ? 'ab '+euro0(t.preis_cent) : t.preis_art === 'aufwand' ? 'nach Aufwand' : ''}); }
           c.onchange = function(){ if (c.checked) an(); else { var tr = $('nr-pos').querySelector('[data-termin="'+t.id+'"]'); if (tr) tr.remove(); summe(); } };
           if (c.checked) an();
         });
@@ -1471,7 +1503,7 @@
     var t = k && k.termine || [];
     $('ku-termine').innerHTML = k ? '<h3 style="font-size:15px;margin:4px 0 6px">Termine ('+t.length+')</h3>' + (t.length ?
       '<table><tbody>' + t.map(function(x){ var b = new Date(x.beginn);
-        return '<tr><td>'+new Intl.DateTimeFormat('de-DE').format(b)+', '+uhr(b)+'</td><td>'+esc(x.angebot)+'</td><td>'+(x.preis_cent!=null?euro(x.preis_cent):'')+'</td><td>'+STATUS[x.status]+'</td></tr>'; }).join('') +
+        return '<tr><td>'+new Intl.DateTimeFormat('de-DE').format(b)+', '+uhr(b)+'</td><td>'+esc(x.angebot)+'</td><td>'+preisText(x.preis_cent,x.preis_art)+'</td><td>'+STATUS[x.status]+'</td></tr>'; }).join('') +
       '</tbody></table>' : '<p class="hinweis">Noch keine Termine im neuen System.</p>') : '';
     $('ku-loeschen').hidden = !k; delete $('ku-loeschen').dataset.sicher; $('ku-loeschen').textContent = 'Löschen';
     $('ku-fehler').textContent = ''; $('ku-modal').hidden = false; $('ku-name').focus();
