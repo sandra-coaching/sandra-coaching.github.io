@@ -1086,10 +1086,10 @@
   var MG_FRAGE = {widerfahren:'Was ist passiert?', bei_mir:'Was davon hattest du in der Hand?', anerkennen:'Was hat dich daran am meisten getroffen?',
     fakt:'Was ist passiert?', satz:'Was sagst du dir (über dich)?', gefuehl:'Was fühlst du dabei?', tun:'Was machst du dann?',
     ergebnis:'Was passiert danach?', neuer_satz:'Neuer Satz', brauchen:'Was brauchst du jetzt?',
-    zweck:'ZDE – wofür bist du da?', alltag:'Wie viel der Woche passt schon dazu? (in %)'};
+    warum_weg:'Warum für diesen Weg', zweck:'ZDE – wofür bist du da?', alltag:'Wie viel der Woche passt schon dazu? (in %)'};
   [1,2,3,4,5].forEach(function(i){ MG_FRAGE['z'+i] = 'Ziel '+i; MG_FRAGE['z'+i+'_warum'] = 'Ziel '+i+' – warum wichtig'; MG_FRAGE['z'+i+'_schritt'] = 'Ziel '+i+' – erster Schritt'; MG_FRAGE['z'+i+'_stand'] = 'Ziel '+i+' – Stand'; });
   var MG_REIHE = {B:['widerfahren','bei_mir','anerkennen','satz','gefuehl','tun','ergebnis','neuer_satz','brauchen'], A:['fakt','satz','gefuehl','tun','ergebnis','neuer_satz'],
-    Z:['zweck'].concat([1,2,3,4,5].reduce(function(l,i){ return l.concat(['z'+i,'z'+i+'_warum','z'+i+'_schritt','z'+i+'_stand']); }, []), ['alltag'])};
+    Z:['warum_weg','zweck'].concat([1,2,3,4,5].reduce(function(l,i){ return l.concat(['z'+i,'z'+i+'_warum','z'+i+'_schritt','z'+i+'_stand']); }, []), ['alltag'])};
   var mgPriv = null, mgSchluessel = null, mgListe = [], mgSuchTimer = null;
 
   function ladeMitglieder(){

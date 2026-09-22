@@ -268,6 +268,14 @@
   .regler output{font-weight:600;font-size:20px;min-width:62px;text-align:right}
   @media(max-width:560px){.ziel-mehr{grid-template-columns:1fr}}
 
+  /* Dein Warum */
+  .warum{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--clay);border-radius:16px;padding:14px 18px;margin-top:16px}
+  .warum small{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);font-weight:600}
+  .warum .satz{font-size:17px;margin-top:4px;white-space:pre-wrap}
+  .warum textarea{min-height:70px;margin-top:8px}
+  .warum .reihe{margin-top:10px}
+  .warum .btn{padding:9px 20px;font-size:14.5px}
+
   .safety{background:var(--sand-2);border-radius:16px;padding:16px 20px;margin-top:40px;font-size:14.5px;color:#5E5346}
   .safety b{display:block;color:var(--ink);margin-bottom:2px}
   footer{color:var(--muted);font-size:13.5px;padding:26px 0 50px;border-top:1px solid var(--line)}
@@ -393,6 +401,19 @@
   <section class="ansicht" id="v-uebersicht" hidden>
     <h1>Schön, dass du da bist, <span data-vorname></span></h1>
     <p class="leise">Nimm dir eine Situation, die dich beschäftigt, und geh sie Schritt für Schritt durch.</p>
+    <div class="warum" id="u-warum">
+      <small>Dein Warum für diesen Weg</small>
+      <div id="w-anzeige" hidden><p class="satz" id="w-satz"></p>
+        <button class="link-knopf klein" type="button" id="w-aendern" style="margin-top:4px;color:var(--clay-dark)">ändern</button></div>
+      <div id="w-form" hidden>
+        <p class="leise klein" style="margin-top:4px">Warum machst du das hier? Was soll danach anders sein – für dich, nicht für die anderen?
+          Ein Satz reicht. Er steht dann hier und erinnert dich jedes Mal daran, wofür du dranbleibst.</p>
+        <textarea id="w-text" rows="2" aria-label="Dein Warum" placeholder="Ich mache das, weil …"></textarea>
+        <div class="reihe"><button class="btn" type="button" id="w-speichern">Speichern</button>
+          <button class="link-knopf klein" type="button" id="w-abbrechen" hidden>Abbrechen</button>
+          <span class="klein leise" id="w-stand"></span></div>
+      </div>
+    </div>
     <button class="anl-link" id="u-anleitung" type="button"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="flex:none;color:var(--clay-dark)"><path d="M3 5.5C5.5 4 8.5 4 12 6c3.5-2 6.5-2 9-.5V19c-2.5-1.5-5.5-1.5-9 .5-3.5-2-6.5-2-9-.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6v13.5" stroke="currentColor" stroke-width="1.6"/></svg><span><b>So funktioniert's</b> – kurze Erklärung mit Beispiel, 3 Minuten</span><span class="pf">›</span></button>
     <div class="neu-wahl">
       <button class="neu-karte" data-neu="B"><b>Ausführlich</b><span>Erst sortieren, was dir widerfahren ist und was bei dir liegt. Für Kränkungen und alles, was schwer wiegt. Etwa 20 Minuten.</span></button>
@@ -737,7 +758,7 @@
   /* Überschrift fehlt? Dann die ersten Worte der ersten Antwort zeigen */
   function titelVon(a){ a = a || {}; var t = String(a.titel || '').trim(); if (t) return t;
     var f = String(a.widerfahren || a.fakt || '').replace(/\s+/g, ' ').trim(); return f ? (f.length > 40 ? f.slice(0, 39).trim() + '…' : f) : 'Ohne Titel'; }
-  SCHRITTE.Z = [{k:'titel', f:'Überschrift'}, {k:'zweck', f:'Dein ZDE – wofür bist du da?'}]
+  SCHRITTE.Z = [{k:'titel', f:'Überschrift'}, {k:'warum_weg', f:'Dein Warum für diesen Weg'}, {k:'zweck', f:'Dein ZDE – wofür bist du da?'}]
     .concat([1,2,3,4,5].reduce(function(l, i){ return l.concat([{k:'z'+i, f:'Ziel '+i}, {k:'z'+i+'_warum', f:'Ziel '+i+' – warum es dir wichtig ist'},
       {k:'z'+i+'_schritt', f:'Ziel '+i+' – erster Schritt'}, {k:'z'+i+'_stand', f:'Ziel '+i+' – Stand'}]); }, []))
     .concat([{k:'alltag', f:'Wie viel deiner Woche passt schon dazu? (in Prozent)'}]);
@@ -982,6 +1003,7 @@
   function datum(iso){ return iso ? new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'long',year:'numeric'}).format(new Date(iso)) : ''; }
   function zeigeUebersicht(){
     var ld = $('liste-durchgaenge');
+    zeigeWarum(false);
     var nurDg = eintraege.filter(function(e){ return e.variante !== 'Z'; }).length;
     var zz = zielEintrag(); $('u-ziele-text').textContent = zz && zz.daten && zz.daten.antworten.zweck ? '„' + kuerze(zz.daten.antworten.zweck, 90) + '“' + zielStandText(zz.daten.antworten) : 'Der Blick nach vorn: Was willst du in deinem Leben unbedingt erleben? Mit Anleitung und Beispiel.';
     ld.innerHTML = nurDg ? eintraege.map(function(e, i){
@@ -1319,7 +1341,7 @@
     $('z-frei-text').textContent = moeglich ? 'Dann kann Sandra Zweck und Ziele lesen und im Termin mit dir besprechen. Jederzeit zurücknehmbar.'
                                             : 'Sandra hat Freigaben noch nicht eingerichtet. Bis dahin bleibt alles nur bei dir.';
     $('z-stand').textContent = akt.id ? 'Verschlüsselt gespeichert' : '';
-    $('z-anl').open = !akt.id;
+    $('z-anl').open = !String(a.zweck || '').trim();
     zeige('v-ziele');
   }
   $('u-ziele').addEventListener('click', oeffneZiele);
@@ -1335,6 +1357,29 @@
   });
   $('z-frei').addEventListener('change', function(){ if (akt && akt.variante === 'Z') { akt.freigegeben = this.checked; ungespeichert = true; speichern(); } });
   $('z-zurueck').addEventListener('click', function(){ speichern().then(function(){ akt = null; zeigeUebersicht(); }); });
+
+
+  /* ---------------- Dein Warum (liegt verschlüsselt im selben Eintrag wie ZDE und Big Five) ---------------- */
+  function zeigeWarum(bearbeiten){
+    var zz = zielEintrag(), w = zz && zz.daten ? String(zz.daten.antworten.warum_weg || '').trim() : '';
+    var form = bearbeiten || !w;
+    $('w-anzeige').hidden = form; $('w-form').hidden = !form; $('w-abbrechen').hidden = !w;
+    $('w-satz').textContent = w; if (form) $('w-text').value = w; $('w-stand').textContent = '';
+  }
+  $('w-aendern').addEventListener('click', function(){ zeigeWarum(true); $('w-text').focus(); });
+  $('w-abbrechen').addEventListener('click', function(){ zeigeWarum(false); });
+  $('w-speichern').addEventListener('click', function(){
+    var v = $('w-text').value.trim(), btn = this;
+    if (!v) { $('w-stand').textContent = 'Schreib ein paar Worte – oder lass es für später.'; return; }
+    var x = zielEintrag();
+    akt = x && x.daten ? {id:x.id, variante:'Z', daten:JSON.parse(JSON.stringify(x.daten)), freigegeben:x.freigegeben}
+                       : {id:null, variante:'Z', daten:{antworten:{titel:'Mein ZDE und meine Big Five for Life'}, schritt:0}, freigegeben:false};
+    akt.daten.antworten.warum_weg = v; ungespeichert = true; laeuft(btn, true, 'Wird gespeichert …');
+    speichern().then(function(ok){
+      laeuft(btn, false); akt = null;
+      if (ok) zeigeWarum(false); else $('w-stand').textContent = 'Nicht gespeichert – bitte noch einmal versuchen.';
+    });
+  });
 
   /* ---------------- Einstellungen ---------------- */
   $('k-einst').addEventListener('click', function(){ uebernehmeTextSicher(); speichern().then(function(){ akt = null; zeige('v-einst'); }); });
