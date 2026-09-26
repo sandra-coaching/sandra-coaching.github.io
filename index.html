@@ -187,6 +187,18 @@
   .quali li{margin-bottom:6px}
   .quali .klein{font-size:13.5px;color:var(--muted);margin-top:10px}
   .quali .platz{background:var(--sand);border-radius:6px;padding:1px 6px;font-size:14px;color:#6B5E51}
+  .ergebnis-satz{margin-top:14px;font-size:16.5px;background:var(--sand);border-radius:14px;padding:12px 16px}
+  .ergebnis-satz b{color:var(--clay-dark)}
+  .vorher-nachher{display:flex;flex-direction:column;gap:12px}
+  .vn{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;align-items:center;
+      background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px 20px}
+  .vn .v{color:var(--muted);font-size:15.5px}
+  .vn .n{font-size:16px;font-weight:500}
+  .vn .n::before{content:'→';color:var(--clay);margin-right:10px;font-weight:400}
+  .vn-fuss{margin-top:14px;font-size:14.5px;color:var(--muted)}
+  .erg{margin-top:10px;font-size:14.5px;background:var(--sand);border-radius:12px;padding:9px 13px;color:#5E5346}
+  .erg b{color:var(--ink)}
+  @media(max-width:700px){.vn{grid-template-columns:1fr;gap:8px;padding:14px 16px}}
   .about{display:grid;grid-template-columns:.72fr 1.28fr;gap:52px;align-items:center}
   .portraet{margin:0}
   .portraet img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;
@@ -379,11 +391,13 @@
       <p class="fuer-wen">Für Frauen und Männer, bei denen von außen alles stimmt:
          Familie, Arbeit, ein Leben, das läuft. Und innen die Frage, wo man selbst
          dabei geblieben ist.</p>
+      <p class="ergebnis-satz"><b>Das Ergebnis:</b> Du erkennst das Muster, das dich festhält,
+         weißt wieder, was du selbst willst – und hast ein Werkzeug, mit dem du allein weiterkommst.</p>
       <div class="cta">
         <a href="#termin" class="btn">Kostenloses Erstgespräch</a>
         <a href="#woher" class="btn btn-2">Woher das kommt</a>
       </div>
-      <div class="reassure"><span data-eg-min>15</span> Minuten · unverbindlich · online per Video</div>
+      <div class="reassure"><span data-eg-min>15</span> Minuten · unverbindlich · online per Videocall</div>
     </div>
   </div>
 </div>
@@ -474,12 +488,38 @@
   </div>
 </section>
 
+<!-- ============ ERGEBNIS ============ -->
+<section id="ergebnis">
+  <div class="wrap">
+    <div class="head">
+      <h2>Was sich ändert</h2>
+      <p>Links steht, was viele hierher bringt. Rechts, woran ich mit dir arbeite.</p>
+    </div>
+    <div class="vorher-nachher">
+      <div class="vn"><div class="v">Du funktionierst den ganzen Tag und merkst abends, dass nichts davon für dich war.</div>
+        <div class="n">Du merkst früher, was du brauchst – und sagst es, bevor der Tag vorbei ist.</div></div>
+      <div class="vn"><div class="v">Dieselbe Diskussion, derselbe Rückzug, immer im Kreis.</div>
+        <div class="n">Du erkennst das Muster, während es läuft – und kannst aussteigen.</div></div>
+      <div class="vn"><div class="v">Schuldgefühle, Selbstzweifel und eine Unruhe, die nicht weggeht.</div>
+        <div class="n">Die alten Sätze sind noch da, aber sie bestimmen nicht mehr, was du tust.</div></div>
+      <div class="vn"><div class="v">In der Beziehung steht etwas im Raum, das keiner ausspricht.</div>
+        <div class="n">Du weißt, was davon bei dir liegt und was nicht – und kannst entscheiden.</div></div>
+      <div class="vn"><div class="v">„Was ich selbst will? Dazu bin ich lange nicht gekommen.“</div>
+        <div class="n">Du hast einen Satz, wofür du da bist, fünf Ziele und den ersten Schritt im Kalender.</div></div>
+      <div class="vn"><div class="v">Nach einem guten Gespräch ist nach drei Tagen alles wie vorher.</div>
+        <div class="n">Du hast ein eigenes Werkzeug und einen geschützten Bereich, in dem du weiterarbeitest.</div></div>
+    </div>
+    <p class="vn-fuss">Das sind die Ziele, an denen ich mit dir arbeite – keine Garantien. Wie schnell sich etwas bewegt,
+       ist bei jedem anders, und den Teil, den du selbst gehst, kann dir niemand abnehmen.</p>
+  </div>
+</section>
+
 <!-- ============ PHASEN ============ -->
 <section id="ablauf">
   <div class="wrap">
     <div class="head">
-      <h2>Wie wir arbeiten</h2>
-      <p>Drei Schritte. Du steigst dort ein, wo du gerade stehst.</p>
+      <h2>Wie ich arbeite</h2>
+      <p>Drei Schritte, die ich mit dir gehe. Du steigst dort ein, wo du gerade stehst.</p>
     </div>
     <div class="steps">
       <div class="step"><b>Ankommen</b>
@@ -502,19 +542,22 @@
   <div class="wrap">
     <div class="head">
       <h2>Angebot</h2>
-      <p>Alles beginnt mit dem kostenfreien Erstgespräch. Erst danach entscheidest du.</p>
+      <p>Bei jedem Angebot steht, was du danach hast. Alles beginnt mit dem kostenfreien
+         Erstgespräch – erst danach entscheidest du.</p>
     </div>
     <div class="three" id="angebot-karten">
       <div class="box">
         <b>Erstgespräch</b>
         <span>Ein ruhiges Kennenlernen. Du erzählst, was dich beschäftigt – ich sage
               dir ehrlich, ob ich die Richtige für dich bin.</span>
+        <p class="erg"><b>Danach hast du:</b> eine klare Antwort, ob und wie wir zusammenarbeiten.</p>
         <div class="p"><span data-eg-min>15</span> Min · kostenfrei</div>
       </div>
       <div class="box">
         <b>Einzelbegleitung</b>
         <span>Regelmäßige Gespräche über einen Zeitraum, den wir gemeinsam festlegen.
-              Online per Video.</span>
+              Online per Videocall.</span>
+        <p class="erg"><b>Danach hast du:</b> Klarheit über die Situation, die dich gerade festhält – und einen nächsten Schritt.</p>
         <div class="p">60 Min · [Preis eintragen]</div>
       </div>
       <div class="box">
@@ -522,6 +565,8 @@
         <span>Der vertiefende Weg zu den Mustern, die sich immer wiederholen – in der
               Beziehung, im Beruf, im Umgang mit dir selbst. Am Ende steht dein eigenes
               Selbstcoaching-Konzept – mit Zugang zum geschützten Mitgliederbereich.</span>
+        <p class="erg"><b>Danach hast du:</b> dein Muster verstanden, deine Altlasten bearbeitet und ein Werkzeug,
+           mit dem du allein weiterarbeitest.</p>
         <div class="p">[Anzahl] Sitzungen · [Preis eintragen]</div>
       </div>
     </div>
@@ -577,8 +622,16 @@
         darüber. [Platzhalter – Sandra ergänzt aus ihrer Erfahrung.]</p>
       </details>
       <details>
+        <summary>Was habe ich am Ende davon?</summary>
+        <p>Du gehst nicht mit guten Vorsätzen raus, sondern mit etwas in der Hand: Du weißt, welches
+        Muster bei dir läuft und woher es kommt. Du kennst den Satz, der dich klein hält, und einen,
+        der freundlicher und trotzdem wahr ist. Und du hast einen Weg, wie du das allein weiterführst,
+        wenn wir nicht mehr sprechen. Was das bei dir konkret verändert, hängt von dir ab – versprechen
+        kann ich es nicht, daran arbeiten schon.</p>
+      </details>
+      <details>
         <summary>Wie läuft das ab?</summary>
-        <p>Alle Gespräche finden online statt, per Video. Die Arbeit funktioniert genauso
+        <p>Alle Gespräche finden online statt, per Videocall. Die Arbeit funktioniert genauso
         gut wie im selben Raum – viele finden es zu Hause sogar leichter, weil sie in
         ihrer gewohnten Umgebung bleiben.</p>
       </details>
@@ -672,7 +725,7 @@
           <label class="bk-ok" id="bk-hat-code-wrap" hidden><input type="checkbox" id="bk-hat-code">
             Ich habe dieses Paket schon und buche eine weitere Sitzung</label>
           <input class="bk-in" id="bk-code" placeholder="Dein Paketcode (z. B. A1B2C3D4)" hidden style="margin-top:8px">
-          <p class="bk-hinweis-art">Alle Termine finden online per Video statt. Den Link bekommst du vor dem Termin.</p>
+          <p class="bk-hinweis-art">Alle Termine finden online per Videocall statt. Den Link bekommst du vor dem Termin.</p>
           <textarea class="bk-in" id="bk-satz" rows="2" maxlength="300"
                     placeholder="Magst du in einem Satz sagen, was dich herführt? (freiwillig)"></textarea>
           <label class="bk-ok"><input type="checkbox" id="bk-einw">
@@ -925,7 +978,9 @@
       var f = x.ist_paket ? x.anzahl_sitzungen+' Sitzungen à '+x.dauer_min+' Min' : x.dauer_min+' Min';
       if (preisText(x)) f += ' · ' + preisText(x);
       return '<div class="box">'+(x.kategorie?'<small class="bk-karte-kat">'+esc(x.kategorie)+'</small>':'')+
-        '<b>'+esc(x.titel)+'</b><span>'+esc(x.beschreibung||'')+'</span><div class="p">'+f+'</div>'+
+        '<b>'+esc(x.titel)+'</b><span>'+esc(x.beschreibung||'')+'</span>'+
+        (x.ergebnis ? '<p class="erg"><b>Danach hast du:</b> '+esc(x.ergebnis)+'</p>' : '')+
+        '<div class="p">'+f+'</div>'+
         '<a href="#termin" class="bk-karte-link" data-waehle="'+i+'">Termin dafür finden →</a></div>';
     }).join('');
   }

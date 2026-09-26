@@ -265,6 +265,8 @@
           <label>Kategorie<select id="an-kat"></select></label>
           <label>Titel<input id="an-titel" maxlength="120" required placeholder="z. B. Einzelsitzung"></label>
           <label class="breit">Beschreibung (erscheint auf der Seite)<textarea id="an-beschr" rows="2" maxlength="400"></textarea></label>
+          <label class="breit">Dein Ergebnis – was hat die Kundin danach? (erscheint hervorgehoben auf der Seite)
+            <textarea id="an-erg" rows="2" maxlength="300" placeholder="z. B. Du weißt, welches Muster in deiner Beziehung läuft – und was dein Anteil daran ist."></textarea></label>
           <label>Dauer pro Sitzung (Minuten)<input id="an-dauer" type="number" min="15" max="240" step="5" required></label>
           <label>Preis
             <span class="reihe" style="flex-wrap:nowrap">
@@ -1261,7 +1263,7 @@
     anEdit = a || null;
     $('an-form-titel').textContent = a ? 'Angebot bearbeiten' : 'Neues Angebot';
     $('an-kat').innerHTML = katOptionen(a ? a.kategorie_id : (kats[0]&&kats[0].id));
-    $('an-titel').value = a ? a.titel : ''; $('an-beschr').value = a && a.beschreibung || '';
+    $('an-titel').value = a ? a.titel : ''; $('an-beschr').value = a && a.beschreibung || ''; $('an-erg').value = a && a.ergebnis || '';
     $('an-dauer').value = a ? a.dauer_min : 60;
     $('an-preisart').value = a && a.preis_art || 'fest';
     $('an-preis').value = a && a.preis_cent != null ? String(a.preis_cent/100).replace('.',',') : '';
@@ -1304,7 +1306,7 @@
     var art = $('an-preisart').value, p = art === 'aufwand' ? null : preisCent();
     if (p !== null && isNaN(p)) { f.textContent = 'Den Preis bitte als Zahl eingeben, z. B. 90 oder 89,50. Für „nach Aufwand" oben die Preisart umstellen.'; return; }
     if (art === 'ab' && !p) { f.textContent = 'Bei „ab" bitte einen Mindestpreis eintragen.'; return; }
-    rpc('coaching_admin_angebot_speichern', {p_id: anEdit ? anEdit.id : null, p_titel:$('an-titel').value, p_beschreibung:$('an-beschr').value,
+    rpc('coaching_admin_angebot_speichern', {p_id: anEdit ? anEdit.id : null, p_titel:$('an-titel').value, p_beschreibung:$('an-beschr').value, p_ergebnis:$('an-erg').value,
       p_kategorie_id:$('an-kat').value||null, p_dauer_min:+$('an-dauer').value, p_preis_cent:p,
       p_ist_paket:$('an-paket').checked, p_anzahl_sitzungen:+$('an-anz').value, p_aktiv:$('an-aktiv').checked, p_sortierung:+$('an-sort').value||0, p_preis_art:art})
       .then(function(){ $('an-form-karte').hidden = true; ladeAngebote(); })
