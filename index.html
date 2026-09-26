@@ -187,6 +187,16 @@
   .quali li{margin-bottom:6px}
   .quali .klein{font-size:13.5px;color:var(--muted);margin-top:10px}
   .quali .platz{background:var(--sand);border-radius:6px;padding:1px 6px;font-size:14px;color:#6B5E51}
+  .passt{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .passt>div{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px 24px}
+  .passt .p-nein{background:var(--sand);border-color:var(--sand-2)}
+  .passt b{display:block;font-size:17px;margin-bottom:10px}
+  .passt ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .passt li{position:relative;padding-left:28px;font-size:15.5px;line-height:1.55}
+  .passt .p-ja li::before{content:'✓';position:absolute;left:0;top:-1px;color:#7E8A63;font-weight:600}
+  .passt .p-nein li::before{content:'–';position:absolute;left:2px;top:-1px;color:var(--clay);font-weight:600}
+  .passt-fuss{margin-top:16px;font-size:15px;color:var(--muted)}
+  @media(max-width:700px){.passt{grid-template-columns:1fr}}
   .ergebnis-satz{margin-top:14px;font-size:16.5px;background:var(--sand);border-radius:14px;padding:12px 16px}
   .ergebnis-satz b{color:var(--clay-dark)}
   .vorher-nachher{display:flex;flex-direction:column;gap:12px}
@@ -534,6 +544,41 @@
               selbst willst: andere lassen, wie sie sind – und dich selbst nicht länger übergehen. Am Ende hast du ein Selbstcoaching-Konzept in der Hand, das nur zu
               dir passt – und einen geschützten Bereich, in dem du allein damit weiterarbeitest.</span></div>
     </div>
+  </div>
+</section>
+
+<!-- ============ PASSUNG ============ -->
+<section id="passt">
+  <div class="wrap">
+    <div class="head">
+      <h2>Ob das zu dir passt</h2>
+      <p>Damit wir beide wissen, worauf wir uns einlassen. Das ist keine Wertung –
+         es gibt gute Gründe, warum etwas gerade nicht dran ist.</p>
+    </div>
+    <div class="passt">
+      <div class="p-ja">
+        <b>Das passt zu dir, wenn du …</b>
+        <ul>
+          <li>dein Leben aktiv gestalten willst, statt zu warten, dass es sich von selbst löst</li>
+          <li>bereit bist, dir dafür Zeit zu nehmen – und in dich zu investieren</li>
+          <li>Verantwortung für deine eigenen Entscheidungen übernehmen willst</li>
+          <li>lieber in die Tiefe gehst, als schnelle Tipps zu sammeln</li>
+          <li>nicht mehr nur funktionieren, sondern wieder bei dir ankommen willst</li>
+        </ul>
+      </div>
+      <div class="p-nein">
+        <b>Das passt gerade nicht, wenn du …</b>
+        <ul>
+          <li>eine schnelle Lösung suchst, ohne selbst etwas zu verändern</li>
+          <li>möchtest, dass jemand anderes entscheidet oder die Verantwortung übernimmt</li>
+          <li>nur Bestätigung für etwas suchst, das längst entschieden ist</li>
+          <li>gerade in einer akuten Krise steckst oder eine Behandlung brauchst – dann ist
+              ärztliche oder psychotherapeutische Hilfe das Richtige, nicht Coaching</li>
+        </ul>
+      </div>
+    </div>
+    <p class="passt-fuss">Unsicher, auf welcher Seite du stehst? Genau dafür ist das Erstgespräch da.
+       Es kostet nichts, und ich sage dir ehrlich, wenn ich nicht die Richtige bin.</p>
   </div>
 </section>
 
