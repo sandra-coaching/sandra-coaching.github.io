@@ -386,6 +386,11 @@
     <!-- Mitglieder -->
     <section id="t-mitglieder" hidden>
       <div class="karte">
+        <h2>Anfragen aus dem Netz <span class="hinweis" id="zg-anzahl"></span></h2>
+        <p class="hinweis" style="margin-top:-4px">Menschen, die den Zugang ohne Paket angefragt haben. „Anlegen und freischalten" legt
+          den Kunden an, erzeugt den Code und hakt die Anfrage ab.</p>
+        <div id="zg-liste" style="margin-bottom:26px"></div>
+
         <h2>Zugang freischalten</h2>
         <p class="hinweis" style="margin-top:-4px">Der Mitgliederbereich gehört zum Paket „Prozess: Muster lösen". Der Kunde braucht eine E-Mail-Adresse.
           Den Code siehst du nur einmal – gib ihn gleich weiter.</p>
@@ -602,7 +607,7 @@
     b.addEventListener('click', function(){
       document.querySelectorAll('.tabs button').forEach(function(x){ x.classList.toggle('an', x===b); });
       ['kalender','zeiten','angebote','kunden','rechnungen','pakete','mitglieder','einst','aufgaben'].forEach(function(t){ $('t-'+t).hidden = t !== b.dataset.tab; });
-      ({kalender:ladeWoche, zeiten:ladeZeiten, angebote:ladeAngebote, kunden:ladeKunden, rechnungen:ladeRechnungen, pakete:ladePakete, mitglieder:ladeMitglieder, einst:function(){ ladeEinst(); ladeRechnungsdaten(); ladeVorlage(); }, aufgaben:ladeAufgaben})[b.dataset.tab]();
+      ({kalender:ladeWoche, zeiten:ladeZeiten, angebote:ladeAngebote, kunden:ladeKunden, rechnungen:ladeRechnungen, pakete:ladePakete, mitglieder:function(){ ladeMitglieder(); ladeZugangAnfragen(); }, einst:function(){ ladeEinst(); ladeRechnungsdaten(); ladeVorlage(); }, aufgaben:ladeAufgaben})[b.dataset.tab]();
     });
   });
 
@@ -1094,6 +1099,38 @@
     Z:['warum_weg','zweck'].concat([1,2,3,4,5].reduce(function(l,i){ return l.concat(['z'+i,'z'+i+'_warum','z'+i+'_schritt','z'+i+'_stand']); }, []), ['alltag'])};
   var mgPriv = null, mgSchluessel = null, mgListe = [], mgSuchTimer = null;
 
+  var zgListe = [];
+  function ladeZugangAnfragen(){
+    rpc('coaching_admin_zugang_anfragen', {p_alle:false}).then(function(l){
+      zgListe = l || [];
+      $('zg-anzahl').textContent = zgListe.length ? '· ' + zgListe.length + ' offen' : '· keine offen';
+      $('zg-liste').innerHTML = zgListe.length ? zgListe.map(function(a, i){
+        return '<div class="karte" style="margin-top:10px;padding:14px 18px">' +
+          '<b>'+esc(a.name)+'</b> <small class="hinweis">'+esc(a.email||'')+' · '+datumDE(isoTag(new Date(a.erstellt_am)))+'</small>' +
+          (a.nachricht ? '<p style="margin:6px 0 0;white-space:pre-wrap">'+esc(a.nachricht)+'</p>' : '') +
+          '<div class="reihe" style="margin-top:10px;gap:8px">' +
+            '<button class="btn btn-2 btn-klein" data-zg-frei="'+i+'">Anlegen und freischalten</button>' +
+            '<button class="btn btn-2 btn-klein" data-zg-ok="'+i+'">Erledigt</button>' +
+          '</div><p class="fehler" data-zg-fehler="'+i+'"></p></div>';
+      }).join('') : '<p class="hinweis">Zurzeit keine offenen Anfragen.</p>';
+    }).catch(function(){ $('zg-liste').innerHTML = '<p class="hinweis">Anfragen konnten nicht geladen werden.</p>'; });
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-zg-frei],[data-zg-ok]'); if (!b) return;
+    var i = +(b.dataset.zgFrei !== undefined ? b.dataset.zgFrei : b.dataset.zgOk), a = zgListe[i]; if (!a) return;
+    var f = document.querySelector('[data-zg-fehler="'+i+'"]'); if (f) f.textContent = '';
+    b.disabled = true;
+    if (b.dataset.zgOk !== undefined) {
+      rpc('coaching_admin_zugang_anfrage_erledigt', {p_id:a.id})
+        .then(ladeZugangAnfragen).catch(function(err){ if (f) f.textContent = err.message; b.disabled = false; });
+      return;
+    }
+    rpc('coaching_admin_kunde_speichern', {p_id:null, p_daten:{name:a.name, email:a.email, notiz:'Zugang zum Mitgliederbereich angefragt'}})
+      .then(function(id){ return rpc('coaching_admin_mitglied_freischalten', {p_kundin_id:id})
+        .then(function(r){ mgCodeZeigen(r, a.name); return rpc('coaching_admin_zugang_anfrage_erledigt', {p_id:a.id, p_kundin_id:id}); }); })
+      .then(function(){ ladeZugangAnfragen(); ladeMitglieder(); window.scrollTo({top:0, behavior:'smooth'}); })
+      .catch(function(err){ if (f) f.textContent = err.message + ' – Tipp: Gibt es den Kunden schon, nimm die Suche unten.'; b.disabled = false; });
+  });
   function ladeMitglieder(){
     rpc('coaching_admin_mitglieder').then(function(l){
       mgListe = l;

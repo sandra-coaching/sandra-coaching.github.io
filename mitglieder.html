@@ -314,8 +314,48 @@
       <p class="fehler" id="a-fehler" role="alert"></p>
       <p class="klein leise" style="margin-top:14px" id="a-wechsel-text"></p>
     </form>
-    <p class="leise klein" style="margin-top:16px">Noch keinen Zugang? Er gehört zum Paket „Prozess: Muster lösen".
-      Frag Sandra im nächsten Termin danach oder <a href="index.html#termin">buch ein Erstgespräch</a>.</p>
+    <p class="leise klein" style="margin-top:16px">Noch keinen Zugang? Er gehört zum Paket „Prozess: Muster lösen" –
+      und ist auch einzeln zu haben, ohne Paket und ohne Erstgespräch.
+      <button type="button" class="link-knopf klein" id="k-zugang" style="color:var(--clay-dark);text-decoration:underline">Zugang anfragen</button></p>
+  </section>
+
+  <!-- ============ Zugang anfragen ============ -->
+  <section class="ansicht" id="v-zugang" hidden>
+    <button class="link-knopf" id="zg-zurueck">‹ Zurück zur Anmeldung</button>
+    <h1 style="margin-top:14px">Zugang zum Mitgliederbereich</h1>
+    <p class="leise">Hier arbeitest du allein an deinen Themen: an den Mustern, die sich wiederholen, an deinem Zweck
+       und an deinen fünf großen Zielen. Alles, was du schreibst, ist verschlüsselt – lesen kann es nur, wem du es
+       ausdrücklich freigibst.</p>
+
+    <div class="karte">
+      <h2>So läuft es ab</h2>
+      <ol class="z-schritte" style="margin-left:18px">
+        <li>Du schickst mir deine Anfrage – Name und E-Mail genügen.</li>
+        <li>Sandra meldet sich bei dir, nennt dir den Preis und schickt dir deinen Zugangscode.</li>
+        <li>Beim ersten Mal wählst du eine Passphrase, danach reicht E-Mail und Passphrase.</li>
+      </ol>
+      <p class="klein leise" style="margin-top:10px">Gehört der Zugang zu einem Paket, das du schon gebucht hast,
+         frag Sandra einfach im nächsten Termin danach.</p>
+    </div>
+
+    <form class="karte" id="f-zugang" novalidate>
+      <h2>Deine Anfrage</h2>
+      <label class="feld">Dein Name<input type="text" id="zg-name" autocomplete="name" maxlength="120"></label>
+      <label class="feld">Deine E-Mail-Adresse<input type="email" id="zg-email" autocomplete="email" maxlength="160"></label>
+      <label class="feld">Magst du kurz sagen, worum es bei dir geht? (freiwillig)
+        <textarea id="zg-text" rows="3" maxlength="600" style="min-height:80px"></textarea></label>
+      <label class="haken"><input type="checkbox" id="zg-einw">
+        <span>Ich bin einverstanden, dass Name, E-Mail und mein Text gespeichert werden, damit Sandra mir antworten kann.
+        Mehr dazu in der <a href="datenschutz.html#mitglieder" target="_blank" rel="noopener">Datenschutzerklärung</a>.</span></label>
+      <div class="reihe"><button class="btn" type="submit" id="zg-los">Anfrage senden</button></div>
+      <p class="fehler" id="zg-fehler" role="alert"></p>
+    </form>
+
+    <div class="karte" id="zg-danke" hidden>
+      <h2>Angekommen</h2>
+      <p>Danke. Sandra meldet sich bei dir – in der Regel innerhalb weniger Tage. Du brauchst jetzt nichts weiter zu tun.</p>
+      <div class="reihe"><button class="btn btn-2" type="button" id="zg-fertig">Zurück zur Anmeldung</button></div>
+    </div>
   </section>
 
   <!-- ============ Einrichten: Einwilligung ============ -->
@@ -1380,6 +1420,27 @@
       laeuft(btn, false); akt = null;
       if (ok) zeigeWarum(false); else $('w-stand').textContent = 'Nicht gespeichert – bitte noch einmal versuchen.';
     });
+  });
+
+  /* ---------------- Zugang anfragen (ohne Anmeldung) ---------------- */
+  $('k-zugang').addEventListener('click', function(){ zeige('v-zugang'); setTimeout(function(){ $('zg-name').focus(); }, 60); });
+  $('zg-zurueck').addEventListener('click', function(){ zeige('v-anmelden'); });
+  $('zg-fertig').addEventListener('click', function(){ $('f-zugang').hidden = false; $('zg-danke').hidden = true; zeige('v-anmelden'); });
+  $('f-zugang').addEventListener('submit', function(e){
+    e.preventDefault();
+    var f = $('zg-fehler'), btn = $('zg-los'), name = $('zg-name').value.trim(), mail = $('zg-email').value.trim();
+    f.textContent = '';
+    if (!name) { f.textContent = 'Bitte deinen Namen eingeben.'; return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) { f.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.'; return; }
+    if (!$('zg-einw').checked) { f.textContent = 'Ohne dein Einverständnis kann ich die Anfrage nicht speichern.'; return; }
+    laeuft(btn, true, 'Wird gesendet …');
+    rpc('coaching_zugang_anfrage', {p_name:name, p_email:mail, p_nachricht:$('zg-text').value, p_einwilligung:true})
+      .then(function(){
+        $('zg-name').value = $('zg-email').value = $('zg-text').value = ''; $('zg-einw').checked = false;
+        $('f-zugang').hidden = true; $('zg-danke').hidden = false;
+      })
+      .catch(function(err){ f.textContent = err.message; })
+      .then(function(){ laeuft(btn, false); });
   });
 
   /* ---------------- Einstellungen ---------------- */
