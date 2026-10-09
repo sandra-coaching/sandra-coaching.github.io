@@ -244,6 +244,13 @@
   .s-balken{height:6px;background:var(--sand-2);border-radius:999px;margin-top:8px;overflow:hidden}
   .s-balken i{display:block;height:100%;background:var(--clay)}
   .s-balken.gruen i{background:var(--olive)}
+  .gruppe{background:var(--sand);border:1px solid var(--sand-2);border-radius:16px;padding:16px 20px;margin-top:12px;
+    display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .gruppe .g-txt{flex:1;min-width:220px}
+  .gruppe small{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);font-weight:600}
+  .gruppe b{display:block;font-size:16.5px;margin-top:3px}
+  .gruppe p{font-size:14px;color:#5E5346;margin-top:4px}
+  .gruppe .btn{padding:10px 20px;font-size:14.5px}
   .start-reihe{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
   .s-box{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px 18px;min-width:0}
   .s-box small{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);font-weight:600;margin-bottom:6px}
@@ -495,6 +502,7 @@
     </div>
     <div class="start-kacheln" id="u-kacheln"></div>
     <div class="start-reihe" id="u-reihe2"></div>
+    <div id="u-gruppe"></div>
     <div id="u-ri"></div>
 
     <h2 class="start-h2">Einen Durchgang beginnen</h2>
@@ -1505,6 +1513,29 @@
         '<a class="s-link" href="index.html#termin">Termin finden →</a></div>';
 
     zeichneRootIndex(za);
+    zeichneGruppenstunde();
+  }
+
+  /* Gruppenstunde: nächster freier Termin, über die öffentlichen Funktionen geholt */
+  var gruppeAngebot, gruppeGeladen = false;
+  function zeichneGruppenstunde(){
+    if (gruppeGeladen) return; gruppeGeladen = true;
+    var box = $('u-gruppe');
+    rpc('coaching_angebote_liste', {}).then(function(l){
+      gruppeAngebot = (l || []).filter(function(a){ return /^Gruppenstunde/i.test(a.titel || ''); })[0];
+      if (!gruppeAngebot) { box.innerHTML = ''; return; }
+      var heute = new Date(), bis = new Date(heute.getTime() + 60 * 86400000);
+      var t = function(d){ return d.toISOString().slice(0,10); };
+      return rpc('coaching_freie_zeiten', {p_angebot_id: gruppeAngebot.id, p_von: t(heute), p_bis: t(bis)}).then(function(z){
+        var erste = (z || []).map(function(x){ return x.beginn || x; }).sort()[0];
+        var wann = erste ? new Intl.DateTimeFormat('de-DE', {weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}).format(new Date(erste)) + ' Uhr' : null;
+        box.innerHTML = '<div class="gruppe"><div class="g-txt"><small>Gemeinsam</small>' +
+          '<b>' + (wann ? 'Nächste Gruppenstunde: ' + esc(wann) : 'Gruppenstunde') + '</b>' +
+          '<p>' + (wann ? 'Online in kleiner Runde, etwa eine Stunde. Nichts wird aufgezeichnet.'
+                        : 'Einmal im Monat online in kleiner Runde. Die nächsten Termine stehen noch nicht fest.') + '</p></div>' +
+          (wann ? '<a class="btn" href="index.html#termin">Platz sichern</a>' : '') + '</div>';
+      });
+    }).catch(function(){ box.innerHTML = ''; });
   }
   function zeichneRootIndex(za){
     var stand = za.ernaehrung || '';
