@@ -1,0 +1,44 @@
+# Lädt den Inhalt dieses Ordners auf den netcup-Webspace.
+# Läuft automatisch bei jedem Push nach main – und von Hand über „Actions“.
+# Die Zugangsdaten liegen als Secrets im Repository, nicht in dieser Datei.
+name: Website zu netcup hochladen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      probelauf:
+        description: "Probelauf – zeigt nur an, was passieren würde"
+        type: boolean
+        default: false
+
+concurrency:
+  group: hochladen
+  cancel-in-progress: false
+
+jobs:
+  hochladen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dateien holen
+        uses: actions/checkout@v4
+
+      - name: Per FTPS hochladen
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./
+          server-dir: ${{ secrets.FTP_ORDNER }}
+          dry-run: ${{ inputs.probelauf == true }}
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/node_modules/**
+            **/.DS_Store
