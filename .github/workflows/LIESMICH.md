@@ -7,6 +7,11 @@ Protokoll auf.
 
 ## Einmalig einzurichten – vier Secrets
 
+Zuerst in Plesk einen eigenen FTP-Zugang anlegen (netcup-Kundenkonto →
+Webhosting → Plesk → Websites & Domains → ganzbeidir-coaching.de → FTP-Zugang →
+FTP-Zugang hinzufügen). Name z. B. `github-upload`, Passwort erzeugen lassen,
+Basisverzeichnis `/httpdocs`. Dann in GitHub:
+
 GitHub → Repository → **Settings** → **Secrets and variables** → **Actions** →
 **New repository secret**:
 
@@ -15,7 +20,7 @@ GitHub → Repository → **Settings** → **Secrets and variables** → **Actio
 | `FTP_SERVER` | Adresse des FTP-Servers, z. B. `ganzbeidir-coaching.de` |
 | `FTP_USER` | Benutzername des FTP-Zugangs aus Plesk |
 | `FTP_PASSWORD` | zugehöriges Passwort |
-| `FTP_ORDNER` | Zielordner, bei netcup meist `/httpdocs/` |
+| `FTP_ORDNER` | Zielordner – `/` , wenn der FTP-Zugang bereits auf `/httpdocs` zeigt |
 
 ## Erst testen, dann scharf schalten
 
@@ -27,8 +32,11 @@ Haken starten.
 ## Wenn etwas schiefgeht
 
 * **„530 Login incorrect“** – Benutzername oder Passwort stimmen nicht.
-* **Dateien landen im falschen Ordner** – `FTP_ORDNER` anpassen. Je nach
-  FTP-Zugang ist das `/httpdocs/`, `/` oder `/ganzbeidir-coaching.de/httpdocs/`.
+* **Dateien landen im falschen Ordner** – `FTP_ORDNER` anpassen. Zeigt der
+  FTP-Zugang auf das Basisverzeichnis `/httpdocs`, gehört dort `/` hinein;
+  zeigt er auf die Wurzel, dann `/httpdocs/`.
+* **Die Startseite ändert sich nicht** – liegt die Seite wirklich unter
+  `httpdocs`? In Plesk steht das Dokumentenstammverzeichnis bei der Domain.
 * **Verbindung bricht ab** – `protocol: ftps` in `hochladen.yml` auf
   `ftps-legacy` ändern.
 
