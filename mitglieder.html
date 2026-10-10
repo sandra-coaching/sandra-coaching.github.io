@@ -310,6 +310,19 @@
   .ziel-mehr input,.ziel-mehr select{margin-top:4px;font-size:15px;padding:9px 12px;background:var(--paper)}
   .ziel-mehr .breit{grid-column:1/-1}
   select{display:block;width:100%;border:1px solid var(--line);border-radius:12px;font:inherit;color:var(--ink)}
+  .f-skala{display:grid;grid-template-columns:1fr auto;gap:2px 14px;align-items:center;margin-top:16px}
+  .f-skala .f-frage{font-size:15px}
+  .f-skala .f-enden{grid-column:1;display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+  .f-skala input[type=range]{grid-column:1;accent-color:var(--clay);width:100%}
+  .f-skala output{grid-column:2;grid-row:1 / span 3;font-weight:600;font-size:20px;min-width:44px;text-align:right}
+  .f-band{background:var(--sand);border:1px solid var(--sand-2);border-radius:16px;padding:16px 20px;margin:14px 0 4px;
+    display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between}
+  .f-band .f-txt{flex:1;min-width:220px}
+  .f-band small{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);font-weight:600}
+  .f-band b{display:block;font-size:16.5px;margin-top:3px}
+  .f-band p{font-size:14px;color:#5E5346;margin-top:4px}
+  .f-band .reihe{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .f-band .btn{padding:10px 20px;font-size:14.5px}
   .regler{display:flex;gap:14px;align-items:center;margin-top:14px}
   .regler input{flex:1;accent-color:var(--clay)}
   .regler output{font-weight:600;font-size:20px;min-width:62px;text-align:right}
@@ -501,6 +514,7 @@
           <span class="klein leise" id="w-stand"></span></div>
       </div>
     </div>
+    <div id="u-frage"></div>
     <div class="start-kacheln" id="u-kacheln"></div>
     <div class="start-reihe" id="u-reihe2"></div>
     <div id="u-gruppe"></div>
@@ -689,6 +703,112 @@
     <p class="speicherstand" id="z-stand" aria-live="polite"></p>
   </section>
 
+  <!-- ============ Fragebogen vor dem ersten Gespräch ============ -->
+  <section class="ansicht" id="v-frage" hidden>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <button class="link-knopf" id="f-zurueck">‹ Übersicht</button>
+      <span class="marke marke-var">Vor dem ersten Gespräch</span>
+    </div>
+    <h1 style="margin-top:14px">Bevor wir uns das erste Mal sehen</h1>
+    <p class="leise">Ein paar Fragen, damit du selbst sortierst, worum es dir geht – und damit Sandra nicht die erste halbe Stunde
+       mit Fragen verbringt, die du hier in Ruhe beantworten kannst. Zehn Minuten, nichts davon ist Pflicht.</p>
+
+    <div class="karte" style="background:var(--sand);border:none">
+      <h2 style="margin-top:0">Was mit deinen Antworten passiert</h2>
+      <p class="klein">Alles, was du hier schreibst, wird <b>auf deinem Gerät verschlüsselt</b>, bevor es gespeichert wird.
+         Sandra sieht es nur, wenn du es unten ausdrücklich freigibst – und du kannst die Freigabe jederzeit zurücknehmen.</p>
+      <p class="klein leise">Bitte keine Angaben zu Krankheiten, Diagnosen oder Behandlungen eintragen. Coaching ist keine Therapie;
+         solche Themen besprichst du besser mündlich oder mit einer Ärztin oder Therapeutin.</p>
+    </div>
+
+    <div class="karte">
+      <p class="schritt-nr" style="margin-top:0">1 · Was dich herführt</p>
+      <h2>Worum geht es gerade?</h2>
+      <p class="leise klein">In deinen eigenen Worten. Ein paar Sätze reichen.</p>
+      <textarea data-f="anlass" rows="4" style="min-height:110px" aria-label="Was führt dich her?"
+        placeholder="Von außen stimmt eigentlich alles, aber …"></textarea>
+      <label class="breit" style="display:block;margin-top:14px;font-size:13.5px;color:var(--muted)">Wie lange beschäftigt dich das schon?
+        <select data-f="seit_wann" style="display:block;margin-top:4px">
+          <option value="">–</option><option>Seit ein paar Wochen</option><option>Seit Monaten</option>
+          <option>Seit Jahren</option><option>So lange ich denken kann</option>
+        </select></label>
+    </div>
+
+    <div class="karte">
+      <p class="schritt-nr" style="margin-top:0">2 · Wo du gerade stehst</p>
+      <h2>Fünf Regler, ehrlich geschätzt</h2>
+      <p class="leise klein">Kein Test. Es geht nur darum, dass du in ein paar Monaten vergleichen kannst.</p>
+      <div class="f-skala">
+        <span class="f-frage">Wie zufrieden bist du gerade insgesamt?</span>
+        <input type="range" min="0" max="10" step="1" value="5" data-f="s_zufrieden" aria-label="Wie zufrieden bist du gerade insgesamt?">
+        <span class="f-enden"><span>gar nicht</span><span>sehr</span></span>
+        <output data-fwert="s_zufrieden">5</output>
+      </div>
+      <div class="f-skala">
+        <span class="f-frage">Wie sehr beschäftigt dich dein Thema?</span>
+        <input type="range" min="0" max="10" step="1" value="5" data-f="s_belastung" aria-label="Wie sehr beschäftigt dich dein Thema?">
+        <span class="f-enden"><span>kaum</span><span>ständig</span></span>
+        <output data-fwert="s_belastung">5</output>
+      </div>
+      <div class="f-skala">
+        <span class="f-frage">Wie klar sind dir deine eigenen Wünsche?</span>
+        <input type="range" min="0" max="10" step="1" value="5" data-f="s_wuensche" aria-label="Wie klar sind dir deine eigenen Wünsche?">
+        <span class="f-enden"><span>unklar</span><span>sehr klar</span></span>
+        <output data-fwert="s_wuensche">5</output>
+      </div>
+      <div class="f-skala">
+        <span class="f-frage">Wie gut kannst du Nein sagen?</span>
+        <input type="range" min="0" max="10" step="1" value="5" data-f="s_nein" aria-label="Wie gut kannst du Nein sagen?">
+        <span class="f-enden"><span>schwer</span><span>leicht</span></span>
+        <output data-fwert="s_nein">5</output>
+      </div>
+      <div class="f-skala">
+        <span class="f-frage">Wie viel Zeit bleibt für dich selbst?</span>
+        <input type="range" min="0" max="10" step="1" value="5" data-f="s_zeit" aria-label="Wie viel Zeit bleibt für dich selbst?">
+        <span class="f-enden"><span>fast keine</span><span>genug</span></span>
+        <output data-fwert="s_zeit">5</output>
+      </div>
+    </div>
+
+    <div class="karte">
+      <p class="schritt-nr" style="margin-top:0">3 · Dein Muster</p>
+      <h2>Welcher Satz über dich selbst taucht immer wieder auf?</h2>
+      <p class="leise klein">Er beginnt oft mit „Ich bin …", „Ich muss …" oder „Ich darf nicht …".</p>
+      <input type="text" data-f="satz" aria-label="Dein wiederkehrender Satz" placeholder="„Ich muss alles alleine schaffen.“">
+      <h2 style="margin-top:22px">Woran würdest du merken, dass sich etwas verändert hat?</h2>
+      <p class="leise klein">Je alltäglicher, desto besser – ein Satz, den du sagen würdest, eine Situation, die anders läuft.</p>
+      <textarea data-f="veraendert" rows="3" style="min-height:90px" aria-label="Woran würdest du es merken?"
+        placeholder="Ich würde sonntags nicht mehr schon an Montag denken."></textarea>
+    </div>
+
+    <div class="karte">
+      <p class="schritt-nr" style="margin-top:0">4 · Was auf Sandra zukommt</p>
+      <h2>Was erwartest du vom ersten Gespräch?</h2>
+      <textarea data-f="erwartung" rows="3" style="min-height:80px" aria-label="Was erwartest du?"
+        placeholder="Ich möchte erstmal verstehen, warum ich immer wieder dort lande."></textarea>
+      <h2 style="margin-top:22px">Gibt es etwas, das dir daran unangenehm ist?</h2>
+      <p class="leise klein">Freiwillig. Es hilft Sandra zu wissen, wo sie vorsichtig sein soll.</p>
+      <textarea data-f="sorge" rows="2" style="min-height:70px" aria-label="Was dir unangenehm ist"
+        placeholder="Ich weine schnell und finde das peinlich."></textarea>
+      <label class="breit" style="display:block;margin-top:18px;font-size:13.5px;color:var(--muted)">Wie darf Sandra mit dir umgehen?
+        <select data-f="art" style="display:block;margin-top:4px">
+          <option value="">–</option><option>Eher behutsam, lass mir Zeit</option>
+          <option>Eher direkt, sag mir klar, was du siehst</option><option>Mal so, mal so – sag es mir im Gespräch</option>
+        </select></label>
+      <label class="breit" style="display:block;margin-top:14px;font-size:13.5px;color:var(--muted)">Hattest du schon einmal Coaching oder eine ähnliche Begleitung?
+        <input type="text" data-f="erfahrung" style="display:block;margin-top:4px" placeholder="Wenn ja: was hat dir geholfen, was nicht?"></label>
+      <h2 style="margin-top:22px">Was sollte Sandra sonst noch wissen?</h2>
+      <textarea data-f="sonst" rows="2" style="min-height:70px" aria-label="Sonstiges" placeholder="Muss nicht ausgefüllt werden."></textarea>
+    </div>
+
+    <label class="schalter">
+      <input type="checkbox" id="f-frei">
+      <span><b>Für Sandra freigeben</b><br><span class="klein leise" id="f-frei-text"></span></span>
+    </label>
+    <p class="speicherstand" id="f-stand" aria-live="polite"></p>
+    <p class="klein leise" style="margin-top:4px">Lieber auf Papier? <a href="aufnahmebogen-ganz-bei-dir.pdf" download>Denselben Bogen als PDF herunterladen</a>.</p>
+  </section>
+
   <!-- ============ Anleitung ============ -->
   <section class="ansicht" id="v-anleitung" hidden>
     <button class="link-knopf" id="an-zurueck">‹ Übersicht</button>
@@ -855,7 +975,18 @@
     .concat([1,2,3,4,5].reduce(function(l, i){ return l.concat([{k:'z'+i, f:'Ziel '+i}, {k:'z'+i+'_warum', f:'Ziel '+i+' – warum es dir wichtig ist'},
       {k:'z'+i+'_schritt', f:'Ziel '+i+' – erster Schritt'}, {k:'z'+i+'_stand', f:'Ziel '+i+' – Stand'}]); }, []))
     .concat([{k:'alltag', f:'Wie viel deiner Woche passt schon dazu? (in Prozent)'}]);
-  var VARIANTE_NAME = {A:'Kurz', B:'Ausführlich', Z:'ZDE & Big Five'};
+  SCHRITTE.F = [{k:'anlass', f:'Worum geht es gerade?'}, {k:'seit_wann', f:'Wie lange beschäftigt dich das schon?'},
+    {k:'s_zufrieden', f:'Zufriedenheit insgesamt'}, {k:'s_belastung', f:'Wie sehr beschäftigt dich dein Thema'},
+    {k:'s_wuensche', f:'Wie klar sind dir deine eigenen Wünsche'}, {k:'s_nein', f:'Wie gut kannst du Nein sagen'},
+    {k:'s_zeit', f:'Wie viel Zeit bleibt für dich selbst'},
+    {k:'satz', f:'Wiederkehrender Satz über dich selbst'}, {k:'veraendert', f:'Woran du eine Veränderung merken würdest'},
+    {k:'erwartung', f:'Was du vom ersten Gespräch erwartest'}, {k:'sorge', f:'Was dir daran unangenehm ist'},
+    {k:'art', f:'Wie Sandra mit dir umgehen darf'}, {k:'erfahrung', f:'Erfahrung mit Coaching oder Begleitung'},
+    {k:'sonst', f:'Was Sandra sonst noch wissen sollte'}];
+  var F_SKALEN = ['s_zufrieden','s_belastung','s_wuensche','s_nein','s_zeit'];
+  var VARIANTE_NAME = {A:'Kurz', B:'Ausführlich', Z:'ZDE & Big Five', F:'Vor dem ersten Gespräch'};
+  /* Ein „Durchgang" ist nur A oder B – Ziele (Z) und Fragebogen (F) sind eigene Einträge */
+  function istDg(v){ return v === 'A' || v === 'B'; }
 
   /* ---------------- Zustand ---------------- */
   var sitzung = null;       /* {email, code} – der Code allein öffnet nichts */
@@ -1097,10 +1228,10 @@
   function zeigeUebersicht(){
     var ld = $('liste-durchgaenge');
     zeigeWarum(false);
-    var nurDg = eintraege.filter(function(e){ return e.variante !== 'Z'; }).length;
+    var nurDg = eintraege.filter(function(e){ return istDg(e.variante); }).length;
     zeichneStart();
     ld.innerHTML = nurDg ? eintraege.map(function(e, i){
-      if (e.variante === 'Z') return '';
+      if (!istDg(e.variante)) return '';
       if (!e.daten) return '<div class="eintrag" style="cursor:default"><span><b>Eintrag konnte nicht geöffnet werden</b><small>'+datum(e.geaendert)+'</small></span></div>';
       var t = titelVon(e.daten.antworten);
       return '<button class="eintrag" data-i="'+i+'"><span><b>'+esc(t)+'</b><small>'+datum(e.geaendert)+'</small></span>'+
@@ -1183,7 +1314,7 @@
     zeichneKarte(); zeichneTabelle();
   }
   function uebernehmeText(){
-    if (!akt || akt.variante === 'Z') return;
+    if (!akt || !istDg(akt.variante)) return;
     if (schrittNr >= schritte().length) return;
     var k = schritte()[schrittNr].k, v = $('d-text').value;
     if ((akt.daten.antworten[k] || '') !== v) { akt.daten.antworten[k] = v; ungespeichert = true; }
@@ -1210,12 +1341,12 @@
     if (speichertGerade) return speichertGerade.then(speichern);
     ungespeichert = false;
     var d = akt, daten = {antworten:d.daten.antworten, schritt:d.daten.schritt || 0, variante:d.variante};
-    var standEl = $(d.variante === 'Z' ? 'z-stand' : 'd-stand');
+    var standEl = $(d.variante === 'Z' ? 'z-stand' : d.variante === 'F' ? 'f-stand' : 'd-stand');
     standEl.textContent = 'Wird verschlüsselt gespeichert …';
     speichertGerade = Promise.all([verschluesseln(daten), d.freigegeben && freigabeSchluessel ? freigabeBauen(daten) : Promise.resolve(null)])
       .then(function(r){ return rpc('coaching_mitglied_eintrag_speichern', mit({p_id:d.id, p_variante:d.variante, p_inhalt:r[0], p_freigabe:r[1]})); })
       .then(function(id){
-        d.id = id; if (d.variante !== 'Z') $('d-loeschen').hidden = false;
+        d.id = id; if (istDg(d.variante)) $('d-loeschen').hidden = false;
         var x = eintraege.filter(function(e){ return e.id === id; })[0];
         if (!x) { x = {id:id, variante:d.variante}; eintraege.unshift(x); }
         x.daten = JSON.parse(JSON.stringify(daten)); x.freigegeben = !!d.freigegeben; x.geaendert = new Date().toISOString();
@@ -1323,7 +1454,7 @@
   }
   var LEGENDE = '<div class="wk-legende"><span><i class="l-ist"></i>hier bist du</span><span><i class="l-voll"></i>ausgefüllt</span><span><i></i>noch offen</span></div>';
   function zeichneKarte(){
-    if (!akt || akt.variante === 'Z') return;
+    if (!akt || !istDg(akt.variante)) return;
     var box = $('d-karte');
     box.innerHTML = (akt.variante === 'B' ? karteB(box.clientWidth || 700) : karteA()) + LEGENDE;
     zeigeInfo(null);
@@ -1391,7 +1522,7 @@
       }).join('') + '</tbody></table></div>';
   }
   function zeichneTabelle(){
-    if (!akt || akt.variante === 'Z') return;
+    if (!akt || !istDg(akt.variante)) return;
     var t = tabelleHTML(akt.variante, akt), andere = eintraege.filter(function(e){ return e.daten && e.variante === akt.variante && e.id !== akt.id; }).length;
     $('d-tabelle').innerHTML = t ? '<h2 class="tab-titel">Alle deine Themen · ' + VARIANTE_NAME[akt.variante] + '</h2>' + t +
       '<p class="tab-hinweis">' + (andere ? 'Tippe auf eine Zeile, um den Durchgang zu öffnen. ' : '') + 'Die markierte Zeile ist der, an dem du gerade arbeitest.</p>' : '';
@@ -1451,15 +1582,76 @@
   $('z-zurueck').addEventListener('click', function(){ speichern().then(function(){ akt = null; zeigeUebersicht(); }); });
 
 
+  /* ---------------- Fragebogen vor dem ersten Gespräch ---------------- */
+  function frageEintrag(){ return eintraege.filter(function(e){ return e.variante === 'F'; })[0] || null; }
+  function frageFelder(){ return document.querySelectorAll('#v-frage [data-f]'); }
+  function frageAusgefuellt(a){
+    a = a || {};
+    return SCHRITTE.F.filter(function(x){ return F_SKALEN.indexOf(x.k) < 0 && String(a[x.k] == null ? '' : a[x.k]).trim(); }).length;
+  }
+  function frageWerte(){
+    F_SKALEN.forEach(function(k){
+      var el = document.querySelector('#v-frage [data-fwert="' + k + '"]');
+      if (el) el.textContent = akt && akt.daten.antworten[k] !== undefined ? akt.daten.antworten[k] : 5;
+    });
+  }
+  function neuerFrageEintrag(){
+    var x = frageEintrag();
+    return x && x.daten ? {id:x.id, variante:'F', daten:JSON.parse(JSON.stringify(x.daten)), freigegeben:x.freigegeben}
+                        : {id:null, variante:'F', daten:{antworten:{titel:'Vor dem ersten Gespräch'}, schritt:0}, freigegeben:false};
+  }
+  function oeffneFragebogen(){
+    akt = neuerFrageEintrag(); ungespeichert = false;
+    var a = akt.daten.antworten;
+    Array.prototype.forEach.call(frageFelder(), function(el){
+      var v = a[el.dataset.f];
+      el.value = v === undefined ? (el.type === 'range' ? 5 : '') : v;
+    });
+    frageWerte();
+    var moeglich = !!freigabeSchluessel;
+    $('f-frei').checked = !!akt.freigegeben; $('f-frei').disabled = !moeglich;
+    $('f-frei-text').textContent = moeglich ? 'Dann kann Sandra deine Antworten vor dem Termin lesen. Jederzeit zurücknehmbar.'
+                                            : 'Sandra hat Freigaben noch nicht eingerichtet. Bis dahin bleibt alles nur bei dir.';
+    $('f-stand').textContent = akt.id ? 'Verschlüsselt gespeichert' + (akt.freigegeben ? ' · für Sandra freigegeben' : '') : '';
+    zeige('v-frage');
+  }
+  Array.prototype.forEach.call(frageFelder(), function(el){
+    el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function(){
+      if (!akt || akt.variante !== 'F') return;
+      akt.daten.antworten[el.dataset.f] = el.value; ungespeichert = true;
+      if (el.type === 'range') frageWerte();
+      $('f-stand').textContent = 'Ungespeichert …';
+      clearTimeout(speicherTimer); speicherTimer = setTimeout(speichern, 1500);
+    });
+  });
+  $('f-frei').addEventListener('change', function(){ if (akt && akt.variante === 'F') { akt.freigegeben = this.checked; ungespeichert = true; speichern(); } });
+  $('f-zurueck').addEventListener('click', function(){ speichern().then(function(){ akt = null; zeigeUebersicht(); }); });
+
+  /* Band auf der Startansicht */
+  function zeichneFrageBand(){
+    var x = frageEintrag(), a = x && x.daten ? x.daten.antworten : {}, voll = frageAusgefuellt(a);
+    $('u-frage').innerHTML = '<div class="f-band"><div class="f-txt"><small>Vor dem ersten Gespräch</small>' +
+      '<b>' + (voll ? 'Dein Fragebogen' : 'Ein Fragebogen für dich selbst') + '</b>' +
+      '<p>' + (voll
+        ? esc(voll + ' von ' + (SCHRITTE.F.length - F_SKALEN.length) + ' Fragen beantwortet · zuletzt ' + datum(x.geaendert))
+          + (x.freigegeben ? ' · für Sandra freigegeben' : '')
+        : 'Zehn Minuten, in denen du sortierst, worum es dir geht. Verschlüsselt, und nur für Sandra sichtbar, wenn du es freigibst.') +
+      '</p></div><span class="reihe">' +
+      '<button class="btn" type="button" id="u-frage-auf">' + (voll ? 'Ansehen' : 'Online ausfüllen') + '</button>' +
+      '<a class="link-knopf klein" href="aufnahmebogen-ganz-bei-dir.pdf" download>als PDF</a></span></div>';
+    $('u-frage-auf').addEventListener('click', oeffneFragebogen);
+  }
+
+
   /* ---------------- Startansicht ---------------- */
   function offenerDurchgang(){
     var kand = eintraege.filter(function(e){
-      return e.daten && e.variante !== 'Z' && (e.daten.schritt || 0) < (SCHRITTE[e.variante] || []).length;
+      return e.daten && istDg(e.variante) && (e.daten.schritt || 0) < (SCHRITTE[e.variante] || []).length;
     });
     return kand[0] || null;
   }
   function zeichneStart(){
-    var dg = eintraege.filter(function(e){ return e.variante !== 'Z'; });
+    var dg = eintraege.filter(function(e){ return istDg(e.variante); });
     var zz = zielEintrag(), za = zz && zz.daten ? zz.daten.antworten : {};
     var letzte = dg.map(function(e){ return e.geaendert; }).filter(Boolean).sort().slice(-1)[0];
     var teile = [];
@@ -1513,6 +1705,7 @@
                       : 'Freigeben kannst du am Ende jedes Durchgangs – freiwillig.') + '</p>' +
         '<a class="s-link" href="index.html#termin">Termin finden →</a></div>';
 
+    zeichneFrageBand();
     zeichneRootIndex(za);
     zeichneGruppenstunde();
   }

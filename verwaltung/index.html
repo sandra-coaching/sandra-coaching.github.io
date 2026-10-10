@@ -1094,10 +1094,15 @@
   var MG_FRAGE = {widerfahren:'Was ist passiert?', bei_mir:'Was davon hattest du in der Hand?', anerkennen:'Was hat dich daran am meisten getroffen?',
     fakt:'Was ist passiert?', satz:'Was sagst du dir (über dich)?', gefuehl:'Was fühlst du dabei?', tun:'Was machst du dann?',
     ergebnis:'Was passiert danach?', neuer_satz:'Neuer Satz', brauchen:'Was brauchst du jetzt?',
-    warum_weg:'Warum für diesen Weg', zweck:'ZDE – wofür bist du da?', alltag:'Wie viel der Woche passt schon dazu? (in %)'};
+    warum_weg:'Warum für diesen Weg', zweck:'ZDE – wofür bist du da?', alltag:'Wie viel der Woche passt schon dazu? (in %)',
+    anlass:'Worum geht es gerade?', seit_wann:'Wie lange schon?', s_zufrieden:'Zufriedenheit insgesamt (0–10)',
+    s_belastung:'Wie sehr beschäftigt das Thema (0–10)', s_wuensche:'Eigene Wünsche klar (0–10)', s_nein:'Nein sagen (0–10)',
+    s_zeit:'Zeit für sich selbst (0–10)', veraendert:'Woran sie eine Veränderung merken würde', erwartung:'Erwartung an das erste Gespräch',
+    sorge:'Was ihr daran unangenehm ist', art:'Wie Sandra mit ihr umgehen darf', erfahrung:'Erfahrung mit Coaching', sonst:'Sonstiges'};
   [1,2,3,4,5].forEach(function(i){ MG_FRAGE['z'+i] = 'Ziel '+i; MG_FRAGE['z'+i+'_warum'] = 'Ziel '+i+' – warum wichtig'; MG_FRAGE['z'+i+'_schritt'] = 'Ziel '+i+' – erster Schritt'; MG_FRAGE['z'+i+'_stand'] = 'Ziel '+i+' – Stand'; });
   var MG_REIHE = {B:['widerfahren','bei_mir','anerkennen','satz','gefuehl','tun','ergebnis','neuer_satz','brauchen'], A:['fakt','satz','gefuehl','tun','ergebnis','neuer_satz'],
-    Z:['warum_weg','zweck'].concat([1,2,3,4,5].reduce(function(l,i){ return l.concat(['z'+i,'z'+i+'_warum','z'+i+'_schritt','z'+i+'_stand']); }, []), ['alltag'])};
+    Z:['warum_weg','zweck'].concat([1,2,3,4,5].reduce(function(l,i){ return l.concat(['z'+i,'z'+i+'_warum','z'+i+'_schritt','z'+i+'_stand']); }, []), ['alltag']),
+    F:['anlass','seit_wann','s_zufrieden','s_belastung','s_wuensche','s_nein','s_zeit','satz','veraendert','erwartung','sorge','art','erfahrung','sonst']};
   var mgPriv = null, mgSchluessel = null, mgListe = [], mgSuchTimer = null;
 
   var zgListe = [];
